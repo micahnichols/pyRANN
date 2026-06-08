@@ -1,0 +1,15 @@
+12-15-2025: Fixed some dump files not reading in correctly:
+	In load.py, loop over lines678 was changed from "if len(bs)==3" to if len(bs)>=3. This makes it to
+	where tilts are still factored in even if box has stress attached to it
+
+2-20-2026: Added in write_VASP method to series class to write INCARS,
+KPOINTS, and POSCARS
+
+2-25-2026: CFG filetype in load must have series=True -> Need to add system
+CFG load
+c++ wrapper now included in ranndip (ranndip.calibration)
+	# Todo: docstrings for calibration and recompile documentation with calibration module
+
+4-7-2026: Fixed more dump files not reading correctly
+	This change must not have been properly implemented in this ranndip
+	version (change from 12-15-2025)

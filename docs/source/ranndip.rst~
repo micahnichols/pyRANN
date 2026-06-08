@@ -1,0 +1,31 @@
+RANNDIP PACKAGE
+===============
+
+calibration
+-------------------
+.. automodule:: ranndip.calibration
+   :members:
+   :member-order: groupwise
+   :undoc-members:
+
+load function
+-------------------
+.. autofunction:: ranndip.load
+
+system class
+-------------------
+.. autoclass:: ranndip.system
+   :members:
+   :member-order: groupwise
+   :undoc-members:
+   :exclude-members: findspacing, makelattice3
+
+series class
+-------------------
+.. autoclass:: ranndip.series
+   :members:
+   :member-order: groupwise
+   :undoc-members:
+   :show-inheritance:
+
+tutorial

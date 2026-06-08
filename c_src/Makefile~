@@ -1,0 +1,88 @@
+# ----------------------------------------------------------------
+# Directories and source files
+# ----------------------------------------------------------------
+SRC_DIR := ./
+OBJ_DIR := ./obj
+TEST_DIR := /mnt/wwn-0x5000c500a2b12ba1-part2/cdb333/Altraining
+TEST_FILE := MgAl_900.nn
+DEST_DIR := ../ranndip
+
+SRC_FILES := $(wildcard $(SRC_DIR)/*.cpp)
+OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES))
+DEPENDS := ${OBJ_FILES:.o=.d}  # dependency files
+
+# ----------------------------------------------------------------
+# Compiler and flags
+# ----------------------------------------------------------------
+CXX := g++
+PYTHON_INCLUDE := $(shell python3 -m pybind11 --includes)
+# PYTHON_LIB := $(shell python3-config --ldflags)
+# PYTHON_LIB := $(-L/apps/spack-managed/gcc-11.3.1/python-3.10.8-hd5op5cyvdqv72hbblt5g7vfdizpw7kd/lib -ldl -lm)
+
+CXXFLAGS := -O2 -fPIC -shared-libgcc -MMD -fopenmp $(PYTHON_INCLUDE)
+LDFLAGS := -shared -fopenmp $(PYTHON_LIB)
+LDLIBS := 
+
+# TARGET := pair_rann.cpython-312-x86_64-linux-gnu.so
+EXT_SUFFIX := $(shell python3-config --extension-suffix)
+TARGET := calibration$(EXT_SUFFIX)
+
+
+# ----------------------------------------------------------------
+# Default target
+# ----------------------------------------------------------------
+all: $(TARGET)
+
+# ----------------------------------------------------------------
+# Linking the shared library
+# ----------------------------------------------------------------
+$(TARGET): $(OBJ_FILES)
+	$(CXX) $(OBJ_FILES) $(LDFLAGS) $(LDLIBS) -o $@
+	cp $@ $(DEST_DIR)
+
+# ----------------------------------------------------------------
+# Compile .cpp -> .o with -fPIC
+# ----------------------------------------------------------------
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	@mkdir -p $(OBJ_DIR)
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+# ----------------------------------------------------------------
+# Run test case
+# ----------------------------------------------------------------
+run:
+	@echo "Running test case in $(TEST_DIR)..."
+	(cd $(TEST_DIR) && ./$(TARGET) -in $(TEST_FILE))
+
+# ----------------------------------------------------------------
+# Clean build
+# ----------------------------------------------------------------
+clean:
+	-rm -rf $(OBJ_DIR) $(TARGET)
+
+# ----------------------------------------------------------------
+# Include dependency files
+# ----------------------------------------------------------------
+-include ${DEPENDS}
+
+# ----------------------------------------------------------------
+# Intel Advisor analysis (optional)
+# ----------------------------------------------------------------
+ADVPRJ := $(CURDIR)/intel_advisor
+
+survey:
+	(cd $(TEST_DIR) && advixe-cl -collect survey -project-dir $(ADVPRJ) -- ./$(TARGET) -in $(TEST_FILE) )
+
+roofline:
+	(cd $(TEST_DIR) && advixe-cl -collect survey -project-dir $(ADVPRJ) -- ./$(TARGET) -in $(TEST_FILE))
+	(cd $(TEST_DIR) && advixe-cl -collect tripcounts -flop -project-dir $(ADVPRJ) -- ./$(TARGET) -in $(TEST_FILE))
+
+map:
+	(cd $(TEST_DIR) && advixe-cl -collect map -mark-up-list=1 -project-dir $(ADVPRJ) -- ./$(TARGET) -in $(TEST_FILE))
+
+open-gui:
+	advixe-gui $(ADVPRJ)/$(ADVPRJ).advixeproj >/dev/null 2>&1 &
+
+clean-results:
+	rm -rf $(ADVPRJ)
+

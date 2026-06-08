@@ -1,0 +1,6 @@
+12-15-2025: Fixed some dump files not reading in correctly:
+	In load.py, loop over lines678 was changed from "if len(bs)==3" to if len(bs)>=3. This makes it to
+	where tilts are still factored in even if box has stress attached to it
+
+2-20-2026: Added in write_VASP method to series class to write INCARS,
+KPOINTS, and POSCARS
