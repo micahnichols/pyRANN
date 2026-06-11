@@ -414,16 +414,19 @@ def load(filename: str,
             # print(f'{colvec = }')
             # print(f'{per_atom_keywords = }')
             for i in colvec:
-                # print(f'{i = }')
+                print(f'{i.strip() = }')
                 if i in per_atom_keywords:
                     per_atom_index = colvec.index(i)
                     per_atom_dict[i] = Data[:,per_atom_index].T
             per_atom_dict = {k: v for k, v in per_atom_dict.items() if v is not None}
             atoms = np.array([v for k, v in per_atom_dict.items() if k.startswith('x') or k.startswith('y') or k.startswith('z')])
+            # print(f'{atoms = }')
             if 'fx' in per_atom_dict.keys():
                 force = np.array([per_atom_dict['fx'], per_atom_dict['fy'], per_atom_dict['fz']])
                 # print(f'{force = }')
                 # print(f'{force.shape = }')
+            else:
+                force = np.zeros((natoms, 3))
             if 'type' in per_atom_dict.keys():
                 # types = np.array([per_atom_dict['type']])
                 types = per_atom_dict['type']
