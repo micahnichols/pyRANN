@@ -33,8 +33,10 @@ class series:
         """
         if systems is not None:
             systems = np.asarray(systems)
+            timesteps = [i.timestep for i in systems]
         self.systems = systems
         self.descriptor = descriptor
+        self.timesteps = timesteps
 
     def __str__(self) -> str:
         """
@@ -67,6 +69,27 @@ class series:
         """
         descriptor = value
         self.__descriptor = descriptor
+
+    @property
+    def timesteps(self) -> np.ndarray:
+        """
+        Gets 1-D array of timesteps for all systems.
+
+        Returns:
+        np.ndarray: 1-D array of timesteps.
+        """
+        return self.__timesteps
+
+    @timesteps.setter
+    def timesteps(self, value: npt.ArrayLike):
+        """
+        Sets the timesteps for all systems
+
+        Args:
+        value: 1-D array of timesteps for all systems in class
+        """
+        self.__timesteps = value
+
     def export(self,
                filename: Union[str, None],
                directory: Union[str, None] = None,
@@ -280,7 +303,7 @@ class series:
                    if do_force:
                        file.write("%d %d %f %f %f %f %f %f\n" % (i+1, self.systems[nn].types[i], x[0][i], x[1][i], x[2][i], f[0][i], f[1][i], f[2][i]))
                    else:
-                       file.write("%d %d %f %f %f %f %f %f\n" % (i+1, self.systems[nn].types[i], x[0][i], x[1][i], x[2][i]))
+                       file.write("%d %d %f %f %f %f %f %f\n" % (i+1, self.systems[nn].types[i], x[0][i], x[1][i], x[2][i], 0.0, 0.0, 0.0))
                    #file.write("\t {0:d} {1:.0f} {2:f} {3:f} {4:f}\n" .format(i+1,types[i],Lattice[0,i],Lattice[1,i],Lattice[2,i]))
             file.close()
 

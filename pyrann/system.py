@@ -563,6 +563,152 @@ class system:
                     file.write("%d %d %f %f %f %f %f %f\n" % (i+1, self.types[i], x[0,i], x[1,i], x[2,i], self.force[0,i], self.force[1,i], self.force[2,i]))
             file.close()
 
+    def thermal_test(self,
+                temp: Union[str, int, float, None],
+                strain: Union[str, int, float, None] = 0,
+                shear: Union[str, int, float, None] = 0,
+                nsims: Union[str, int, None] = 100,
+                N: int = None,
+                ss_dict: Union[dict, None] = None):
+        """
+        Simulates thermal perturbations on the atomic system by applying random displacements and box strain.
+
+        This method generates a series of configurations by thermally perturbing the atomic positions and box dimensions.
+        The perturbations are applied to a base system, and the resulting atomic configurations are stored in a series
+        for further analysis or export.
+
+        Args:
+            temp: Maximum random perturbation of atoms.
+                Currently, this should be a percentage of the given simulation cell's lattice parameter (in decimal
+                format).
+            strain: Maximum strain given as a percentage (in decimal format) of the given simulation
+                cell's lattice parameter.
+            nsims: The number of unique structures to produce.
+            N: Number of atoms - Ignore this. Not sure why I made this an argument at the moment.
+            ss_dict: dictionary of keywords for doing thermal perturbation on solid solution.
+                ss_keys = ['solute_type', 'num_neighbors', 'num_atoms']
+
+        Returns:
+            series: A series containing the generated configurations, each with perturbed atomic positions and box dimensions.
+
+        Raises:
+            ValueError: If the number of simulations (`nsims`) is not provided or invalid keywords are found in `ss_dict`.
+        """
+        # old_atoms = deepcopy(self.atoms)
+        # old_box = deepcopy(self.box)
+        # old_types = deepcopy(self.types)
+        # old_types = copy.copy(self.types)
+        # old_natoms = deepcopy(self.natoms)
+        # old_elements = deepcopy(self.elements)
+        if nsims is None:
+            raise ValueError('Please specify the number of structures to create by thermally perturbing the base system.')
+        else:
+            nsims = int(nsims)
+        if N is None:
+            N = self.natoms
+        if ss_dict is not None:
+            ss_keys = ['solute_type', 'num_neighbors', 'num_atoms']
+            good_keys = []
+            for i in ss_dict.keys():
+                if i not in ss_keys:
+                    raise ValueError(f'{i} is not a valid solidsolution keyword.\nValid keywords are {ss_keys}')
+                else:
+                    if i == 'solute_type':
+                        solute_type = ss_dict[i]
+                    elif i == 'num_neighbors':
+                        num_neighbors = ss_dict[i]
+                    elif i == 'num_atoms':
+                        num_atoms = ss_dict[i]
+                    # elif i == 'replicate':
+                    #     replicate = ss_dict[i]
+                    else:
+                        solute_type = None
+                        num_neighbors = 1
+                        num_atoms = 1
+                        # replicate = None
+            # self.solidsolution(solute_type=solute_type, num_neighbors=num_neighbors, replicate=replicate)
+
+
+        series_list = []
+        for i in range(1,nsims+1):
+
+            # self.atoms = old_atoms
+            # self.box = old_box
+            # self.types = old_types
+            # self.natoms = old_natoms
+            # self.elements = old_elements
+            self.atoms = self._original_atoms+0
+            self.box = self._original_box+0
+            self.types = self._original_types+0
+            self.natoms = self._original_natoms+0
+            self.elements = self._original_elements
+
+            # self.solidsolution(solute_type=solute_type, num_neighbors=num_neighbors, replicate=replicate)
+            if ss_dict is not None:
+                self.solidsolution(solute_type=solute_type, num_neighbors=num_neighbors, num_atoms=num_atoms)
+
+            rng = np.random.default_rng()
+            ss = rng.uniform(size=6, low=np.array([-1.,-1.,-1.,-1.,-1.,-1.])*strain, high=np.array([1.,1.,1.,1.,1.,1.])*strain)
+            shear_strain = rng.uniform(size=6, low=np.array([-1.,-1.,-1.,-1.,-1.,-1.])*shear, high=np.array([1.,1.,1.,1.,1.,1.])*shear)
+            # ss = (rand(6)-0.5)*strain*2
+            # box1 = new_box+0
+            # self.box = self.box+0
+            xmag = norm(self.box[:,0])
+            ymag = norm(self.box[:,1])
+            zmag = norm(self.box[:,2])
+            self.box[0,0] += ss[0]*xmag
+            self.box[1,1] += ss[1]*ymag
+            self.box[2,2] += ss[2]*zmag
+            self.box[0,1] += shear_strain[3]*ymag
+            self.box[0,2] += shear_strain[4]*zmag
+            self.box[1,2] += shear_strain[5]*zmag
+            # self.box[0,1] += ss[3]*ymag
+            # self.box[0,2] += ss[4]*zmag
+            # self.box[1,2] += ss[5]*zmag
+
+            # self.box[0,0] += ss[0]*xmag
+            # self.box[1,1] += ss[1]*ymag
+            # self.box[2,2] += ss[2]*zmag
+            # self.box[0,1] += ss[3]*ymag
+            # self.box[0,2] += ss[4]*zmag
+            # self.box[1,2] += ss[5]*zmag
+            # self.atoms = self.box@(inv(old_box)@old_atoms)
+
+            self.atoms = self.box@(inv(self._original_box)@self._original_atoms)
+
+            seq = list(range(0,self.natoms))
+            index = random.sample(seq,N)
+            for j in range(N):
+                rng = np.random.default_rng()
+                vec = rng.uniform(size=3, low=np.array([-1.,-1.,-1.]), high=np.array([1.,1.,1.]))
+                # x = (random.random()-0.5)
+                # y = (random.random()-0.5)
+                # z = (random.random()-0.5)
+                # vec = np.array([x, y, z])*temp/np.sqrt(3)*2
+                vec *= temp/np.sqrt(3)*2
+                self.atoms[:,index[j]] += vec
+            # Direct = inv(self.box)@self.atoms
+            # Direct -= floor(Direct)
+            # self.atoms = self.box@Direct
+
+            series_list.append(system(atoms=self.atoms+0, box=self.box+0, types=self.types+0, elements=self.elements, natoms=self.natoms+0, timestep=i))
+
+        # count = 1
+        # for i in series_list:
+        #     i.export(f'thermal_tests/{count}.poscar')
+        #     count += 1
+
+        # self.atoms = old_atoms
+        # self.box = old_box
+        # self.types = old_types
+        # self.natoms = old_natoms
+        # self.elements = old_elements
+        descriptor = f'{self.descriptor}_{self.thermal.__name__}'
+        self.atoms = self._original_atoms+0
+        self.box = self._original_box+0
+        self.types = self._original_types+0
+        self.natoms = self._original_natoms+0
+        return series(series_list, descriptor=descriptor)
     def thermal(self,
                 temp: Union[str, int, float, None],
                 strain: Union[str, int, float, None] = 0,

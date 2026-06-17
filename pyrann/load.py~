@@ -43,7 +43,7 @@ def load(filename: str,
     else:
         filename = '.'.join([filename, filetype])
     if series:
-        if filetype.lower() != 'dump':
+        if filetype.lower() != 'dump' and filetype.lower() != 'cfg':
             raise ValueError('Currently, only a dump file containing multiple timesteps can be loaded as a series. This may change in the future.')
 
     if filetype.lower() == 'pos' or filetype.lower() == 'poscar':
@@ -100,41 +100,83 @@ def load(filename: str,
 
     elif filetype == 'data' or filetype == 'dat':
         file = open(filename,'r')
-        header = file.readline()
-        file.readline()
-        line2 = file.readline().strip().split()
-        natoms = int(line2[0])
-        file.readline()
-        line3 = file.readline().strip().split()
-        ntypes = int(line3[0])
         box = np.empty((3,3))
         origin = np.empty(3)
-        file.readline()
-        for i in range(3):
-            bs = file.readline().strip().split()
-            origin[i]=bs[0]
-            box[i,i]=bs[1]
-        line7=file.readline().strip()
-        if (not line7=="Atoms"):
-            t = line7.split()
-            box[0,1]=t[0]
-            box[0,2]=t[1]
-            box[1,2]=t[2]
-            line7=file.readline()
-        file.readline()
-        Id = np.empty(natoms)
-        types = np.empty(natoms)
-        atoms = np.empty((3,natoms))
-        for i in range(natoms):
-            line = file.readline().strip().split()
-            (Id[i],types[i],atoms[0,i],atoms[1,i],atoms[2,i])=np.float64(line)
+        atom_count = 0
+        for line_num, content in enumerate(file):
+            if not content.strip().split():
+                continue
+            elif content.strip().split()[0] == '#' or line_num == 1:
+                header = content
+                sec_header = content
+            elif content.strip().split()[-1] == 'atoms':
+                natoms = int(content.strip().split()[0])
+                Id = np.empty(natoms)
+                types = np.empty(natoms)
+                atoms = np.empty((3, natoms))
+            elif content.strip().split()[-1] == 'types' and content.strip().split()[1] == 'atom':
+                ntypes = int(content.strip().split()[0])
+            elif content.strip().endswith('xhi'):
+                origin[0] = content.strip().split()[0]
+                box[0,0] = content.strip().split()[1]
+            elif content.strip().endswith('yhi'):
+                origin[1] = content.strip().split()[0]
+                box[1,1] = content.strip().split()[1]
+            elif content.strip().endswith('zhi'):
+                origin[2] = content.strip().split()[0]
+                box[2,2] = content.strip().split()[1]
+            elif content.strip().endswith('xy xz yz'):
+                box[0,1] = content.strip().split()[0]
+                box[0,2] = content.strip().split()[1]
+                box[1,2] = content.strip().split()[2]
+            elif content.strip().split()[0] == 'Atoms':
+                sec_header = 'Atoms'
+            elif content.strip().split() and sec_header == 'Atoms':
+                (Id[atom_count],
+                types[atom_count],
+                atoms[0,atom_count],
+                atoms[1,atom_count],
+                atoms[2,atom_count],
+                 *_) = np.float64(content.strip().split())
+                atom_count += 1
+            else:
+                continue
+        # header = file.readline()
+        # file.readline()
+        # line2 = file.readline().strip().split()
+        # natoms = int(line2[0])
+        # file.readline()
+        # line3 = file.readline().strip().split()
+        # ntypes = int(line3[0])
+        # box = np.empty((3,3))
+        # origin = np.empty(3)
+        # file.readline()
+        # for i in range(3):
+        #     bs = file.readline().strip().split()
+        #     origin[i]=bs[0]
+        #     box[i,i]=bs[1]
+        # line7=file.readline().strip()
+        # if (not line7=="Atoms"):
+        #     t = line7.split()
+        #     box[0,1]=t[0]
+        #     box[0,2]=t[1]
+        #     box[1,2]=t[2]
+        #     line7=file.readline()
+        # file.readline()
+        # Id = np.empty(natoms)
+        # types = np.empty(natoms)
+        # atoms = np.empty((3,natoms))
+        # for i in range(natoms):
+        #     line = file.readline().strip().split()
+        #     (Id[i],types[i],atoms[0,i],atoms[1,i],atoms[2,i])=np.float64(line)
         file.close()
         descriptor = filename
         return system(atoms=atoms, box=box, types=types, descriptor=descriptor)
         # return (atoms,box,types,Id)
 
     elif filetype == 'dump' and not series:
-        nsims = int(np.genfromtxt(filename, skip_header=1, max_rows=1, usecols=-1, dtype=int))
+        # nsims = int(np.genfromtxt(filename, skip_header=1, max_rows=1, usecols=-1, dtype=int))
+        nsims = 1
         file = open(filename,'r')
         Data_arr = []
         colstr_arr = []
@@ -178,7 +220,7 @@ def load(filename: str,
 
             line9 = file.readline()
             colstr = line9.replace('ITEM: ATOMS ','')
-            colvec = colstr.split(' ')
+            colvec = colstr.strip().split(' ')
             cols = len(colvec)
             Data = np.zeros([natoms,cols])
             for i in range(natoms):
@@ -211,7 +253,8 @@ def load(filename: str,
         colstr_arr = np.array([colstr_arr])[0]
         box_arr = np.array([box_arr])[0]
         natoms_arr = np.array([natoms_arr])[0]
-        timestep_arr = np.array([timestep_arr])[0]
+        # timestep_arr = np.array([timestep_arr])[0]
+        timestep_arr = timestep_arr[0]
         energy_arr = np.array([energy_arr])[0]
         # atoms = Data_arr[0,:,2:].T
         atoms = np.array([v for k, v in per_atom_dict.items() if k.startswith('x') or k.startswith('y') or k.startswith('z')])
@@ -349,7 +392,11 @@ def load(filename: str,
         # return system(atoms=atoms, box=box, types=types, descriptor=descriptor)
         return series1(series_list, descriptor=descriptor)
     elif filetype.lower() == 'dump' and series:
-        nsims = int(np.genfromtxt(filename, skip_header=1, max_rows=1, usecols=-1, dtype=int))
+        with open(filename, 'r') as f:
+            content = f.read()
+        nsims = content.count('TIMESTEP')
+        # print(f'{nsims = }')
+        # nsims = int(np.genfromtxt(filename, skip_header=1, max_rows=1, usecols=-1, dtype=int))
         file = open(filename,'r')
         Data_arr = []
         colstr_arr = []
@@ -367,7 +414,10 @@ def load(filename: str,
             file.readline()
             line4 = file.readline()
             timestep = int(line2[0])
-            energy = float(line2[1])
+            try:
+                energy = float(line2[1])
+            except:
+                energy = 0.0
             natoms = int(line4)
             file.readline()
             box = np.zeros([3,2])
@@ -413,8 +463,9 @@ def load(filename: str,
             per_atom_dict = dict.fromkeys(per_atom_keywords)
             # print(f'{colvec = }')
             # print(f'{per_atom_keywords = }')
+            colvec = [i.strip() for i in colvec]
             for i in colvec:
-                print(f'{i.strip() = }')
+                # print(f'{i = }')
                 if i in per_atom_keywords:
                     per_atom_index = colvec.index(i)
                     per_atom_dict[i] = Data[:,per_atom_index].T
@@ -426,7 +477,8 @@ def load(filename: str,
                 # print(f'{force = }')
                 # print(f'{force.shape = }')
             else:
-                force = np.zeros((natoms, 3))
+                # force = np.zeros((natoms, 3))
+                force = np.zeros((3, natoms))
             if 'type' in per_atom_dict.keys():
                 # types = np.array([per_atom_dict['type']])
                 types = per_atom_dict['type']
