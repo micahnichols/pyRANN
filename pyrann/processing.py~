@@ -23,20 +23,20 @@ from bokeh.models import RangeSlider, CustomJS
 from bokeh.layouts import column
 
 class processing:
+    """
+    Initializes a processing class instance
+
+    Args:
+        input_file: The name (relative path) of the file that contains the ML
+            potential information.
+        formalism: The formalism of the ML potential under
+            investigation. Current options are RANN and MTP. If not provided,
+            it tries to infer based on input_file extension.
+    """
 
     def __init__(self,
                  input_file: str,
                  formalism: Optional[Union[str, None]] = None):
-        """
-        Initializes a processing class instance
-
-        Args:
-            input_file: The name (relative path) of the file that contains the ML
-            potential information.
-            formalism: The formalism of the ML potential under
-            investigation. Current options are RANN and MTP. If not provided,
-            it tries to infer based on input_file extension.
-        """
         relative_base = Path('.')
         files = list(relative_base.rglob(input_file))
         if Path(input_file) not in files:
@@ -45,7 +45,7 @@ class processing:
             self.input_file = input_file
         if formalism is None:
             input_ext = input_file.lower().split('.')[-1]
-            if input_ext == 'nn' or input_ext == 'rann':
+            if input_ext == 'nn' or input_ext == 'rann' or input_ext == 'input':
                 formalism = 'rann'
             if input_ext == 'mtp':
                 formalism = 'mtp'
@@ -291,24 +291,28 @@ class processing:
         Returns:
             np.ndarray: 1-D array of global simulation numbers to keep in the database.
         """
-        loop_size = int(len(values)*(percent/100))
+        # loop_size = int(len(self.global_sim_num)*(percent/100))
+        # print(f'{loop_size = }')
 
         if metric == None:
 
-            deleted = np.zeros(len(values))
+            deleted = np.zeros(len(self.global_sim_num))
             model = NearestNeighbors(n_neighbors=100)
             model.fit(self.features)
             dd, ii = model.kneighbors(self.features)
 
             global_unique, global_index = np.unique(self.global_sim_num, return_index=True)
             global_unique = self.global_sim_num[global_index]
+            loop_size = int(len(global_unique)*(percent/100))
+            print(f'{loop_size = }')
 
             n_points = len(ii)
             k = ii.shape[1]
             for i in range(loop_size):
-                neighbor_sims = global_sim[ii]
+                print(f'{i = }')
+                neighbor_sims = self.global_sim_num[ii]
 
-                same_sim = (neighbor_sims == global_sim[:, None])
+                same_sim = (neighbor_sims == self.global_sim_num[:, None])
                 nbr_deleted = deleted[neighbor_sims]
 
                 valid = (~same_sim) & (nbr_deleted == 0)
@@ -325,14 +329,14 @@ class processing:
                 metric = np.where(deleted[global_unique] == 0,
                                   dens[global_unique],
                                   1.0e-8)
-                del_pos = int(np.argmax(metrix))
+                del_pos = int(np.argmax(metric))
                 del_sim_num = int(global_unique[del_pos])
 
                 deleted = np.where(
                         (global_unique != del_sim_num) & (deleted[global_unique] != 1),
                         0, 1
                         ).astype(np.float64)
-            keep = np.array([global_unique[i] for i in range(len(deleted)) if i == 0])
+            keep = np.array([global_unique[i] for i in range(len(deleted)) if deleted[i] == 0])
         else:
             keep = metric(**kwargs)
         return keep
@@ -343,9 +347,9 @@ class processing:
 
         Args:
             **kwargs: Any UMAP arguments. pyRANN defaults use UMAP defaults
-            except for the following: verbose=True, init="pca", n_neighbors=54.
-            If kwargs are defined, all undefined UMAP args will default back
-            to UMAP default.
+                except for the following: verbose=True, init="pca", n_neighbors=54.
+                If kwargs are defined, all undefined UMAP args will default back
+                to UMAP default.
 
         Returns:
             An instance of UMAP to visualize the descriptor space

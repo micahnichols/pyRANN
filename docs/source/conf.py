@@ -35,3 +35,5 @@ html_static_path = ['_static']
 add_module_names = False
 autodoc_typehints = 'description'
 apidoc_serperate_modules=True
+
+html_static_path = ['_static']

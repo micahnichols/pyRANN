@@ -7,9 +7,9 @@ import sys
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
-sys.path.insert(0,os.path.abspath('../../ranndip'))
+sys.path.insert(0,os.path.abspath('../../pyrann'))
 # sys.path.insert(0,os.path.abspath('../../'))
-project = 'ranndip'
+project = 'pyrann'
 copyright = '2026, Micah Nichols, Christopher Barrett'
 author = 'Micah Nichols, Christopher Barrett'
 release = '1.0.0.a1'

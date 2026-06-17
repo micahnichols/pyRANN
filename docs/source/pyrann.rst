@@ -28,4 +28,12 @@ series class
    :undoc-members:
    :show-inheritance:
 
+processing class
+-------------------
+.. autoclass:: pyrann.processing
+   :members:
+   :member-order: groupwise
+   :undoc-members:
+   :show-inheritance:
+
 tutorial

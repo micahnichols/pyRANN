@@ -1,0 +1,33 @@
+pyRANN TUTORIAL
+================
+Here is a tutorial for obtaining RANN fingerprint values for all dump files.
+This will produce a Pandas DataFrame with the dump file name, global simulation number, local atom id, local simulation number, and fingerprint values for each atom.
+
+.. code-block:: python
+   :linenos:
+
+   from pyrann import calibration
+   import pyrann as rann
+   import pandas
+   import numpy as np
+   import os
+   
+   input_file = 'Mg.input'
+   a = calibration.PairRANN(input_file)
+   a.setup()
+   filenames = np.array([a[i].filename for i in range(a.nsims) for j in range(a[i].inum)])
+   total_sims = np.array([i for i in range(a.nsims) for j in range(a[i].inum)], dtype=np.int64)
+   local_id = np.array([a.id(i)[j] for i in range(a.nsims) for j in range(a[i].inum)], dtype=np.int64)
+   features = np.array([a.feature(i,j) for i in range(a.nsims) for j in range(a[i].inum)], dtype=np.float64)
+   local1 = np.array([j for i in a.sims_per_file for j in range(i)], dtype=np.int64)
+   local_sims = np.array([local1[i] for i in range(a.nsims) for j in range(a[i].inum)], dtype=np.int64)
+   atom_list = [[a[i].filename, i, a.id(i)[j]] for i in range(a.nsims) for j in range(a[i].inum)]
+   df = pd.DataFrame(atom_list, columns=['Filename', 'Global Simulation Number', 'Local ID'])
+   local_df = pd.DataFrame(local_sims, columns=['Local Simulation Number'])
+   all_features = np.asarray(features)
+   values_df = pd.DataFrame(all_features)
+   values_df.columns = pd.MultiIndex.from_product([['Fingerprints'], values_df.columns])
+   X_df_col_names = [f'Fingerprints {i}' for i in range(len(X[0]))]
+   X_df = pd.DataFrame(all_features, columns=X_df_col_names)
+   df2 = pd.concat([df, local_df, X_df], axis=1)
+   df2 = df2.sort_values(by=['Global Simulation Number'])
