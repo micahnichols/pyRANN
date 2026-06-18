@@ -17,9 +17,9 @@ Please visit the html documentation in /docs/build/html/pyrann.html as well as t
 
 ## Tutorial
 
-pyRANN TUTORIAL
+## pyRANN TUTORIAL
 ================
-This is a tutorial for plotting the descriptor space of a RANN database with UMAP as well as reducing the RANN database.
+This is a tutorial for plotting the descriptor space of a sample MLIP database (Mg) with RANN and MTP atomic descriptors. Please open /pyrann/docs/build/html/tutorial.html in a browser to see the full interactive plots. Alternatively, open the plots themselves in /pyrann/docs/source/_static/*.html
 
 ```python
 
@@ -110,30 +110,6 @@ processing.plot(mapper, color_data=epa,
                 key_str='reduced_database_epa')
 ```
 
-full_database.html
-
-This plot is interactive. Hover over a datapoint to show the global simulation number, local simulation number, and local id for that particular atom. Click a legend entry to toggle between hide/show for that particular dump file.
-
-<iframe src="_static/full_database.html" height="1000px" width="100%" style="border:none;"></iframe>
-
-reduced_database.html
-
-This plot is interactive. Hover over a datapoint to show the global simulation number, local simulation number, and local id for that particular atom. Click a legend entry to toggle between hide/show for that particular dump file.
-
-<iframe src="_static/reduced_database.html" height="1000px" width="100%" style="border:none;"></iframe>
-
-full_database_epa.html
-
-This plot is interactive. Hover over a datapoint to show the global simulation number, local simulation number, local id, and energy/atom for that particular atom. There is a dual slider at the bottom left of the page. Adjusting this slider will remove atoms with energies outside of the slider range.
-
-<iframe src="_static/full_database_epa.html" height="1000px" width="100%" style="border:none;"></iframe>
-
-reduced_database_epa.html
-
-This plot is interactive. Hover over a datapoint to show the global simulation number, local simulation number, local id, and energy/atom for that particular atom. There is a dual slider at the bottom left of the page. Adjusting this slider will remove atoms with energies outside of the slider range.
-
-<iframe src="_static/reduced_database_epa.html" height="1000px" width="100%" style="border:none;"></iframe>
-
 To reprduce the same plots on the same database using MTP descriptors, only lines 5 and 10 need to change.
 
 ```python
@@ -145,27 +121,3 @@ processing = rann.processing('pot4_6.0.mtp')
 #   to cfg files in order to calculate MTP descriptors
 processing.get_features(file_fmt='dump')
 ```
-
-full_database_mtp.html
-
-This plot is interactive. Hover over a datapoint to show the global simulation number, local simulation number, and local id for that particular atom. Click a legend entry to toggle between hide/show for that particular dump file.
-
-<iframe src="_static/full_database_mtp.html" height="1000px" width="100%" style="border:none;"></iframe>
-
-reduced_database_mtp.html
-
-This plot is interactive. Hover over a datapoint to show the global simulation number, local simulation number, and local id for that particular atom. Click a legend entry to toggle between hide/show for that particular dump file.
-
-<iframe src="_static/reduced_database_mtp.html" height="1000px" width="100%" style="border:none;"></iframe>
-
-full_database_mtp_epa.html
-
-This plot is interactive. Hover over a datapoint to show the global simulation number, local simulation number, local id, and energy/atom for that particular atom. There is a dual slider at the bottom left of the page. Adjusting this slider will remove atoms with energies outside of the slider range.
-
-<iframe src="_static/full_database_mtp_epa.html" height="1000px" width="100%" style="border:none;"></iframe>
-
-reduced_database_mtp_epa.html
-
-This plot is interactive. Hover over a datapoint to show the global simulation number, local simulation number, local id, and energy/atom for that particular atom. There is a dual slider at the bottom left of the page. Adjusting this slider will remove atoms with energies outside of the slider range.
-
-<iframe src="_static/reduced_database_mtp_epa.html" height="1000px" width="100%" style="border:none;"></iframe>                                                                           
