@@ -248,7 +248,7 @@ class processing:
                 for i in cfgs:
                     i.init_nbhs(cutoff)
                 if len(cfgs) == 1:
-                    features = np.array([pot.calc_basis_funcs(k) for i in cfgs for j in range(i.ncfg()) for k in i.nbhs(j)]) 
+                    features = np.array([pot.calc_basis_funcs(k)[1:] for i in cfgs for j in range(i.ncfg()) for k in i.nbhs(j)]) 
                     filenames = np.array([filename_list[i] for i in range(len(filename_list)) for j in range(len(loaded_cfgs[i].systems)) for k in range(loaded_cfgs[i].systems[j].natoms)])
                     local_sim_num = np.array([j for i in range(len(filename_list)) for j in range(len(loaded_cfgs[i].systems)) for k in range(loaded_cfgs[i].systems[j].natoms)])
                     # Working under the assumption that MTP trains over only 1 .cfg file

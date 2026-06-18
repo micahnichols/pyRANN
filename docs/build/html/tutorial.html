@@ -169,7 +169,25 @@
 <p>This plot is interactive. Hover over a datapoint to show the global simulation number, local simulation number, local id, and energy/atom for that particular atom. There is a dual slider at the bottom left of the page. Adjusting this slider will remove atoms with energies outside of the slider range.</p>
 <iframe src="_static/full_database_epa.html" height="1000px" width="100%" style="border:none;"></iframe><p>reduced_database_epa.html</p>
 <p>This plot is interactive. Hover over a datapoint to show the global simulation number, local simulation number, local id, and energy/atom for that particular atom. There is a dual slider at the bottom left of the page. Adjusting this slider will remove atoms with energies outside of the slider range.</p>
-<iframe src="_static/reduced_database_epa.html" height="1000px" width="100%" style="border:none;"></iframe></section>
+<iframe src="_static/reduced_database_epa.html" height="1000px" width="100%" style="border:none;"></iframe><p>To reprduce the same plots on the same database using MTP descriptors, only lines 5 and 10 need to change.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 4</span><span class="c1"># Create processing class instance with Mg MTP potential</span>
+<span class="linenos"> 5</span><span class="n">processing</span> <span class="o">=</span> <span class="n">rann</span><span class="o">.</span><span class="n">processing</span><span class="p">(</span><span class="s1">&#39;pot4_6.0.mtp&#39;</span><span class="p">)</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="c1"># Set processing instance features to MTP potential atomic descriptors</span>
+<span class="linenos"> 8</span><span class="c1">#   Setting file_fmt to &#39;dump&#39; will convert all dump files in the directory</span>
+<span class="linenos"> 9</span><span class="c1">#   to cfg files in order to calculate MTP descriptors</span>
+<span class="linenos">10</span><span class="n">processing</span><span class="o">.</span><span class="n">get_features</span><span class="p">(</span><span class="n">file_fmt</span><span class="o">=</span><span class="s1">&#39;dump&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>full_database_mtp.html</p>
+<p>This plot is interactive. Hover over a datapoint to show the global simulation number, local simulation number, and local id for that particular atom. Click a legend entry to toggle between hide/show for that particular dump file.</p>
+<iframe src="_static/full_database_mtp.html" height="1000px" width="100%" style="border:none;"></iframe><p>reduced_database_mtp.html</p>
+<p>This plot is interactive. Hover over a datapoint to show the global simulation number, local simulation number, and local id for that particular atom. Click a legend entry to toggle between hide/show for that particular dump file.</p>
+<iframe src="_static/reduced_database_mtp.html" height="1000px" width="100%" style="border:none;"></iframe><p>full_database_mtp_epa.html</p>
+<p>This plot is interactive. Hover over a datapoint to show the global simulation number, local simulation number, local id, and energy/atom for that particular atom. There is a dual slider at the bottom left of the page. Adjusting this slider will remove atoms with energies outside of the slider range.</p>
+<iframe src="_static/full_database_mtp_epa.html" height="1000px" width="100%" style="border:none;"></iframe><p>reduced_database_mtp_epa.html</p>
+<p>This plot is interactive. Hover over a datapoint to show the global simulation number, local simulation number, local id, and energy/atom for that particular atom. There is a dual slider at the bottom left of the page. Adjusting this slider will remove atoms with energies outside of the slider range.</p>
+<iframe src="_static/reduced_database_mtp_epa.html" height="1000px" width="100%" style="border:none;"></iframe></section>
 
 
            </div>

@@ -258,9 +258,18 @@ class processing:
                     features = np.array([pot.calc_basis_funcs(k) for i in cfgs for j in range(i.ncfg()) for k in i.nbhs(j)]) 
                     filenames = np.array([filename_list[i] for i in range(len(filename_list)) for j in range(len(loaded_cfgs[i].systems)) for k in range(loaded_cfgs[i].systems[j].natoms)])
                     local_sim_num = np.array([j for i in range(len(filename_list)) for j in range(len(loaded_cfgs[i].systems)) for k in range(loaded_cfgs[i].systems[j].natoms)])
-                    global_temp = 0
+                    # global_temp = 0
                     # TODO - MAKE SURE THIS MATH IS CORRECT
-                    global_sim_num = np.array([global_temp:=global_temp*i+(j+i) for i in range(len(filename_list)) for j in range(len(loaded_cfgs[i].systems)) for k in range(loaded_cfgs[i].systems[j].natoms)])
+                    # global_sim_num = np.array([global_temp:=global_temp*i+(j+i) for i in range(len(filename_list)) for j in range(len(loaded_cfgs[i].systems)) for k in range(loaded_cfgs[i].systems[j].natoms)])
+                    global_sim_num = []
+                    global_temp = 0
+                    for i in range(len(filename_list)):
+                        for j in range(len(loaded_cfgs[i].systems)):
+                            for k in range(loaded_cfgs[i].systems[j].natoms):
+                                global_sim_num.append(global_temp)
+                            global_temp += 1
+                    global_sim_num = np.asarray(global_sim_num)
+
                     local_id = np.array([k for i in range(len(filename_list)) for j in range(len(loaded_cfgs[i].systems)) for k in range(loaded_cfgs[i].systems[j].natoms)])
 
         self.filenames = filenames

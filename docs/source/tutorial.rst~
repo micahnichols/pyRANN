@@ -112,6 +112,8 @@ This plot is interactive. Hover over a datapoint to show the global simulation n
    <iframe src="_static/reduced_database.html" height="1000px" width="100%" style="border:none;"></iframe>
 
 
+
+
 full_database_epa.html
 
 This plot is interactive. Hover over a datapoint to show the global simulation number, local simulation number, local id, and energy/atom for that particular atom. There is a dual slider at the bottom left of the page. Adjusting this slider will remove atoms with energies outside of the slider range.
@@ -121,6 +123,8 @@ This plot is interactive. Hover over a datapoint to show the global simulation n
    <iframe src="_static/full_database_epa.html" height="1000px" width="100%" style="border:none;"></iframe>
 
 
+
+
 reduced_database_epa.html
 
 This plot is interactive. Hover over a datapoint to show the global simulation number, local simulation number, local id, and energy/atom for that particular atom. There is a dual slider at the bottom left of the page. Adjusting this slider will remove atoms with energies outside of the slider range.
@@ -128,3 +132,19 @@ This plot is interactive. Hover over a datapoint to show the global simulation n
 .. raw:: html
 
    <iframe src="_static/reduced_database_epa.html" height="1000px" width="100%" style="border:none;"></iframe>
+
+
+
+To reprduce the same plots on the same database using MTP descriptors, only lines 5 and 10 need to change.
+
+.. code-block:: python
+   :linenos:
+   :lineno-start: 4
+
+   # Create processing class instance with Mg MTP potential
+   processing = rann.processing('pot4_6.0.mtp')
+
+   # Set processing instance features to MTP potential atomic descriptors
+   #   Setting file_fmt to 'dump' will convert all dump files in the directory
+   #   to cfg files in order to calculate MTP descriptors
+   processing.get_features(file_fmt='dump')
