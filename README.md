@@ -2,6 +2,8 @@
 
 A python package for generating atomic structures for machine learned interatomic potentials (MLIPs), visualizing and refining MLIP databases and metaparameters, and general MLIP tools
 
+To enable MTP descriptor calculation, please download mlip-3, download or clone the MTP interface code (github.com/micahnichols/MTP_interface), compile using make, and place the .so file into /pyRANN/pyrann/.
+
 ## Installation
 
 Download or clone this repository and then run the following:
