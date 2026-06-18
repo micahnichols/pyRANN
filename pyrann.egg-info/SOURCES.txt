@@ -37,6 +37,7 @@ c_src/rann_state_zbl.cpp
 c_src/utils.cpp
 pyrann/__init__.py
 pyrann/load.py
+pyrann/processing.py
 pyrann/series.py
 pyrann/system.py
 pyrann.egg-info/PKG-INFO

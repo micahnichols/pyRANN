@@ -304,6 +304,8 @@ def load(filename: str,
         # print(f'{dt = }')
         sims = np.empty((nsims),dtype=dt)
         series_list = []
+        do_force = False
+        do_stress = False
         for nn in range(nsims):
             # print(nn)
             sims[nn]['index']=nn
@@ -328,6 +330,10 @@ def load(filename: str,
                         for j in range(3):
                             sims[nn]['box'][j,i]=float(ls[j])
                 elif line[:10]==' AtomData:':
+                    if line.strip().split()[-1] in ['fx', 'fy', 'fz']:
+                        do_force = True
+                    else:
+                        do_force = False
                     # print(' AtomData\n')
                     for i in range(sims[nn]['natoms'][0]):
                         line = file.readline()
@@ -335,8 +341,10 @@ def load(filename: str,
                         sims[nn]['id'][i]=int(ls[0])
                         sims[nn]['type'][i]=int(ls[1])+1
                         sims[nn]['x'][i,:]=(float(ls[2]),float(ls[3]),float(ls[4]))
-                        sims[nn]['f'][i,:]=(float(ls[5]),float(ls[6]),float(ls[7]))
+                        if do_force:
+                            sims[nn]['f'][i,:]=(float(ls[5]),float(ls[6]),float(ls[7]))
                 elif line[:12]==" PlusStress:":
+                    do_stress = True
                     # print(' PlusStress\n')
                     line = file.readline()
                     ls = line.split()
@@ -379,7 +387,12 @@ def load(filename: str,
             types = sims[timestep]['type'][:sims[timestep]['natoms'][0]]
             atoms = sims[timestep]['x'][:sims[timestep]['natoms'][0]].T
             box = sims[timestep]['box']
-            series_list.append(system(atoms=atoms, box=box, types=types, timestep=nn))
+            energy = sims[timestep]['energy'][0]
+            if do_force:
+                force = sims[timestep]['f'][:sims[timestep]['natoms'][0]].T
+            else:
+                force=None
+            series_list.append(system(atoms=atoms, box=box, types=types, timestep=nn, energy=energy, force=force))
 
         # TODO - ADD IN STRESSES, FORCES, ETC
         # print(sims[-2]['x'][:sims[-2]['natoms'][0]].T)

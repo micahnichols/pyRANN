@@ -328,6 +328,7 @@ def load(filename: str,
                         for j in range(3):
                             sims[nn]['box'][j,i]=float(ls[j])
                 elif line[:10]==' AtomData:':
+                    print(f'{line = }')
                     # print(' AtomData\n')
                     for i in range(sims[nn]['natoms'][0]):
                         line = file.readline()
@@ -379,7 +380,8 @@ def load(filename: str,
             types = sims[timestep]['type'][:sims[timestep]['natoms'][0]]
             atoms = sims[timestep]['x'][:sims[timestep]['natoms'][0]].T
             box = sims[timestep]['box']
-            series_list.append(system(atoms=atoms, box=box, types=types, timestep=nn))
+            energy = sims[timestep]['energy'][0]
+            series_list.append(system(atoms=atoms, box=box, types=types, timestep=nn, energy=energy))
 
         # TODO - ADD IN STRESSES, FORCES, ETC
         # print(sims[-2]['x'][:sims[-2]['natoms'][0]].T)
@@ -478,7 +480,8 @@ def load(filename: str,
                 # print(f'{force.shape = }')
             else:
                 # force = np.zeros((natoms, 3))
-                force = np.zeros((3, natoms))
+                # force = np.zeros((3, natoms))
+                force = None
             if 'type' in per_atom_dict.keys():
                 # types = np.array([per_atom_dict['type']])
                 types = per_atom_dict['type']

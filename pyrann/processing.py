@@ -21,6 +21,7 @@ import matplotlib.pyplot as plt
 import colorcet.plotting
 from bokeh.models import RangeSlider, CustomJS
 from bokeh.layouts import column
+import importlib.util
 
 class processing:
     """
@@ -188,6 +189,8 @@ class processing:
             features (np.ndarray): An array of size (natoms, nfeatures). 
                 Gives the features for all atoms.
         """
+
+        path = os.getcwd()
         if file_fmt:
             fmts = ['dump', 'cfg', 'dat', 'data', 'poscar']
             if file_fmt.lower() not in fmts:
@@ -198,12 +201,21 @@ class processing:
                     series_bool = True
                 else:
                     series_bool = False
-                path = os.getcwd()
                 if self.formalism == 'rann':
                     for file in os.listdir(path):
                         if file.lower().endswith(file_fmt.lower()):
                             temp = load(file, series=series_bool)
                             temp.export(f'{file.split('.')[0]}.dump')
+                elif self.formalism == 'mtp':
+                    temp_list = []
+                    for file in os.listdir(path):
+                        if file.lower().endswith(file_fmt.lower()):
+                            temp = load(file, series=series_bool)
+                            temp_list.append(temp)
+                            temp.export(f'{file.split('.')[0]}.cfg')
+                    # export = series([j for i in range(len(temp_list)) for j in temp_list[i].systems])
+                    # export.export('combined.cfg')
+
                 # TODO - add in MTP support
         if self.formalism == 'rann':
             a = calibration.PairRANN(self.input_file)
@@ -216,11 +228,57 @@ class processing:
             local_id = np.array([a.id(i)[j] for i in range(a.nsims) for j in range(a[i].inum)], dtype=np.int64)
             features = np.array([a.feature(i,j) for i in range(a.nsims) for j in range(a[i].inum)], dtype=np.float64)
 
-            self.filenames = filenames
-            self.global_sim_num = global_sim_num
-            self.local_sim_num = local_sim_num
-            self.local_id = local_id
             self.pair_rann = a
+
+        elif self.formalism == 'mtp':
+            if not importlib.util.find_spec('pyrann.mtp_bindings'):
+                raise ImportError('\nPlease compile mtp_bindings shared library file.\n')
+            else:
+                from . import mtp_bindings
+                cfgs = []
+                filename_list = []
+                loaded_cfgs = []
+                for file in os.listdir(path):
+                    if file.lower().endswith('.cfg'):
+                        loaded_cfgs.append(load(file, series=True))
+                        filename_list.append(file)
+                        cfgs.append(mtp_bindings.Configuration(file))
+                pot = mtp_bindings.MTP(self.input_file)
+                cutoff = pot.cutoff()
+                for i in cfgs:
+                    i.init_nbhs(cutoff)
+                if len(cfgs) == 1:
+                    features = np.array([pot.calc_basis_funcs(k) for i in cfgs for j in range(i.ncfg()) for k in i.nbhs(j)]) 
+                    filenames = np.array([filename_list[i] for i in range(len(filename_list)) for j in range(len(loaded_cfgs[i].systems)) for k in range(loaded_cfgs[i].systems[j].natoms)])
+                    local_sim_num = np.array([j for i in range(len(filename_list)) for j in range(len(loaded_cfgs[i].systems)) for k in range(loaded_cfgs[i].systems[j].natoms)])
+                    # Working under the assumption that MTP trains over only 1 .cfg file
+                    global_sim_num = np.array([j for i in range(len(filename_list)) for j in range(len(loaded_cfgs[i].systems)) for k in range(loaded_cfgs[i].systems[j].natoms)])
+                    local_id = np.array([k for i in range(len(filename_list)) for j in range(len(loaded_cfgs[i].systems)) for k in range(loaded_cfgs[i].systems[j].natoms)])
+                else:
+                    features = np.array([pot.calc_basis_funcs(k) for i in cfgs for j in range(i.ncfg()) for k in i.nbhs(j)]) 
+                    filenames = np.array([filename_list[i] for i in range(len(filename_list)) for j in range(len(loaded_cfgs[i].systems)) for k in range(loaded_cfgs[i].systems[j].natoms)])
+                    local_sim_num = np.array([j for i in range(len(filename_list)) for j in range(len(loaded_cfgs[i].systems)) for k in range(loaded_cfgs[i].systems[j].natoms)])
+                    # global_temp = 0
+                    # TODO - MAKE SURE THIS MATH IS CORRECT
+                    # global_sim_num = np.array([global_temp:=global_temp*i+(j+i) for i in range(len(filename_list)) for j in range(len(loaded_cfgs[i].systems)) for k in range(loaded_cfgs[i].systems[j].natoms)])
+                    global_sim_num = []
+                    global_temp = 0
+                    for i in range(len(filename_list)):
+                        for j in range(len(loaded_cfgs[i].systems)):
+                            for k in range(loaded_cfgs[i].systems[j].natoms):
+                                global_sim_num.append(global_temp)
+                            global_temp += 1
+                    global_sim_num = np.asarray(global_sim_num)
+
+                    local_id = np.array([k for i in range(len(filename_list)) for j in range(len(loaded_cfgs[i].systems)) for k in range(loaded_cfgs[i].systems[j].natoms)])
+
+        self.filenames = filenames
+        self.global_sim_num = global_sim_num
+        self.local_sim_num = local_sim_num
+        self.local_id = local_id
+
+
+
 
         if standardize:
             scaler = StandardScaler()
@@ -472,7 +530,10 @@ class processing:
                     width=650,
                     )
             callback = CustomJS(
-                    args=dict(source=data_source, visible=visible, slider=slider),
+                    args=dict(source=data_source,
+                              visible=visible,
+                              slider=slider,
+                              color_mapper=color_mapper),
                     code="""
                     const low = slider.value[0];
                     const high = slider.value[1];
@@ -494,7 +555,12 @@ class processing:
                     }
 
                     visible.data = { x: new_x, y: new_y, color: new_val };
+
+                    color_mapper.low = low;
+                    color_mapper.high = high;
+
                     visible.change.emit();
+                    color_mapperchange.emit();
                 """,
                 )
             slider.js_on_change("value", callback)

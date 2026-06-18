@@ -115,7 +115,7 @@ class series:
             filename = 'Atomic_System'
         else:
             if filetype is None:
-                ext_keys = ['poscar', 'pos', 'data', 'dat', 'dump', 'qe', 'quantum_espresso', 'vasp', 'INCAR']
+                ext_keys = ['poscar', 'pos', 'data', 'dat', 'dump', 'qe', 'quantum_espresso', 'vasp', 'INCAR', 'cfg']
                 if filename.split('.')[-1].lower() in ext_keys:
                     filetype = filename.split('.')[-1]
                 else:
@@ -150,6 +150,8 @@ class series:
             filetype = 'poscar'
         elif filetype.lower() == 'incar':
             filetype = 'poscar'
+        elif filetype.lower() == 'cfg':
+            filetype = 'cfg'
 
 
         if filetype == 'poscar':
@@ -293,7 +295,6 @@ class series:
                # f = sims[nn]['f']
                do_force = True
                f = self.systems[nn].force
-               print(f'{f = }')
                if f is None:
                    do_force = False
                # ids = sims[nn]['id']
@@ -307,6 +308,50 @@ class series:
                        file.write("%d %d %f %f %f %f %f %f\n" % (i+1, self.systems[nn].types[i], x[0][i], x[1][i], x[2][i], 0.0, 0.0, 0.0))
                    #file.write("\t {0:d} {1:.0f} {2:f} {3:f} {4:f}\n" .format(i+1,types[i],Lattice[0,i],Lattice[1,i],Lattice[2,i]))
             file.close()
+        elif filetype == 'cfg':
+            original_filename = filename
+            filename = f'{directory}{original_filename}'
+
+           # if filename is None:
+           #     filename = 'Atomic_series.dump'
+           # else:
+           #     if filename.lower().split('.')[-1] != 'dump':
+           #         filename = '.'.join([filename.split('.')[0], 'dump'])
+
+            f = open(filename,"w")
+           # nsims = sims.size
+            nsims = len(self.systems)
+            sims = len(self.systems)
+            energy = np.zeros(nsims)
+            energy_weight = np.ones(nsims)
+            # force = np.zeros((nsims,3))
+            force_weight = np.ones(nsims)
+            # stress1 = np.zeros((nsims,3))
+            for nn in range(nsims):
+                ids = [i+1 for i in range(self.systems[nn].natoms)]
+                f.write('BEGIN_CFG\n')
+                f.write(' Size\n')
+                f.write(f'    {self.systems[nn].natoms}\n')
+                f.write(' Supercell\n')
+                for i in range(3):
+                    f.write("%f      %f      %f\n" % (self.systems[nn].box[0,i], self.systems[nn].box[1,i], self.systems[nn].box[2,i]))
+                if self.systems[nn].force:
+                    f.write(' AtomData:  id type       cartes_x      cartes_y      cartes_z           fx          fy          fz\n')
+                    for j in range(self.systems[nn].natoms):
+                        f.write("             %d    %d       %f      %f      %f    %f    %f    %f\n" % (ids[j], self.systems[nn].types[j]-1, self.systems[nn].atoms[j,i], self.systems[nn].atoms[1,j], self.systems[nn].atoms[2,j], self.systems[nn].force[0,j], self.systems[nn].force[1,j], self.systems[nn].force[2,j]))
+                else:
+                    f.write(' AtomData:  id type       cartes_x      cartes_y      cartes_z\n')
+                    for j in range(self.systems[nn].natoms):
+                        f.write("             %d    %d       %f      %f      %f\n" % (ids[j], self.systems[nn].types[j]-1, self.systems[nn].atoms[0,j], self.systems[nn].atoms[1,j], self.systems[nn].atoms[2,j]))
+                f.write(' Energy\n')
+                f.write("        %f\n" % (self.systems[nn].energy))
+                if self.systems[nn].stress:
+                    f.write(' PlusStress:  xx          yy          zz          yz          xz          xy\n')
+                    f.write("        %f    %f    %f    %f    %f    %f\n" % (self.systems[nn].stress[0,0], self.systems[nn].stress[1,1], self.systems[nn].stress[2,2], self.systems[nn].stress[1,2], self.systems[nn].stress[0,2], self.systems[nn].stress[0,1]))
+                f.write('END_CFG\n')
+                f.write('\n')
+            f.close()
+
 
 
         # BREAK HERE
