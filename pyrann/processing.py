@@ -48,13 +48,22 @@ class processing:
             input_ext = input_file.lower().split('.')[-1]
             if input_ext == 'nn' or input_ext == 'rann' or input_ext == 'input':
                 formalism = 'rann'
-            if input_ext == 'mtp':
+            elif input_ext == 'mtp':
                 formalism = 'mtp'
+            elif input_ext == 'xml' or input_ext == 'gap' or input_ext == 'soap':
+                formalism = 'soap'
         else:
             formalism = formalism.lower()
-            formalisms = ['rann', 'nn', 'mtp']
+            formalisms = ['rann', 'nn', 'mtp', 'xml', 'soap', 'gap']
             if formalism not in formalisms:
                 raise ValueError('The provided formalism is not currently accepted. Accepted formalisms are "RANN" and "MTP".')
+            else:
+                if formalism == 'nn' or formalism == 'rann' or formalism == 'input':
+                    formalism = 'rann'
+                elif formalism == 'mtp':
+                    formalism = 'mtp'
+                elif formalism == 'xml' or formalism == 'gap' or formalism == 'soap':
+                    formalism = 'soap'
         self.formalism = formalism
         self.features = np.zeros((100,100))
         self.global_sim_num = np.zeros(100)
@@ -115,13 +124,23 @@ class processing:
             input_ext = self.input_file.lower().split('.')[-1]
             if input_ext == 'nn' or input_ext == 'rann':
                 formalism = 'rann'
-            if input_ext == 'mtp':
+            elif input_ext == 'mtp':
                 formalism = 'mtp'
+            elif input_ext == 'xml' or input_ext == 'soap' or input_ext == 'gap':
+                formalism = 'soap'
         else:
             formalism = value.lower()
-            formalisms = ['rann', 'nn', 'mtp']
+            formalisms = ['rann', 'nn', 'mtp', 'xml', 'soap', 'gap']
             if formalism not in formalisms:
                 raise ValueError('The provided formalism is not currently accepted. Accepted formalisms are "RANN" and "MTP".')
+            else:
+                if formalism == 'nn' or formalism == 'rann':
+                    formalism = 'rann'
+                elif formalism == 'mtp':
+                    formalism = 'mtp'
+                elif formalism == 'xml' or formalism == 'soap' or formalism == 'gap':
+                    formalism = 'soap'
+
         self.__formalism = formalism
 
     @property
@@ -171,7 +190,8 @@ class processing:
 
     def get_features(self,
                      standardize: Optional[bool] = True,
-                     file_fmt: Optional[Union[str, None]] = None
+                     file_fmt: Optional[Union[str, None]] = None,
+                     **kwargs
                      ):
         """
         Gets and sets the filenames, global simulation numbers, local simulation numbers,
@@ -184,6 +204,10 @@ class processing:
                 Only neccessary if the file format does not match the default
                 file format of the current formalism. The files will be 
                 converted to support the current set formalism.
+            **kwargs: Any other necessary arguments needed for the current
+                formalism. Currently, the only time this should be used is 
+                to provide the element symbol(s) if the formalism uses soap
+                descriptors (i.e. symbol='Mg').
 
         Sets:
             features (np.ndarray): An array of size (natoms, nfeatures). 
@@ -191,6 +215,19 @@ class processing:
         """
 
         path = os.getcwd()
+        allowed_kwargs = {'symbol', 'symbols'}
+        unexpected_keys = set(kwargs.keys()) - allowed_kwargs
+        if unexpected_keys:
+            raise TypeError(f'Unexpected keyword argument(s): {", ".join(unexpected_keys)}')
+        if kwargs.get('symbol'):
+            good_arg = kwargs.get('symbol')
+        elif kwargs.get('symbols'):
+            good_arg = kwargs.get('symbols')
+            assert isinstance(good_arg, list) or isinstance(good_arg, np.ndarray),\
+            'Symbols must be given as list or array. If there is only one symbol,\
+                    use "symbol" instead of "symbols".'
+            good_arg = np.asarray(good_arg)
+
         if file_fmt:
             fmts = ['dump', 'cfg', 'dat', 'data', 'poscar']
             if file_fmt.lower() not in fmts:
@@ -213,10 +250,17 @@ class processing:
                             temp = load(file, series=series_bool)
                             temp_list.append(temp)
                             temp.export(f'{file.split('.')[0]}.cfg')
+                elif self.formalism == 'soap':
+                    # TODO - ADD IN .xyz SUPPORT?
+                    pass
+        else:
+            if self.formalism == 'soap':
+                raise ValueError('Please specify the file format of the atomic structure files you\
+                        would like to examine. pyRANN does not currently support loading in .xyz files.')
+
                     # export = series([j for i in range(len(temp_list)) for j in temp_list[i].systems])
                     # export.export('combined.cfg')
 
-                # TODO - add in MTP support
         if self.formalism == 'rann':
             a = calibration.PairRANN(self.input_file)
             a.setup()
@@ -271,6 +315,69 @@ class processing:
                     global_sim_num = np.asarray(global_sim_num)
 
                     local_id = np.array([k for i in range(len(filename_list)) for j in range(len(loaded_cfgs[i].systems)) for k in range(loaded_cfgs[i].systems[j].natoms)])
+        elif self.formalism == 'soap':
+            from quippy.descriptors import Descriptor
+            import ase
+            from ase.io import read
+            import xml.etree.ElementTree as ET
+
+            tree = ET.parse(self.input_file)
+            root = tree.getroot()
+
+            for elem in root.iter('descriptor'):
+                if 'soap' in elem.text:
+                    soap = elem.text
+            ase_dict = {'dump':  'lammps-dump-text', 'cfg': 'cfg', 'dat': 'lammps-data', 'data': 'lammps-data', 'poscar': 'vasp'}
+
+            loaded_files = []
+            filename_list = []
+            ase_list = []
+            for file in os.listdir(path):
+                if file.lower().endswith(f'.{file_fmt}'):
+                    loaded_files.append(load(file, series=True))
+                    # loaded_cfgs.append(load(file, series=True))
+                    filename_list.append(file)
+                    # cfgs.append(mtp_bindings.Configuration(file))
+                    ase_list.append(read(file, index=':', format=ase_dict[file_fmt]))
+
+            for i in range(len(ase_list)):
+                if isinstance(good_arg, str):
+                    for j in ase_list[i]:
+                        j.symbols[:] = good_arg 
+                else:
+                    for j in range(len(ase_list[i])):
+                        for k in ase_list[i][j].symbols:
+                # for j in range(len(ase_list[i])):
+                #     for k in ase_list[i][j].symbols:
+
+                            # if loaded_files[i].systems[j].types[k]
+                            k = good_arg[int(loaded_files[i].systems[j].types[k]-1)]
+            desc = Descriptor(soap)
+            # features = np.asarray([desc.calc(k) for i in ase_list for j in i for k in j])
+            # features = np.asarray([desc.calc(j)['data'] for i in ase_list for j in i])
+            features = desc.calc(ase_list)
+            features = np.asarray([k for i in features for j in i for k in j['data']])
+            # features = np.asarray([j['data'].reshape(-1, j['data'].shape[-1]) for i in features for j in i])
+            # features = features.reshape(-1, features.shape[-1])
+            print(f'\n\n{features.shape = }\n\n')
+            print(f'{features = }\n\n')
+            filenames = np.asarray([filename_list[i] for i in range(len(filename_list)) for j in range(len(loaded_files[i].systems)) for k in range(loaded_files[i].systems[j].natoms)])
+            # global_sim_num = np.asarray([
+            global_sim_num = []
+            global_temp = 0
+            for i in range(len(filename_list)):
+                for j in range(len(loaded_files[i].systems)):
+                    for k in range(loaded_files[i].systems[j].natoms):
+                        global_sim_num.append(global_temp)
+                    global_temp += 1
+            global_sim_num = np.asarray(global_sim_num)
+            local_sim_num = np.asarray([j for i in range(len(filename_list)) for j in range(len(loaded_files[i].systems)) for k in range(loaded_files[i].systems[j].natoms)])
+            local_id = np.asarray([k for i in range(len(filename_list)) for j in range(len(loaded_files[i].systems)) for k in range(loaded_files[i].systems[j].natoms)])
+
+
+
+
+
 
         self.filenames = filenames
         self.global_sim_num = global_sim_num

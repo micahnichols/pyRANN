@@ -6,3 +6,5 @@ c_src/*.so
 pyrann/__pycache__/
 **/*~
 **/*.un*
+pyrann.egg-info/
+pyrann/pyrann.egg-info/
