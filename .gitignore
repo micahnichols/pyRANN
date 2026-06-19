@@ -4,3 +4,5 @@ pyrann/*.py[cod]
 pyrann/*.so
 c_src/*.so
 pyrann/__pycache__/
+**/*~
+**/*.un*
