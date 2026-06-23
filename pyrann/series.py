@@ -335,7 +335,7 @@ class series:
                 f.write(' Supercell\n')
                 for i in range(3):
                     f.write("%.16f      %.16f      %.16f\n" % (self.systems[nn].box[0,i], self.systems[nn].box[1,i], self.systems[nn].box[2,i]))
-                if self.systems[nn].force:
+                if self.systems[nn].force[0,0]:
                     f.write(' AtomData:  id type       cartes_x      cartes_y      cartes_z           fx          fy          fz\n')
                     for j in range(self.systems[nn].natoms):
                         f.write("             %d    %d       %.16f      %.16f      %.16f    %.16f    %.16f    %.16f\n" % (ids[j], self.systems[nn].types[j]-1, self.systems[nn].atoms[j,i], self.systems[nn].atoms[1,j], self.systems[nn].atoms[2,j], self.systems[nn].force[0,j], self.systems[nn].force[1,j], self.systems[nn].force[2,j]))

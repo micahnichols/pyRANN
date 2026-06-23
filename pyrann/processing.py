@@ -13,7 +13,7 @@ from pathlib import Path
 from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import NearestNeighbors
 from bokeh.models import Legend, LegendItem, LinearColorMapper, ColorBar
-from bokeh.palettes import Viridis256
+# from bokeh.palettes import Viridis256
 import bokeh.plotting as bpl
 from bokeh.transform import transform
 import matplotlib.colors as plc
@@ -22,6 +22,7 @@ import colorcet.plotting
 from bokeh.models import RangeSlider, CustomJS
 from bokeh.layouts import column
 import importlib.util
+import importlib
 
 class processing:
     """
@@ -537,6 +538,8 @@ class processing:
              color_data: npt.ArrayLike,
              hover_info: dict,
              color_type: Optional[str] = 'categorical',
+             rescale_colorbar: Optional[bool] = False,
+             cmap: Optional[str] = 'Viridis256',
              subset_points: Optional[Union[npt.ArrayLike, None]] = None,
              key_str: Optional[Union[str, None]] = None):
         """
@@ -552,7 +555,11 @@ class processing:
             color_type: Type of coloring to use. If categorical, each unique item
                 in color_data gets its own color. If linear, viridis colormap will be
                 used to color the data from min(color_data) to max(color_data).
-                Defaults to categorical
+                Defaults to categorical.
+            rescale_colorbar: Boolean to rescale colorbar when changing the visible
+                range on the plot if color_type == 'linear'. Ignored if
+                color_type == 'categorical'.
+            cmap: String representation of desiried 256 color palette from Bokeh.
             subset_points: 1-D array of booleans of length natoms. True means that 
                 the data point for that atom should be plotted.
             key_str: The string to name the html file.
@@ -565,6 +572,10 @@ class processing:
             tooltip_dict[col_name] = '@{'+col_name+'}'
         tooltips = list(tooltip_dict.items())
         if color_type.lower() == 'categorical':
+            if len(data['x']) > 8000:
+                radius = 1
+            else:
+                radius = 2
             unique, index = np.unique(color_data, return_index=True)
             index = np.argsort(index)
             unique = unique[index]
@@ -580,12 +591,13 @@ class processing:
                 data = data.reset_index(drop=True)
 
             dfs = [data[data['label']==i] for i in unique]
-            fig = bpl.figure(width=2000, height=1000, tooltips=tooltips,
+            fig = bpl.figure(width=1900, height=1000, tooltips=tooltips,
                              tools=('pan,wheel_zoom,box_zoom,save,reset,help'),
                              background_fill_color='black')
             for i in range(len(dfs)):
                 data_source = bpl.ColumnDataSource(dfs[i])
-                fig.circle(x='x', y='y', source=data_source, color='color', size=2, legend_label=unique[i])
+                fig.circle(x='x', y='y', source=data_source, color='color', radius=radius,
+                           radius_units='screen', legend_label=unique[i])
             fig.legend.location = 'top_left'
             fig.legend.click_policy = 'hide'
             fig.grid.visible=False
@@ -602,6 +614,18 @@ class processing:
             #     os.system(f'mv {base_file}.html {key_str}.html')
 
         elif color_type.lower() == 'linear':
+            cmaps = ['Greys256', 'Inferno256', 'Magma256', 'Plasma256',
+                     'Viridis256', 'Cividis256', 'Turbo256']
+            if cmap in cmaps:
+                palettes = importlib.import_module('bokeh.palettes')
+                cmap = getattr(palettes, f'{cmap}')
+            else:
+                raise ImportError(f'Please choose a bokeh palette from the following:\n{cmaps}')
+            if len(data['x']) >= 8000:
+                radius = 1
+            else:
+                radius = 2
+
             data['color'] = color_data
             if subset_points:
                 data['subset'] = subset_points
@@ -610,15 +634,19 @@ class processing:
                 data = data.reset_index(drop=True)
             data_source = bpl.ColumnDataSource(data)
             visible = bpl.ColumnDataSource(data)
-            color_mapper = LinearColorMapper(palette=Viridis256,
+            color_mapper = LinearColorMapper(palette=cmap,
                                              low=min(color_data),
                                              high=max(color_data))
-            fig = bpl.figure(width=2000, height=1000, tooltips=tooltips,
+            fig = bpl.figure(width=1900, height=1000, tooltips=tooltips,
                              tools=('pan,wheel_zoom, box_zoom,save,reset,help'),
                              background_fill_color='black')
             fig.circle(x='x', y='y', source=visible,
                        color=transform('color', color_mapper),
-                       size=2)
+                       radius=radius,
+                       radius_units='screen')
+                       # fill_alpha=0.5,
+                       # line_alpha=0.1,
+                       # hatch_alpha=0.1)
             color_bar = ColorBar(color_mapper=color_mapper, label_standoff=12)
             fig.add_layout(color_bar, 'left')
             if key_str:
@@ -636,40 +664,108 @@ class processing:
                     title='Value Range',
                     width=650,
                     )
-            callback = CustomJS(
-                    args=dict(source=data_source,
-                              visible=visible,
-                              slider=slider,
-                              color_mapper=color_mapper),
-                    code="""
-                    const low = slider.value[0];
-                    const high = slider.value[1];
+            if rescale_colorbar:
+                callback = CustomJS(
+                        args=dict(source=data_source,
+                                  visible=visible,
+                                  slider=slider,
+                                  color_mapper=color_mapper),
+                        code="""
+                        const low = slider.value[0];
+                        const high = slider.value[1];
 
-                    const src_x = source.data['x'];
-                    const src_y = source.data['y'];
-                    const src_val = source.data['color'];
+                        const src = source.data;
+                        const n = src['color'].length;
 
-                    const new_x = [];
-                    const new_y = [];
-                    const new_val = [];
+                        const filtered = {};
 
-                    for (let i =0; i < src_val.length; i++) {
-                        if (src_val[i] >= low && src_val[i] <= high) {
-                            new_x.push(src_x[i]);
-                            new_y.push(src_y[i]);
-                            new_val.push(src_val[i]);
+                        for (const key in src) {
+                            filtered[key] = [];
                         }
-                    }
 
-                    visible.data = { x: new_x, y: new_y, color: new_val };
+                        for (let i = 0; i < n; i++) {
+                            if (src['color'][i] >= low && src['color'][i] <= high) {
+                                for (const key in src) {
+                                    filtered[key].push(src[key][i]);
+                                }
+                            }
+                        }
 
-                    color_mapper.low = low;
-                    color_mapper.high = high;
+                        visible.data = filtered;
 
-                    visible.change.emit();
-                    color_mapperchange.emit();
-                """,
-                )
+                        color_mapper.low = low;
+                        color_mapper.high = high;
+
+                        visible.change.emit();
+                        color_mapper.change.emit();
+                    """,
+                    )
+                # callback = CustomJS(
+                #         args=dict(source=data_source,
+                #                   visible=visible,
+                #                   slider=slider,
+                #                   color_mapper=color_mapper),
+                #         code="""
+                #         const low = slider.value[0];
+                #         const high = slider.value[1];
+
+                #         const src_x = source.data['x'];
+                #         const src_y = source.data['y'];
+                #         const src_val = source.data['color'];
+
+                #         const new_x = [];
+                #         const new_y = [];
+                #         const new_val = [];
+
+                #         for (let i =0; i < src_val.length; i++) {
+                #             if (src_val[i] >= low && src_val[i] <= high) {
+                #                 new_x.push(src_x[i]);
+                #                 new_y.push(src_y[i]);
+                #                 new_val.push(src_val[i]);
+                #             }
+                #         }
+
+                #         visible.data = { x: new_x, y: new_y, color: new_val };
+
+                #         color_mapper.low = low;
+                #         color_mapper.high = high;
+
+                #         visible.change.emit();
+                #         color_mapper.change.emit();
+                #     """,
+                #     )
+            else:
+                callback = CustomJS(
+                        args=dict(source=data_source,
+                                  visible=visible,
+                                  slider=slider,
+                                  color_mapper=color_mapper),
+                        code="""
+                        const low = slider.value[0];
+                        const high = slider.value[1];
+
+                        const src = source.data;
+                        const n = src['color'].length;
+
+                        const filtered = {};
+
+                        for (const key in src) {
+                            filtered[key] = [];
+                        }
+
+                        for (let i = 0; i < n; i++) {
+                            if (src['color'][i] >= low && src['color'][i] <= high) {
+                                for (const key in src) {
+                                    filtered[key].push(src[key][i]);
+                                }
+                            }
+                        }
+
+                        visible.data = filtered;
+
+                        visible.change.emit();
+                    """,
+                    )
             slider.js_on_change("value", callback)
             layout = column(fig, slider)
 
