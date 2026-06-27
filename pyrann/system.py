@@ -14,124 +14,74 @@ import random
 
 from typing import Any, Optional, Union, Tuple
 
-from .series import series
-
-
-# import numpy as np
-# import sys
-# import os
-# sys.path.append(os.getcwd())
-# from numpy.linalg import norm,inv,det
-# from scipy.linalg import sqrtm,eig,norm
-# from numpy import array,cross,dot,sqrt,pi,concatenate,ones,arccos,floor
-# from writedata import writedata
-# from makelattice3 import makelattice3
-# from importposcar import importposcar
-# from writeposcar import writeposcar
-# from lammpsbox import lammpsbox
-# from findspacing import findspacing
-# from writeqecoords import writeqecoords
+# from .series import series
+from . import series
 
 class system:
-    """
+    r"""
     A class representing a physical system with atoms, box dimensions, and various properties.
 
     Initializes a system with atom positions, types, box dimensions, and other optional properties.
 
-    Args:
-        box (Union[npt.ArrayLike, None]): The 3x3 matrix representing the simulation box. Default is the identity matrix.
-        atoms (Union[npt.ArrayLike, None]): A 3xN array representing the atom positions. This is required.
-        types (Union[str, int, list, None]): Atom types, either as a string, integer, or list. Default is an array of ones.
-        elements (Union[str, list, None]): Elements corresponding to atom types. If None, elements are generated.
-        natoms (Union[str, int, None]): Number of atoms in the system. If None, derived from `atoms`.
-        timestep (Union[str, int, None]): The current timestep of the simulation. Default is 0.
-        stress (Union[str, npt.ArrayLike, None]): A 3x3 stress tensor array. Default is None.
-        force (Union[str, npt.ArrayLike, None]): A 3xN force array. Default is None.
-        descriptor (Union[str, None]): A description of the system. Default is None.
+    Parameters
+    ----------
+    box 
+        The 3x3 matrix representing the simulation box. Default is the identity matrix.
+    atoms
+        A 3xN array representing the atom positions. This is required.
+    types
+        Atom types, either as a string, integer, or list. Default is an array of ones.
+    elements
+        Elements corresponding to atom types. If None, elements are generated.
+    natoms
+        Number of atoms in the system. If None, derived from `atoms`.
+    timestep
+        The current timestep of the simulation. Default is 0.
+    energy
+        The energy of the system in :math:`eV`.
+    stress
+        A 3x3 stress tensor array. Default is None.
+    force
+        A 3xN force array. Default is None.
+    descriptor
+        A description of the system. Default is None.
 
-    Raises:
-        ValueError: If `atoms` is not provided.
+    Raises
+    ------
+    ValueError
+        If `atoms` is not provided.
     """
 
     def __init__(self,
-                 box: Union[npt.ArrayLike, None] = None,
-                 atoms: Union[npt.ArrayLike, None] = None,
-                 types: Union[str, int, list, None] = None,
-                 elements: Union[str, list, None] = None,
-                 natoms: Union[str, int, None] = None,
-                 timestep: Union[str, int, None] = None,
-                 energy: Union[str, np.float64, float, None] = None,
-                 stress: Union[str, npt.ArrayLike, None] = None,
-                 force: Union[str, npt.ArrayLike, None] = None,
-                 descriptor: Union[str, None] = None):
+                 box: Optional[npt.ArrayLike] = None,
+                 atoms: Optional[npt.ArrayLike] = None,
+                 types: Optional[Union[str, int, npt.ArrayLike]] = None,
+                 elements: Optional[Union[str, list]] = None,
+                 natoms: Optional[Union[str, int]] = None,
+                 timestep: Optional[Union[str, int]] = None,
+                 energy: Optional[Union[str, float]] = None,
+                 stress: Optional[Union[str, npt.ArrayLike]] = None,
+                 force: Optional[Union[str, npt.ArrayLike]] = None,
+                 descriptor: Optional[str] = None):
 
-        """
-        Initializes a system with atom positions, types, box dimensions, and other optional properties.
-
-        Args:
-            box (Union[npt.ArrayLike, None]): The 3x3 matrix representing the simulation box. Default is the identity matrix.
-            atoms (Union[npt.ArrayLike, None]): A 3xN array representing the atom positions. This is required.
-            types (Union[str, int, list, None]): Atom types, either as a string, integer, or list. Default is an array of ones.
-            elements (Union[str, list, None]): Elements corresponding to atom types. If None, elements are generated.
-            natoms (Union[str, int, None]): Number of atoms in the system. If None, derived from `atoms`.
-            timestep (Union[str, int, None]): The current timestep of the simulation. Default is 0.
-            stress (Union[str, npt.ArrayLike, None]): A 3x3 stress tensor array. Default is None.
-            force (Union[str, npt.ArrayLike, None]): A 3xN force array. Default is None.
-            descriptor (Union[str, None]): A description of the system. Default is None.
-
-        Raises:
-            ValueError: If `atoms` is not provided.
-        """
-
-        if box is not None:
-            box = np.asarray(box)
-        else:
-            box = np.array([[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]])
-        if atoms is not None:
-            atoms = np.asarray(atoms)
-        else:
-            raise ValueError('System class must have atom positions')
         self.box = box
         self._original_box = box
         self.atoms = atoms
         self._original_atoms = atoms
-        if natoms is None:
-            natoms = self.atoms.shape[1]
-        if types is None:
-            types = np.ones(self.atoms.shape[1], dtype=int)
-        else:
-            types = np.asarray(types, dtype=int)
-        if elements is None:
-            elements = np.asarray(types, dtype=str)
-            elements = np.unique(elements)
-            elements = np.array([f'Type_{i}' for i in elements])
-            # elements = np.array([sum(self.types==i) for i in range(self.natoms)])
-            # elements = np.array([i for i in elements if i != 0])
-        else:
-            elements = np.asarray(elements)
-        if timestep is None:
-            timestep = 0
-        if energy is not None:
-            # energy = np.asarray(energy)
-            self.energy = energy
-        else:
-            self.energy = 0
-        if stress is not None:
-            stress = np.asarray(stress)
-        if force is not None:
-            force = np.asarray(force)
-        self.stress = stress
-        self._original_stress = stress
-        self.force = force
-        self._original_force = force
         self.types = types
         self._original_types = types
         self.elements = elements
-        self._original_elements = elements
+        self._original_elements =elements
         self.natoms = natoms
         self._original_natoms = natoms
         self.timestep = timestep
         self._original_timestep = timestep
+        self.energy = energy
+        self._original_energy = energy
+        self.stress = stress
+        self._original_stress = stress
+        self.force = force
+        self._original_force = force
         self.descriptor = descriptor
         self._original_descriptor = descriptor
 
@@ -139,32 +89,54 @@ class system:
         """
         Returns a string representation of the system.
 
-        Returns:
-            str: A formatted string describing the system's box, atom positions, types, and other properties.
+        Returns
+        -------
+        str: A formatted string describing the system's box,
+            atom positions, types, and other properties.
         """
-        return '\n'.join(['box and atoms are column vectors', f'System created from {self.descriptor}', f'box = \n{self.box}', f'natoms = {self.natoms}', f'elements = {self.elements}', f'timestep = {self.timestep}', f'types = {self.types}', f'atoms = \n{self.atoms}', f'forces = \n{self.force}'])
+        return '\n'.join(['box and atoms are column vectors',
+                          f'System created from {self.descriptor}',
+                          f'box = \n{self.box}',
+                          f'natoms = {self.natoms}',
+                          f'elements = {self.elements}',
+                          f'timestep = {self.timestep}',
+                          f'types = {self.types}',
+                          f'atoms = \n{self.atoms}',
+                          f'energy = {self.energy}',
+                          f'forces = \n{self.force}',
+                          f'stress = \n{self.stress}'])
 
     @property
     def box(self) -> np.ndarray:
         """
-        Returns the system's box dimensions.
+        Returns the system's box vectors.
 
-        Returns:
-            np.ndarray: A 3x3 matrix representing the simulation box where x, y, and z
-            are column vectors.
+        Returns
+        -------
+        np.ndarray: A 3x3 matrix representing the simulation box where x,
+            y, and z are column vectors.
         """
         return self.__box
+
     @box.setter
-    def box(self, value: npt.ArrayLike):
+    def box(self, value: Optional[npt.ArrayLike] = None):
         """
         Sets the system's box dimensions.
 
-        Args:
-            value (npt.ArrayLike): A 3x3 array representing the new box dimensions.
+        Parameters
+        ----------
+        value: A 3x3 array representing the new box dimenstions
+            dimensions.
 
-        Raises:
-            AssertionError: If the box is not a 3x3 matrix.
+        Raises
+        ------
+        AssertionError
+            If the box is not a 3x3 matrix.
         """
+        if value is not None:
+            box = np.asarray(value)
+        else:
+            box = np.array([[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]])
         box = np.asarray(value, dtype=np.float64)
         assert box.shape == (3,3), 'Box must be 3x3 matrix'
         self.__box = box
@@ -172,88 +144,153 @@ class system:
     @property
     def atoms(self) -> np.ndarray:
         """
-        Returns the atom positions.
+        Returns (3, natoms) shaped np.ndarray of the atom positions.
 
-        Returns:
-            np.ndarray: A 3xN array representing the positions of the atoms.
+        Returns
+        -------
+        np.ndarray
+            A 3xN array representing the positions of the atoms.
         """
         return self.__atoms
 
     @atoms.setter
-    def atoms(self, value: npt.ArrayLike):
+    def atoms(self, value: Optional[npt.ArrayLike] = None):
         """
         Sets the atom positions.
 
-        Args:
-            value (npt.ArrayLike): A 3xN array representing the new atom positions.
+        Parameters
+        ----------
+        value
+            A 3xN array representing the new atom positions.
 
-        Raises:
-            AssertionError: If the atom array does not have 3 rows (representing 3D coordinates).
+        Raises
+        ------
+        AssertionError
+            If the atom array does not have 3 rows (representing 3D coordinates).
         """
+        if value is not None:
+            atoms = np.asarray(value)
+        else:
+            raise ValueError('System class must have atom positions')
         atoms = np.asarray(value, dtype=np.float64)
         assert atoms.shape[0] == 3, 'Atoms must be column vectors'
         self.__atoms = atoms
-
-    @property
-    def natoms(self) -> int:
-        """
-        Returns the number of atoms in the system.
-
-        Returns:
-            int: The number of atoms in the system.
-        """
-        return self.__natoms
-
-    @natoms.setter
-    def natoms(self, value: int):
-        """
-        Sets the number of atoms in the system.
-
-        Args:
-            value (int): The number of atoms in the system.
-        """
-        natoms = value
-        self.__natoms = natoms
 
     @property
     def types(self) -> np.ndarray:
         """
         Returns the atom types.
 
-        Returns:
-            np.ndarray: A 1D array representing the atom types.
+        Returns
+        -------
+        np.ndarray
+            A 1D array representing the atom types.
         """
         return self.__types
 
     @types.setter
-    def types(self, value: Union[str, int, npt.ArrayLike]):
+    def types(self, value: Optional[Union[str, int, npt.ArrayLike]] = None):
         """
         Sets the atom types.
 
-        Args:
-            value (Union[str, int, npt.ArrayLike]): Atom types, either as a string, integer, or array.
+        Parameters
+        ----------
+        value
+            Atom types, either as a string, integer, or array.
         """
         types = value
+        if types is None:
+            types = np.ones(self.atoms.shape[1], dtype=int)
+        else:
+            types = np.asarray(types, dtype=int)
         self.__types = types
+
+    @property
+    def elements(self) -> Optional[npt.ArrayLike]:
+        """
+        Returns the element types of the system. 
+        If element types are unknown, the element type becomes "Type_n" where n is an integer
+        representing the atom type.
+
+        Returns
+        -------
+        np.ndarray
+            Array of element types.
+        """
+        return self.__elements
+
+    @elements.setter
+    def elements(self, value: Optional[Union[str, npt.ArrayLike]] = None):
+        """
+        Sets the element types of the system with a string representation.
+        If None, elements is set to an array of strings of "Type_n"
+        where n is the element type integer.
+
+        Parameters
+        ----------
+        value
+            1-D array of element type strings. If None, array is generated.
+        """
+        if value is None:
+            elements = np.asarray(self.types, dtype=str)
+            elements = np.unique(elements)
+            elements = np.array([f'Type_{i}' for i in elements])
+        else:
+            elements = np.asarray(value)
+        self.__elements = elements
+
+    @property
+    def natoms(self) -> int:
+        """
+        Returns the number of atoms in the system.
+
+        Returns
+        -------
+        int
+            The number of atoms in the system.
+        """
+        return self.__natoms
+
+    @natoms.setter
+    def natoms(self, value: Optional[Union[str, int]] = None):
+        """
+        Sets the number of atoms in the system.
+
+        Parameters
+        ----------
+        value
+            The number of atoms in the system.
+        """
+        if value is None:
+            natoms = self.atoms.shape[1]
+        else:
+            natoms = value
+        self.__natoms = natoms
 
     @property
     def timestep(self) -> int:
         """
         Returns the timestep.
 
-        Returns:
-           int: The integer value of the timestep.
+        Returns
+        -------
+        int
+            The integer value of the timestep.
         """
         return self.__timestep
 
     @timestep.setter
-    def timestep(self, value: int):
+    def timestep(self, value: Optional[Union[str, int]] = None):
         """
         Sets the timestep.
 
-        Args:
-            value (int): Integer timestep
+        Parameters
+        ----------
+        value
+            Integer timestep
         """
+        if value is None:
+            timestep = 0
         timestep = value
         self.__timestep = timestep
 
@@ -262,20 +299,117 @@ class system:
         """
         Returns the energy of the system
 
-        Returns:
-            np.float64: Float value of the energy.
+        Returns
+        -------
+        np.float64
+            Float value of the energy.
         """
         return self.__energy
+
     @energy.setter
-    def energy(self, value: np.float64):
+    def energy(self, value: Optional[Union[str, float]] = None):
         """
         Sets the system energy
 
-        Args:
-            value (np.float64): Float value of energy.
+        Parameters
+        ----------
+        value
+            Float value of energy.
         """
-        energy = value
+        if value is not None:
+            energy = value
+        else:
+            energy = 0
         self.__energy = energy
+
+    @property
+    def stress(self) -> Optional[npt.ArrayLike]:
+        """
+        Returns the stress tensor of the system if applicable.
+        Returns None otherwise.
+
+        Returns
+        -------
+        np.ndarray
+            A 3x3 matrix representing the stress tensor.
+        """
+        return self.__stress
+
+    @stress.setter
+    def stress(self, value: Optional[Union[str, npt.ArrayLike]] = None):
+        """
+        Sets the stress of the system.
+
+        Parameters
+        ----------
+        value
+            3x3 Stress tensor of the system.
+        """
+        if value is not None:
+            stress = np.asarray(value, dtype=np.float64)
+            self._do_stress = True
+        else:
+            stress = None
+            self._do_stress = False
+        self.__stress = stress
+
+    @property
+    def force(self) -> Optional[npt.ArrayLike]:
+        """
+        Returns the x, y, and z force components of each atom if applicable.
+        Returns None otherwise.
+
+        Returns
+        -------
+        np.ndarray
+            An array of shape (3, natoms) of the x, y, and z force components for each atom.
+        """
+        return self.__force
+
+    @force.setter
+    def force(self, value: Optional[Union[str, npt.ArrayLike]] = None):
+        """
+        Sets the force for each atom in the system.
+
+        Parameters
+        ----------
+        value
+            ArrayLike item representing the x, y, and z force components for each atom. 
+            Must be of shape (3, natoms). If None, forces are not known.
+        """
+        if value is not None:
+            force = np.asarray(value)
+            assert force.shape == (3, self.natoms), (
+                    'force must be of shape (3, natoms)')
+            self._do_force = True
+        else:
+            force = None
+            self._do_force = False
+        self.__force = force
+
+    @property
+    def descriptor(self) -> Optional[str]:
+        """
+        Returns a description of the system. Helpful to determine the file loaded from or operations done on the system.
+
+        Returns
+        -------
+        str
+            User defined string describing the system.
+        """
+        return self.__descriptor
+
+    @descriptor.setter
+    def descriptor(self, value: Optional[str] = None):
+        """
+        Sets the description of the system.
+
+        Parameters
+        ----------
+        value
+            User defined string of the system.
+        """
+        self.__descriptor = value
 
     def createsupercell(self, new_box: Union[npt.ArrayLike, None] = None):
         """
@@ -285,17 +419,22 @@ class system:
         to the new box dimensions. It accounts for periodic boundary conditions and generates a new set of atom types
         and positions based on the replication.
 
-        Args:
-            new_box: Column vector array of new box dimensions.
+        Parameters
+        ----------
+        new_box
+            Column vector array of new box dimensions.
 
-        Returns:
-            None: This method updates the system's attributes: `types`, `atoms`, `box`, and `natoms` based on the new supercell.
+        Returns
+        -------
+        None
+            This method updates the system's attributes: `types`, `atoms`, `box`, and `natoms`
+            based on the new supercell.
 
-        Raises:
-            ValueError: If any unexpected issues arise during supercell creation.
+        Raises
+        ------
+        ValueError
+            If any unexpected issues arise during supercell creation.
         """
-
-
 
         avg_box_x = np.mean(self.box[0,:]) * (np.pi/1000)
         avg_box_y = np.mean(self.box[1,:]) * (np.pi/1000)
@@ -306,7 +445,8 @@ class system:
         self.atoms[1,:] += avg_box_y
         self.atoms[2,:] += avg_box_z
         Direct = inv(self.box)@self.atoms
-        Direct -= floor(Direct)
+        Direct = Direct%1.0
+        # Direct -= floor(Direct)
         new_atoms_matrix = self.box@Direct
         self.atoms = self.box@Direct
         if new_box is None:
@@ -389,24 +529,37 @@ class system:
                style: Union[str, None] = None):
         """
         Exports the system data to a specified file in a given format.
-        self._original_atoms = self.atoms+0
 
-        This method allows the user to export the system's atoms and box dimensions to various file formats, such as POSCAR,
-        LAMMPS data, and others. The user can choose the output file's name, type, and coordinate style (e.g., Cartesian,
-        direct, or crystal).
+        This method allows the user to export the system's atoms and box dimensions to various file formats,
+        such as POSCAR, LAMMPS data, and others. The user can choose the output file's name, type, and
+        coordinate style (e.g., Cartesian, direct, or crystal).
 
-        Args:
-            filename: String of the filename to write.
-            filetype: String of the file extension. Not needed if extension is given in filetype.
-                filetypes are 'poscar', 'pos', 'data', 'dat', 'dump', 'qe', 'quantum_espresso', 'vasp', or 'INCAR'
-                Note: Some of these filetypes may not be implemented yet.
-            style: String of type of atom coordinates desired (direct, crystal, or cartesian).
+        Parameters
+        ----------
+        filename
+            String of the filename to write.
+        filetype
+            String of the file extension. Not needed if extension is given in filetype.
+            filetypes are 'poscar', 'pos', 'data', 'dat', 'dump', 'qe', 'quantum_espresso', 'vasp', or 'INCAR'
+            Note: Some of these filetypes may not be implemented yet.
+        style
+            String of type of atom coordinates desired (direct, crystal, or cartesian).
 
-        Returns:
-            None: This method writes the system data to the specified file in the given format.
+        Returns
+        -------
+        None
+            This method writes the system data to the specified file in the given format.
 
-        Raises:
-            ValueError: If an invalid `filetype` or `style` is provided.
+        Raises
+        ------
+        ValueError
+            If an invalid `filetype` or `style` is provided.
+        Todo
+        ----
+        qe
+            Implement Quantum Expresso
+        vasp
+            Implement VASP
         """
 
         if filename is None:
@@ -417,7 +570,8 @@ class system:
                 if filename.split('.')[-1].lower() in ext_keys:
                     filetype = filename.split('.')[-1]
                 else:
-                    raise ValueError(f'Either filetype must be given, or the file extension must be one of the following:\n{ext_keys}')
+                    raise ValueError(f'Either filetype must be given, '
+                    f'or the file extension must be one of the following:\n{ext_keys}')
             else:
                 filename = '.'.join([filename, filetype])
         if style is None:
@@ -443,30 +597,61 @@ class system:
             filetype = 'poscar'
 
 
-        if filetype == 'poscar':
+        if filetype.lower() == 'poscar':
             file = open(filename,"w")
             # natoms = Lattice.shape[1]
             file.write("#Atomistic data file created by python\n")
             file.write("1.0\n")
-            file.write("%f   %f   %f\n" % (self.box[0,0],self.box[1,0],self.box[2,0]))
-            file.write("%f   %f   %f\n" % (self.box[0,1],self.box[1,1],self.box[2,1]))
-            file.write("%f   %f   %f\n" % (self.box[0,2],self.box[1,2],self.box[2,2]))
-            typesum = []
-            for i in range(len(self.elements)):
-                file.write(self.elements[i]+' ')
-                typesum.append(sum(self.types==i+1))
-            file.write("\n")
-            for i in range(len(self.elements)):
-                file.write("%d " % typesum[i])
-            file.write("\n")
-            file.write("%s\n" % style)
+            len_col0 = max([len(str(f'{self.box[0,i]:+.16f}')) for i in range(3)])
+            len_col1 = max([len(str(f'{self.box[1,i]:+.16f}')) for i in range(3)])
+            len_col2 = max([len(str(f'{self.box[2,i]:+.16f}')) for i in range(3)])
+            # file.write("   %.16f   %.16f   %.16f\n" % (self.box[0,0],self.box[1,0],self.box[2,0]))
+            # file.write("   %.16f   %.16f   %.16f\n" % (self.box[0,1],self.box[1,1],self.box[2,1]))
+            # file.write("   %.16f   %.16f   %.16f\n" % (self.box[0,2],self.box[1,2],self.box[2,2]))
+            file.write(f'  {self.box[0,0]:>{len_col0}.16f}'
+                       f'   {self.box[1,0]:>{len_col1}.16f}'
+                       f'   {self.box[2,0]:>{len_col2}.16f}\n')
+            file.write(f'  {self.box[0,1]:>{len_col0}.16f}'
+                       f'   {self.box[1,1]:>{len_col1}.16f}'
+                       f'   {self.box[2,1]:>{len_col2}.16f}\n')
+            file.write(f'  {self.box[0,2]:>{len_col0}.16f}'
+                       f'   {self.box[1,2]:>{len_col1}.16f}'
+                       f'   {self.box[2,2]:>{len_col2}.16f}\n')
+            # typesum = []
+            unique_types = np.unique(self.types)
+            typesum = np.array([len(self.types[self.types==i]) for i in unique_types])
+            element_str = ' '.join(self.elements)
+            element_int_str = ' '.join(map(str, typesum))
+            file.write(f'{element_str}\n')
+            file.write(f'{element_int_str}\n')
+            # for i in range(len(self.elements)):
+            #     file.write(self.elements[i]+' ')
+                # typesum.append(sum(self.types==i+1))
+            # file.write("\n")
+            # for i in range(len(self.elements)):
+            #     file.write("%d " % typesum[i])
+            # file.write("\n")
+            # file.write("%s\n" % style)
+            file.write(f'{style}\n')
             if (style=='direct' or style=='Direct' or style=='Crystal' or style == 'crystal'):
                 Lattice = inv(self.box)@self.atoms
+                Lattice = Lattice%1.0
             else:
                 Lattice = self.atoms
             I = np.argsort(self.types)
             for i in range(self.natoms):
-                file.write("\t {0:f} {1:f} {2:f} {3:s}\n" .format(Lattice[0,I[i]],Lattice[1,I[i]],Lattice[2,I[i]],self.elements[int(self.types[I[i]])-1]))
+                # file.write("\t {0:f} {1:f} {2:f} {3:s}\n" .format(Lattice[0,I[i]],
+                #                                                   Lattice[1,I[i]],
+                #                                                   Lattice[2,I[i]],
+                #                                                   self.elements[int(self.types[I[i]])-1]))
+                # file.write("   %.16f   %.16f   %.16f %s\n" % (Lattice[0,I[i]],
+                #                                           Lattice[1,I[i]],
+                #                                           Lattice[2,I[i]],
+                #                                           self.elements[int(self.types[I[i]])-1]))
+                file.write(f'  {Lattice[0,I[i]]:>{len_col0}.16f}'
+                           f'   {Lattice[1,I[i]]:>{len_col1}.16f}'
+                           f'   {Lattice[2,I[i]]:>{len_col2}.16f}'
+                           f' {self.elements[int(self.types[I[i]])-1]}\n')
             file.close()
 
         elif filetype == 'data':
@@ -479,7 +664,11 @@ class system:
             zhi = sqrt(dot(self.box[:,2],self.box[:,2])-xz**2-yz**2)
             new_box = array([[xlo, xhi],[ylo, yhi],[zlo, zhi]])
             tilt = array([xy, xz, yz]);
-            R = array([[xhi, xy, xz],[0, yhi, yz],[0, 0, zhi]])@array([cross(self.box[:,1],self.box[:,2]),cross(self.box[:,2],self.box[:,0]),cross(self.box[:,0],self.box[:,1])])/det(array([[xhi, xy, xz],[0, yhi, yz],[0, 0, zhi]]))
+            R = (array([[xhi, xy, xz],[0, yhi, yz],[0, 0, zhi]])
+                 @array([cross(self.box[:,1],self.box[:,2]),
+                         cross(self.box[:,2],self.box[:,0]),
+                         cross(self.box[:,0],self.box[:,1])])
+                 /det(array([[xhi, xy, xz],[0, yhi, yz],[0, 0, zhi]])))
             x = R@self.atoms
             lammpsbox = new_box
             # (atoms,lammpsbox,tilt,R)=triclinic2lammps(Atoms,Box)
@@ -489,13 +678,12 @@ class system:
             file.write("#Atomistic data file created by python\n\n")
             file.write("%d\tatoms\n\n" % self.natoms)
             file.write("%d\t atom types\n\n" % ntypes)
-            file.write("%f   %f xlo xhi\n" % (lammpsbox[0,0],lammpsbox[0,1]))
-            file.write("%f   %f ylo yhi\n" % (lammpsbox[1,0],lammpsbox[1,1]))
-            file.write("%f   %f zlo zhi\n" % (lammpsbox[2,0],lammpsbox[2,1]))
-            file.write("%f   %f  %f xy xz yz\n" % (tilt[0],tilt[1],tilt[2]))
+            file.write("%.16f   %.16f xlo xhi\n" % (lammpsbox[0,0],lammpsbox[0,1]))
+            file.write("%.16f   %.16f ylo yhi\n" % (lammpsbox[1,0],lammpsbox[1,1]))
+            file.write("%.16f   %.16f zlo zhi\n" % (lammpsbox[2,0],lammpsbox[2,1]))
+            file.write("%.16f   %.16f  %.16f xy xz yz\n" % (tilt[0],tilt[1],tilt[2]))
             file.write("Atoms\n\n")
             for i in range(self.natoms):
-                # file.write("\t {0:d} {1:.0f} {2:f} {3:f} {4:f}\n" .format(i+1,self.types[i],self.atoms[0,i],self.atoms[1,i],self.atoms[2,i]))
                 file.write("\t {0:d} {1:.0f} {2:f} {3:f} {4:f}\n" .format(i+1,self.types[i],x[0,i],x[1,i],x[2,i]))
             file.close()
 
@@ -509,7 +697,11 @@ class system:
             zhi = sqrt(dot(self.box[:,2],self.box[:,2])-xz**2-yz**2)
             new_box = array([[xlo, xhi],[ylo, yhi],[zlo, zhi]])
             tilt = array([xy, xz, yz]);
-            R = array([[xhi, xy, xz],[0, yhi, yz],[0, 0, zhi]])@array([cross(self.box[:,1],self.box[:,2]),cross(self.box[:,2],self.box[:,0]),cross(self.box[:,0],self.box[:,1])])/det(array([[xhi, xy, xz],[0, yhi, yz],[0, 0, zhi]]))
+            R = (array([[xhi, xy, xz],[0, yhi, yz],[0, 0, zhi]])
+                 @array([cross(self.box[:,1],self.box[:,2]),
+                         cross(self.box[:,2],self.box[:,0]),
+                         cross(self.box[:,0],self.box[:,1])])
+                 /det(array([[xhi, xy, xz],[0, yhi, yz],[0, 0, zhi]])))
             x = R@self.atoms
             lammpsbox = new_box
             if tilt[0]>0:
@@ -533,49 +725,56 @@ class system:
             file.write("%d\n" % self.natoms)
             origin = np.zeros((3))
             # (x,box,tilt,R)=triclinic2lammps(Atoms,Box)
-            if self.stress is None:
-                do_stress = False
-            else:
-                do_stress = True
-            if self.force is None:
-                do_force = False
-            else:
-                do_force = True
-            if do_stress:
+            # if self.stress is None:
+            #     do_stress = False
+            # else:
+            #     do_stress = True
+            # if self.force is None:
+            #     do_force = False
+            # else:
+            #     do_force = True
+            if self._do_stress:
                 file.write("ITEM: BOX BOUNDS xy xz yz pp pp pp stress\n")
             else:
                 file.write("ITEM: BOX BOUNDS xy xz yz pp pp pp\n")
             for i in range(3):
-                if do_stress:
-                    file.write("%f %f %f %f %f %f\n" % (lammpsbox[i,0],lammpsbox[i,1],tilt[i],self.stress[i,0],self.stress[i,1],self.stress[i,2]))
+                if self._do_stress:
+                    file.write("%.16f %.16f %.16f %.16f %.16f %.16f\n" % (lammpsbox[i,0],lammpsbox[i,1],tilt[i],
+                                                        self.stress[i,0],self.stress[i,1],self.stress[i,2]))
                 else:
-                    file.write("%f %f %f\n" % (lammpsbox[i,0],lammpsbox[i,1],tilt[i],))
+                    file.write("%.16f %.16f %.16f\n" % (lammpsbox[i,0],lammpsbox[i,1],tilt[i],))
             # TODO - ADD IN STRESS ATTRIBUTES
             # file.write("ITEM: ATOMS id type x y z fx fy fz\n")
-            if not do_force:
+            if not self._do_force:
                 file.write("ITEM: ATOMS id type x y z\n")
             else:
                 file.write("ITEM: ATOMS id type x y z fx fy fz\n")
             for i in range(self.natoms):
-                if not do_force:
-                    file.write("%d %d %f %f %f\n" % (i+1, self.types[i], x[0,i], x[1,i], x[2,i]))
+                if not self._do_force:
+                    file.write("%d %d %.16f %.16f %.16f\n" % (i+1, self.types[i], x[0,i], x[1,i], x[2,i]))
                 else:
-                    file.write("%d %d %f %f %f %f %f %f\n" % (i+1, self.types[i], x[0,i], x[1,i], x[2,i], self.force[0,i], self.force[1,i], self.force[2,i]))
+                    file.write("%d %d %.16f %.16f %.16f %.16f %.16f %.16f\n" % (i+1, self.types[i], x[0,i], x[1,i], x[2,i],
+                                                              self.force[0,i], self.force[1,i], self.force[2,i]))
             file.close()
 
-    def thermal_test(self,
-                temp: Union[str, int, float, None],
-                strain: Union[str, int, float, None] = 0,
-                shear: Union[str, int, float, None] = 0,
-                nsims: Union[str, int, None] = 100,
-                N: int = None,
-                ss_dict: Union[dict, None] = None):
+    def thermal_wave(self,
+                     amplitude: float,
+                     a: Union[float, None] = None,
+                     c: Union[float, None] = None,
+                     wavelength: Union[float, int, None] = None,
+                     frequency: Union[float, int, None] = None,
+                     alpha: Union[float, int, None] = None,
+                     direction: Union[npt.ArrayLike, None] = None,
+                     nsims: Union[str, int, None] = 100,
+                     shear: Union[str, int, float, None] = 0,
+                     N: int = None,
+                     ss_dict: Union[dict, None] = None):
         """
         Simulates thermal perturbations on the atomic system by applying random displacements and box strain.
 
-        This method generates a series of configurations by thermally perturbing the atomic positions and box dimensions.
-        The perturbations are applied to a base system, and the resulting atomic configurations are stored in a series
-        for further analysis or export.
+        This method generates a series of configurations by thermally perturbing the atomic
+            positions and box dimensions. The perturbations are applied to a base system, and 
+            the resulting atomic configurations are stored in a series for further analysis or export.
 
         Args:
             temp: Maximum random perturbation of atoms.
@@ -589,10 +788,214 @@ class system:
                 ss_keys = ['solute_type', 'num_neighbors', 'num_atoms']
 
         Returns:
-            series: A series containing the generated configurations, each with perturbed atomic positions and box dimensions.
+            series: A series containing the generated configurations, each with perturbed
+                atomic positions and box dimensions.
 
         Raises:
-            ValueError: If the number of simulations (`nsims`) is not provided or invalid keywords are found in `ss_dict`.
+            ValueError: If the number of simulations (`nsims`) is not provided or invalid
+                keywords are found in `ss_dict`.
+        """
+        # old_atoms = deepcopy(self.atoms)
+        # old_box = deepcopy(self.box)
+        # old_types = deepcopy(self.types)
+        # old_types = copy.copy(self.types)
+        # old_natoms = deepcopy(self.natoms)
+        # old_elements = deepcopy(self.elements)
+        if direction is None:
+            direction = np.random.normal(size=3)
+            direction = direction / np.linalg.norm(direction)
+        else:
+            direction = np.asarray(direction)
+            assert direction.shape == (3,), 'The direction vector must have a shape of (3,).'
+            direction = direction / np.linalg.norm(direction)
+        if wavelength is None and a is None and c is None:
+            box_project = np.abs(np.dot(self.box.T, direction))
+            wavelength = np.sum(box_project)
+        elif wavelength is None and a is not None:
+            if c is not None:
+                # print(f'working correctly\n')
+                box_x = a * (self.box[:,0] / np.linalg.norm(self.box[:,0]))
+                box_y = a * (self.box[:,1] / np.linalg.norm(self.box[:,1]))
+                box_z = c * (self.box[:,2] / np.linalg.norm(self.box[:,2]))
+                temp_box = np.array([box_x, box_y, box_z]).T
+                box_project = np.abs(np.dot(temp_box.T, direction))
+                wavelength = np.sum(box_project)
+            else:
+                box_x = a * (self.box[:,0] / np.linalg.norm(self.box[:,0]))
+                box_y = a * (self.box[:,1] / np.linalg.norm(self.box[:,1]))
+                box_z = a * (self.box[:,2] / np.linalg.norm(self.box[:,2]))
+                temp_box = np.array([box_x, box_y, box_z]).T
+                box_project = np.abs(np.dot(temp_box.T, direction))
+                wavelength = np.sum(box_project)
+
+        if frequency is None:
+            frequency = 1.0
+        if alpha is None:
+            alpha = 1.0
+        if nsims is None:
+            raise ValueError('Please specify the number of structures to create by '
+            'thermally perturbing the base system.')
+        else:
+            nsims = int(nsims)
+        if N is None:
+            N = self.natoms
+        if ss_dict is not None:
+            ss_keys = ['solute_type', 'num_neighbors', 'num_atoms']
+            good_keys = []
+            for i in ss_dict.keys():
+                if i not in ss_keys:
+                    raise ValueError(f'{i} is not a valid solidsolution keyword.\nValid keywords are {ss_keys}')
+                else:
+                    if i == 'solute_type':
+                        solute_type = ss_dict[i]
+                    elif i == 'num_neighbors':
+                        num_neighbors = ss_dict[i]
+                    elif i == 'num_atoms':
+                        num_atoms = ss_dict[i]
+                    # elif i == 'replicate':
+                    #     replicate = ss_dict[i]
+                    else:
+                        solute_type = None
+                        num_neighbors = 1
+                        num_atoms = 1
+                        # replicate = None
+            # self.solidsolution(solute_type=solute_type, num_neighbors=num_neighbors, replicate=replicate)
+
+
+        inv_box = inv(self.box)
+        series_list = []
+        t = np.linspace(0, 1, nsims)
+        for i in range(1, nsims+1):
+            self.atoms = self._original_atoms+0
+            self.box = self._original_box+0
+            self.types = self._original_types+0
+            self.natoms = self._original_natoms+0
+            self.elements = self._original_elements
+            k = 2 * np.pi / wavelength
+            omega = 2 * np.pi * frequency
+            projections = np.dot(self.atoms.T, direction)
+            displacement_magnitudes = amplitude * np.exp(-alpha*t[i-1]) * np.sin(k * projections - omega * t[i-1])
+            displacements = displacement_magnitudes[:, np.newaxis] * direction
+            self.atoms += displacements.T
+            direct = inv_box@self.atoms
+            wrap_direct = direct%1.0
+            self.atoms = self.box@wrap_direct
+            series_list.append(system(atoms=self.atoms+0, box=self.box+0, types=self.types+0,
+                                      elements=self.elements, natoms=self.natoms+0, timestep=i))
+
+
+        # for i in range(1,nsims+1):
+
+        #     # self.atoms = old_atoms
+        #     # self.box = old_box
+        #     # self.types = old_types
+        #     # self.natoms = old_natoms
+        #     # self.elements = old_elements
+        #     self.atoms = self._original_atoms+0
+        #     self.box = self._original_box+0
+        #     self.types = self._original_types+0
+        #     self.natoms = self._original_natoms+0
+        #     self.elements = self._original_elements
+
+        #     # self.solidsolution(solute_type=solute_type, num_neighbors=num_neighbors, replicate=replicate)
+        #     if ss_dict is not None:
+        #         self.solidsolution(solute_type=solute_type, num_neighbors=num_neighbors, num_atoms=num_atoms)
+
+        #     rng = np.random.default_rng()
+        #     ss = rng.uniform(size=6, low=np.array([-1.,-1.,-1.,-1.,-1.,-1.])*strain, high=np.array([1.,1.,1.,1.,1.,1.])*strain)
+        #     shear_strain = rng.uniform(size=6, low=np.array([-1.,-1.,-1.,-1.,-1.,-1.])*shear, high=np.array([1.,1.,1.,1.,1.,1.])*shear)
+        #     # ss = (rand(6)-0.5)*strain*2
+        #     # box1 = new_box+0
+        #     # self.box = self.box+0
+        #     xmag = norm(self.box[:,0])
+        #     ymag = norm(self.box[:,1])
+        #     zmag = norm(self.box[:,2])
+        #     self.box[0,0] += ss[0]*xmag
+        #     self.box[1,1] += ss[1]*ymag
+        #     self.box[2,2] += ss[2]*zmag
+        #     self.box[0,1] += shear_strain[3]*ymag
+        #     self.box[0,2] += shear_strain[4]*zmag
+        #     self.box[1,2] += shear_strain[5]*zmag
+        #     # self.box[0,1] += ss[3]*ymag
+        #     # self.box[0,2] += ss[4]*zmag
+        #     # self.box[1,2] += ss[5]*zmag
+
+        #     # self.box[0,0] += ss[0]*xmag
+        #     # self.box[1,1] += ss[1]*ymag
+        #     # self.box[2,2] += ss[2]*zmag
+        #     # self.box[0,1] += ss[3]*ymag
+        #     # self.box[0,2] += ss[4]*zmag
+        #     # self.box[1,2] += ss[5]*zmag
+        #     # self.atoms = self.box@(inv(old_box)@old_atoms)
+
+        #     self.atoms = self.box@(inv(self._original_box)@self._original_atoms)
+
+        #     seq = list(range(0,self.natoms))
+        #     index = random.sample(seq,N)
+        #     for j in range(N):
+        #         rng = np.random.default_rng()
+        #         vec = rng.uniform(size=3, low=np.array([-1.,-1.,-1.]), high=np.array([1.,1.,1.]))
+        #         # x = (random.random()-0.5)
+        #         # y = (random.random()-0.5)
+        #         # z = (random.random()-0.5)
+        #         # vec = np.array([x, y, z])*temp/np.sqrt(3)*2
+        #         vec *= temp/np.sqrt(3)*2
+        #         self.atoms[:,index[j]] += vec
+        #     # Direct = inv(self.box)@self.atoms
+        #     # Direct -= floor(Direct)
+        #     # self.atoms = self.box@Direct
+
+        #     series_list.append(system(atoms=self.atoms+0, box=self.box+0, types=self.types+0, elements=self.elements, natoms=self.natoms+0, timestep=i))
+
+        # count = 1
+        # for i in series_list:
+        #     i.export(f'thermal_tests/{count}.poscar')
+        #     count += 1
+
+        # self.atoms = old_atoms
+        # self.box = old_box
+        # self.types = old_types
+        # self.natoms = old_natoms
+        # self.elements = old_elements
+        descriptor = f'{self.descriptor}_{self.thermal.__name__}'
+        self.atoms = self._original_atoms+0
+        self.box = self._original_box+0
+        self.types = self._original_types+0
+        self.natoms = self._original_natoms+0
+        return series.series(series_list, descriptor=descriptor)
+
+    def thermal_test(self,
+                temp: Union[str, int, float, None],
+                strain: Union[str, int, float, None] = 0,
+                shear: Union[str, int, float, None] = 0,
+                nsims: Union[str, int, None] = 100,
+                N: int = None,
+                ss_dict: Union[dict, None] = None):
+        """
+        Simulates thermal perturbations on the atomic system by applying random displacements and box strain.
+
+        This method generates a series of configurations by thermally perturbing the
+            atomic positions and box dimensions. The perturbations are applied to a 
+            base system, and the resulting atomic configurations are stored in a series for further analysis or export.
+
+        Args:
+            temp: Maximum random perturbation of atoms.
+                Currently, this should be a percentage of the given simulation cell's lattice parameter (in decimal
+                format).
+            strain: Maximum strain given as a percentage (in decimal format) of the given simulation
+                cell's lattice parameter.
+            nsims: The number of unique structures to produce.
+            N: Number of atoms - Ignore this. Not sure why I made this an argument at the moment.
+            ss_dict: dictionary of keywords for doing thermal perturbation on solid solution.
+                ss_keys = ['solute_type', 'num_neighbors', 'num_atoms']
+
+        Returns:
+            series: A series containing the generated configurations, each with perturbed
+                atomic positions and box dimensions.
+
+        Raises:
+            ValueError: If the number of simulations (`nsims`) is not provided or invalid
+                keywords are found in `ss_dict`.
         """
         # old_atoms = deepcopy(self.atoms)
         # old_box = deepcopy(self.box)
@@ -601,7 +1004,8 @@ class system:
         # old_natoms = deepcopy(self.natoms)
         # old_elements = deepcopy(self.elements)
         if nsims is None:
-            raise ValueError('Please specify the number of structures to create by thermally perturbing the base system.')
+            raise ValueError('Please specify the number of structures to create by thermally '
+            'perturbing the base system.')
         else:
             nsims = int(nsims)
         if N is None:
@@ -648,8 +1052,10 @@ class system:
                 self.solidsolution(solute_type=solute_type, num_neighbors=num_neighbors, num_atoms=num_atoms)
 
             rng = np.random.default_rng()
-            ss = rng.uniform(size=6, low=np.array([-1.,-1.,-1.,-1.,-1.,-1.])*strain, high=np.array([1.,1.,1.,1.,1.,1.])*strain)
-            shear_strain = rng.uniform(size=6, low=np.array([-1.,-1.,-1.,-1.,-1.,-1.])*shear, high=np.array([1.,1.,1.,1.,1.,1.])*shear)
+            ss = rng.uniform(size=6, low=np.array([-1.,-1.,-1.,-1.,-1.,-1.])*strain,
+                             high=np.array([1.,1.,1.,1.,1.,1.])*strain)
+            shear_strain = rng.uniform(size=6, low=np.array([-1.,-1.,-1.,-1.,-1.,-1.])*shear,
+                                       high=np.array([1.,1.,1.,1.,1.,1.])*shear)
             # ss = (rand(6)-0.5)*strain*2
             # box1 = new_box+0
             # self.box = self.box+0
@@ -691,7 +1097,8 @@ class system:
             # Direct -= floor(Direct)
             # self.atoms = self.box@Direct
 
-            series_list.append(system(atoms=self.atoms+0, box=self.box+0, types=self.types+0, elements=self.elements, natoms=self.natoms+0, timestep=i))
+            series_list.append(system(atoms=self.atoms+0, box=self.box+0, types=self.types+0,
+                                      elements=self.elements, natoms=self.natoms+0, timestep=i))
 
         # count = 1
         # for i in series_list:
@@ -708,7 +1115,7 @@ class system:
         self.box = self._original_box+0
         self.types = self._original_types+0
         self.natoms = self._original_natoms+0
-        return series(series_list, descriptor=descriptor)
+        return series.series(series_list, descriptor=descriptor)
     def thermal(self,
                 temp: Union[str, int, float, None],
                 strain: Union[str, int, float, None] = 0,
@@ -718,26 +1125,36 @@ class system:
         """
         Simulates thermal perturbations on the atomic system by applying random displacements and box strain.
 
-        This method generates a series of configurations by thermally perturbing the atomic positions and box dimensions.
-        The perturbations are applied to a base system, and the resulting atomic configurations are stored in a series
-        for further analysis or export.
+        This method generates a series of configurations by thermally perturbing
+        the atomic positions and box dimensions. The perturbations are applied
+        to a base system, and the resulting atomic configurations are stored in
+        a series for further analysis or export.
 
-        Args:
-            temp: Maximum random perturbation of atoms.
-                Currently, this should be a percentage of the given simulation cell's lattice parameter (in decimal
-                format).
-            strain: Maximum strain given as a percentage (in decimal format) of the given simulation
-                cell's lattice parameter.
-            nsims: The number of unique structures to produce.
-            N: Number of atoms - Ignore this. Not sure why I made this an argument at the moment.
-            ss_dict: dictionary of keywords for doing thermal perturbation on solid solution.
-                ss_keys = ['solute_type', 'num_neighbors', 'num_atoms']
+        Parameters
+        ----------
+        temp
+            Maximum random perturbation of atoms in Angstroms.
+        strain
+            Maximum strain given as a percentage (in decimal format) of the given simulation
+            cell's lattice parameter.
+        nsims
+            The number of unique structures to produce.
+        N
+            Number of atoms to perturb. Useful if you only want to perturb a few random atoms. 
+        ss_dict
+            dictionary of keywords for doing thermal perturbation on solid solution.
+            ss_keys = ['solute_type', 'num_neighbors', 'num_atoms']
 
-        Returns:
-            series: A series containing the generated configurations, each with perturbed atomic positions and box dimensions.
+        Returns
+        -------
+        series
+            A series containing the generated configurations, each with
+            perturbed atomic positions and box dimensions.
 
-        Raises:
-            ValueError: If the number of simulations (`nsims`) is not provided or invalid keywords are found in `ss_dict`.
+        Raises
+        ------
+        ValueError
+            If the number of simulations (`nsims`) is not provided or invalid keywords are found in `ss_dict`.
         """
         # old_atoms = deepcopy(self.atoms)
         # old_box = deepcopy(self.box)
@@ -746,7 +1163,8 @@ class system:
         # old_natoms = deepcopy(self.natoms)
         # old_elements = deepcopy(self.elements)
         if nsims is None:
-            raise ValueError('Please specify the number of structures to create by thermally perturbing the base system.')
+            raise ValueError('Please specify the number of structures to create by '
+            'thermally perturbing the base system.')
         else:
             nsims = int(nsims)
         if N is None:
@@ -793,7 +1211,8 @@ class system:
                 self.solidsolution(solute_type=solute_type, num_neighbors=num_neighbors, num_atoms=num_atoms)
 
             rng = np.random.default_rng()
-            ss = rng.uniform(size=6, low=np.array([-1.,-1.,-1.,-1.,-1.,-1.])*strain, high=np.array([1.,1.,1.,1.,1.,1.])*strain)
+            ss = rng.uniform(size=6, low=np.array([-1.,-1.,-1.,-1.,-1.,-1.])*strain,
+                             high=np.array([1.,1.,1.,1.,1.,1.])*strain)
             # ss = (rand(6)-0.5)*strain*2
             # box1 = new_box+0
             # self.box = self.box+0
@@ -825,13 +1244,16 @@ class system:
                 # y = (random.random()-0.5)
                 # z = (random.random()-0.5)
                 # vec = np.array([x, y, z])*temp/np.sqrt(3)*2
-                vec *= temp/np.sqrt(3)*2
+                # vec *= temp/np.sqrt(3)*2
+                vec *= temp
                 self.atoms[:,index[j]] += vec
-            # Direct = inv(self.box)@self.atoms
+            Direct = inv(self.box)@self.atoms
+            Direct = Direct%1.0
             # Direct -= floor(Direct)
-            # self.atoms = self.box@Direct
+            self.atoms = self.box@Direct
 
-            series_list.append(system(atoms=self.atoms+0, box=self.box+0, types=self.types+0, elements=self.elements, natoms=self.natoms+0, timestep=i))
+            series_list.append(system(atoms=self.atoms+0, box=self.box+0, types=self.types+0,
+                                      elements=self.elements, natoms=self.natoms+0, timestep=i))
 
         # count = 1
         # for i in series_list:
@@ -848,7 +1270,7 @@ class system:
         self.box = self._original_box+0
         self.types = self._original_types+0
         self.natoms = self._original_natoms+0
-        return series(series_list, descriptor=descriptor)
+        return series.series(series_list, descriptor=descriptor)
 
     # def solidsolution(self,
     #                   solute_type: int = None,
@@ -864,22 +1286,32 @@ class system:
         """
         Adds a solid solution to the atomic system by introducing solute atoms into the lattice.
 
-        This method randomly selects a position in the system and changes the type of num_neighbor closest atoms corresponding to the solute.
-        The solute atoms are added to the system's atomic types and elements.
+        This method randomly selects a position in the system and changes the type of
+        num_neighbor closest atoms corresponding to the solute. The solute atoms
+        are added to the system's atomic types and elements.
 
-        Args:
-            solute_type: Integer value for the atom type of the solute.
-            num_atoms: Integer value for the number of solute atoms.
-            solute_element: Element type of the solute.
-            num_neighbors: Integer value representing the number of neighbors to a random point
-                to change to the solute type.
+        Parameters
+        ----------
+        solute_type
+            Integer value for the atom type of the solute.
+        num_atoms
+            Integer value for the number of solute atoms.
+        solute_element
+            Element type of the solute.
+        num_neighbors
+            Integer value representing the number of neighbors to a random point
+            to change to the solute type.
 
-        Returns:
-            None: The method modifies the `types` attribute of the atomic system by assigning the selected solute type to
-              the chosen nearest neighbor atoms.
+        Returns
+        -------
+        None
+            The method modifies the `types` attribute of the atomic system by
+            assigning the selected solute type to the chosen nearest neighbor atoms.
 
-        Raises:
-        ValueError: If the solute type or element is not valid.
+        Raises
+        ------
+        ValueError
+            If the solute type or element is not valid.
         """
         if solute_type is None:
             solute_type = max(self.types)+1
@@ -955,19 +1387,28 @@ class system:
         """
         Creates a surface by modifying the atomic system and box dimensions based on a specified direction.
 
-        This method uses the input direction to define the orientation of the system, transforms the system to a new basis,
-        and generates a supercell by filling the box with atoms. It then applies a transformation to the system's atomic positions
-        and box to create a surface-like structure. The result is a modified system with a new set of atoms and box dimensions.
+        This method uses the input direction to define the orientation of the system,
+        transforms the system to a new basis, and generates a supercell by filling
+        the box with atoms. It then applies a transformation to the system's atomic
+        positions and box to create a surface-like structure. The result is a
+        modified system with a new set of atoms and box dimensions.
 
-        Args:
-            direction: An array of column vectors representing the new simulation cell.
-                Free surface will be on the x? plane.
+        Parameters
+        ----------
+        direction
+            An array of column vectors representing the new simulation cell.
+            Free surface will be on the x? plane.
 
-        Returns:
-            None: The method modifies the `atoms` and `box` attributes of the system in place.
+        Returns
+        -------
+        None
+            The method modifies the `atoms` and `box` attributes of the system in place.
 
-        Raises:
-            Exception: If the input direction results in an invalid configuration where the cross product leads to a zero vector.
+        Raises
+        ------
+        Exception
+            If the input direction results in an invalid configuration
+            where the cross product leads to a zero vector.
         """
         direction = np.asarray(direction)
         x1dir = direction[:,0]
@@ -1060,14 +1501,21 @@ class system:
         """
         Removes atoms from the system to create vacancies by removing atoms close to randomly selected points.
 
-        This method randomly selects points within the simulation box and identifies the nearest neighbors to those points.
-        It then removes a specified number of nearest neighbors from the atomic system, effectively creating vacancies in the structure.
+        This method randomly selects points within the simulation box and identifies
+        the nearest neighbors to those points. It then removes a specified number
+        of nearest neighbors from the atomic system, effectively creating vacancies
+        in the structure.
 
-        Args:
-            num_neighbors: The number of neighbors to delete from a randomly selected points.
+        Parameters
+        ----------
+        num_neighbors
+            The number of neighbors to delete from a randomly selected points.
 
-        Returns:
-            None: The method modifies the `atoms` and `types` attributes of the system in place, removing the specified number of atoms.
+        Returns
+        -------
+        None 
+            The method modifies the `atoms` and `types` attributes of the system
+            in place, removing the specified number of atoms.
         """
         rng = np.random.default_rng()
         # final_box = np.array([replicate])*box
@@ -1112,23 +1560,27 @@ class system:
         """
         Generates a lattice structure by replicating a unit cell and placing atoms within the given box.
 
-        This method constructs a lattice by replicating the atoms within a unit cell to fill a 3D box. It computes the
-        lattice vectors, iterates over the box to place atoms at appropriate positions, and returns the final atomic positions
-        and their associated types.
+        This method constructs a lattice by replicating the atoms within a unit
+            cell to fill a 3D box. It computes the lattice vectors, iterates over
+            the box to place atoms at appropriate positions, and returns the final
+            atomic positions and their associated types.
 
         Args:
             unitcell (ndarray): A 3x3 matrix representing the unit cell of the structure.
-            atoms (ndarray): A matrix of atomic positions (3xN), where each column represents the position of an atom in the unit cell.
+            atoms (ndarray): A matrix of atomic positions (3xN), where each column represents
+                the position of an atom in the unit cell.
             types (ndarray): A vector of atomic types corresponding to the atoms in the unit cell.
             box (ndarray): A 3x3 matrix representing the dimensions of the box in which the lattice is constructed.
 
         Returns:
             tuple: A tuple containing:
-                - `A` (ndarray): A matrix of the atomic positions in the lattice (3xM, where M is the total number of atoms).
+                - `A` (ndarray): A matrix of the atomic positions in the lattice
+                    (3xM, where M is the total number of atoms).
                 - `Types` (ndarray): A vector of atomic types corresponding to the atoms in the lattice.
 
         Notes:
-            The method uses the inverse of the unit cell to determine the appropriate scaling and position of atoms within the box.
+            The method uses the inverse of the unit cell to determine the appropriate
+                scaling and position of atoms within the box.
         """
         # """
         # Inputs: Unitcell 3x3 matrix. atoms, matrix with column vectors of atom
@@ -1171,32 +1623,47 @@ class system:
             direction: npt.ArrayLike = np.array([[1,0,0],[0,1,0],[0,0,1]]),
             reps: npt.ArrayLike = np.array([1,1,12])):
         """
-        Generates a series of simulations for computing the Generalized Surface Formation Energy (GSFE) by modifying the atomic positions
-        and box based on a given direction and replication parameters.
+        Generates a series of simulations for computing the Generalized Stacking Fault Energy.
 
-        This method creates a series of simulations by generating different configurations of a system's atomic positions,
-        shifting the positions and box based on specified replication parameters. It uses the `makelattice3` method to construct
-        the lattice and applies transformations to simulate different strain states or surface configurations. The direction 
-        should be a 3x3 matrix with x, y, and z as column vectors.
+        This method creates a series of simulations by generating different
+        configurations of a system's atomic positions, shifting the
+        positions and box based on specified replication parameters.
+        It uses the `makelattice3` method to construct the lattice and
+        applies transformations to simulate different strain states or
+        surface configurations. The direction should be a 3x3 matrix with
+        x, y, and z as column vectors.
 
-        Args:
-            nsims: The total number of unique structures to generate moving along the fault.
-            direction: Array of column vectors representing the miller indicies of the given
-                simulation cell. The stacking fault plane should be the x direction.
-            reps: An array of size (1,3) representing the number of replications of the final
-                simulation cell in the x, y, and z directions.
+        Parameters
+        ----------
+        nsims
+            The total number of unique structures to generate moving along the fault.
+        direction
+            Array of column vectors representing the miller indicies of the given
+            simulation cell. The stacking fault plane should be the x direction.
+        reps
+            An array of size (1,3) representing the number of replications of the final
+            simulation cell in the x, y, and z directions.
 
-        Returns:
-            series: A series object containing the configurations generated in each simulation, with atomic positions, box, and types.
+        Returns
+        -------
+        series
+            A series object containing the configurations generated in
+            each simulation, with atomic positions, box, and types.
 
-        Raises:
-            Exception: If the direction vectors lead to an invalid configuration (i.e., a left-handed coordinate system).
+        Raises
+        ------
+        Exception
+            If the direction vectors lead to an invalid configuration
+            (i.e., a left-handed coordinate system).
 
-        Notes:
-            The method iteratively modifies the atomic positions and the simulation box to generate different configurations. It also
-            creates a series of simulations that can be used to analyze the GSFE by comparing different atomic configurations under
-            strain. The final series of configurations is returned as a `series` object.
-
+        Notes
+        -----
+            The method iteratively modifies the atomic positions and the
+            simulation box to generate different configurations. It also
+            creates a series of simulations that can be used to analyze
+            the GSFE by comparing different atomic configurations under
+            strain. The final series of configurations is returned as a
+            `series` object.
         """
         direction = np.asarray(direction)
         reps = np.asarray(reps)
@@ -1281,7 +1748,8 @@ class system:
             #     os.mkdir(folders[-1]+str(i))
             # os.chdir(folders[-1]+str(i))
 
-            series_list.append(system(atoms=self.atoms+0, box=self.box+0, types=self.types, elements=self.elements, natoms=self.natoms+0, timestep=i))
+            series_list.append(system(atoms=self.atoms+0, box=self.box+0, types=self.types,
+                                      elements=self.elements, natoms=self.natoms+0, timestep=i))
             # Box1r[:,2]+=shift
             # self.box[:,2] += shift
             self.box[:,2] = self.box[:,2]+shift
@@ -1303,23 +1771,35 @@ class system:
         self.types = self._original_types
         self.elements = self._original_elements
         self.natoms = self._original_natoms
-        return series(series_list, descriptor=descriptor)
+        return series.series(series_list, descriptor=descriptor)
 
     def strain(self,
                strain_points: int = 100,
                maximum_strain: np.float64 = 0.05):
 
         '''
-        Strains the simulation cell in even increments up to "maximum_strain" in the following ways: volumetric strain, strain along x, strain along y, strain along z, yz shear strain, xz shear strain, xy shear strain, strain along (111), xy in-plane strain, xy in-plane shear strain, and global strain. Strain points indicates how many different simulation cells to create for each type of strain. The "maximum_strain" parameter is the decimal form of a percentage (0.1 for 10% maximum strain).
+        Strains the simulation cell in even increments from `-maximum_strain` to `maximum_strain`.
 
-        Args:
-            strain_points: The number of unique structures to create for each strain mode (14 strain modes
-                currently used?)
-            maximum_strain: Maximum percentage (in decimal format) of the lattice parameter of the given 
-                simulation cell to strain the box.
+        Strains the simulation cell in even increments up to "maximum_strain"
+        in the following ways: volumetric strain, strain along x, strain
+        along y, strain along z, yz shear strain, xz shear strain, xy shear
+        strain, strain along (111), xy in-plane strain, xy in-plane shear
+        strain, and global strain. Strain points indicates how many different
+        simulation cells to create for each type of strain. The "maximum_strain"
+        parameter is the decimal form of a percentage (0.1 for 10% maximum strain).
 
-        Returns:
-            A series class object
+        Parameters
+        ----------
+        strain_points
+            The number of unique structures to create for each strain mode (14 strain modes
+            currently used?)
+        maximum_strain
+            Maximum percentage (in decimal format) of the lattice parameter of the given 
+            simulation cell to strain the box.
+
+        Returns
+        -------
+        A series class object
         '''
 
         # if (str(os.path.exists('input.xml'))=='False'):
@@ -1527,7 +2007,8 @@ class system:
                 new_axis_matrix=np.transpose(dot(def_matrix,np.transpose(axis_matrix)))
 
                 Direct = inv(self.box)@self.atoms
-                Direct -= floor(Direct)
+                Direct = Direct%1.0
+                # Direct -= floor(Direct)
                 new_atoms_matrix = new_axis_matrix.T@Direct
                 # new_atoms_matrix=np.transpose(dot(def_matrix,np.transpose(new_atoms_matrix)))
                 # new_atoms_matrix = self.atoms.T+def_matrix
@@ -1535,7 +2016,8 @@ class system:
                 self.atoms = new_atoms_matrix+0
 
                 self.box = new_axis_matrix.T+0
-                systems_list.append(system(atoms=self.atoms+0, box=self.box+0, types=self.types+0, elements=self.elements, natoms=self.natoms+0, timestep=timestep_count))
+                systems_list.append(system(atoms=self.atoms+0, box=self.box+0, types=self.types+0,
+                                           elements=self.elements, natoms=self.natoms+0, timestep=timestep_count))
                 timestep_count += 1
 
             #-------------------------------------------------------------------------------
@@ -1559,18 +2041,29 @@ class system:
             #print
 
         descriptor = f'{self.descriptor}_{self.strain.__name__}'
-        return series(systems_list, descriptor='strain')
+        return series.series(systems_list, descriptor='strain')
 
     def change_type(self,
                     new_types: Union[npt.ArrayLike, int]):
         '''
-        Changes the integer atom type for the system object. "new_types" should be array-like where the first position represents the new type for current atom type 1. For example, if a system contains Ti as type 1 and Al as type 2, they could be flipped using "new_types=[2,1]". "new_types" should have the same length as the desired number of atom types.
+        Changes the integer type for selected atoms.
 
-        Args:
-            new_types: An array-like item that represents new atom types.
+        Changes the integer atom type for the system object. "new_types" should
+        be array-like where the first position represents the new type for
+        current atom type 1. For example, if a system contains Ti as type 
+        and Al as type 2, they could be flipped using "new_types=[2,1]".
+        "new_types" should have the same length as the desired number of
+        atom types.
 
-        Returns:
-            None. This method updates the system's types attribute.
+        Parameters
+        ----------
+        new_types
+            An array-like item that represents new atom types.
+
+        Returns
+        -------
+        None
+            This method updates the system's types attribute.
         '''
 
         new_types = np.asarray(new_types)

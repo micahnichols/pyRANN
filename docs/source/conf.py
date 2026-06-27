@@ -7,7 +7,7 @@ import sys
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
-sys.path.insert(0,os.path.abspath('../../pyrann'))
+# sys.path.insert(0,os.path.abspath('../../pyrann'))
 # sys.path.insert(0,os.path.abspath('../../'))
 project = 'pyrann'
 copyright = '2026, Micah Nichols, Christopher Barrett'
@@ -17,12 +17,21 @@ release = '1.0.0.a1'
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.apidoc', 'sphinx.ext.napoleon', 'sphinx_autodoc_typehints']
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.apidoc', 'sphinx.ext.napoleon', 'sphinx_autodoc_typehints', 'sphinx.ext.autosummary']
+
+autosummary_generate = True
+
+napoleon_google_docstring = False
+napoleon_numpy_docstring = True
+
+napoleon_use_param = True 
+napoleon_use_rtype = False
+
+typehints_document_rtype = True
+napoleon_use_ivar = True
 
 templates_path = ['_templates']
 exclude_patterns = []
-
-
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
@@ -34,6 +43,7 @@ html_theme='sphinx_rtd_theme'
 html_static_path = ['_static']
 add_module_names = False
 autodoc_typehints = 'description'
-apidoc_serperate_modules=True
+# apidoc_serperate_modules=True
+apidoc_separate_modules = True
 
 html_static_path = ['_static']

@@ -2,7 +2,22 @@ Metadata-Version: 2.4
 Name: pyrann
 Version: 1.0.0a1
 Summary: Python package to generate atomic systems for use in DFT database for RANN interatomic potentials
+Author: Micah Nichols, Christopher Barrett
 Requires-Dist: numpy
 Requires-Dist: scipy
+Requires-Dist: pandas
+Requires-Dist: scikit-learn
+Requires-Dist: bokeh
+Requires-Dist: matplotlib
+Requires-Dist: colorcet
+Requires-Dist: quippy-ase
+Requires-Dist: ase
+Requires-Dist: umap-learn
+Provides-Extra: mtp
+Requires-Dist: pyrann-mtp @ file:./pyrann-mtp ; extra == "mtp"
+Provides-Extra: all
+Requires-Dist: pyrann-mtp @ file:./pyrann-mtp ; extra == "all"
+Dynamic: author
+Dynamic: provides-extra
 Dynamic: requires-dist
 Dynamic: summary

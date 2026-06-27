@@ -26,14 +26,16 @@ import importlib
 
 class processing:
     """
-    Initializes a processing class instance
+    A class to obtain atomic descriptors for RANN, MTP, and GAP formalisms. Also used to 
+    investigate and refine databases and metaparameters for MLIPs
 
-    Args:
-        input_file: The name (relative path) of the file that contains the ML
-            potential information.
-        formalism: The formalism of the ML potential under
-            investigation. Current options are RANN and MTP. If not provided,
-            it tries to infer based on input_file extension.
+    Parameters
+    ----------
+    input_file
+        The name (relative path) of the file that contains the ML potential information.
+    formalism
+        The formalism of the ML potential under investigation. Current options are RANN, MTP, and GAP (or SOAP).
+        If not provided, it tries to infer based on input_file extension.
     """
 
     def __init__(self,
@@ -57,7 +59,8 @@ class processing:
             formalism = formalism.lower()
             formalisms = ['rann', 'nn', 'mtp', 'xml', 'soap', 'gap']
             if formalism not in formalisms:
-                raise ValueError('The provided formalism is not currently accepted. Accepted formalisms are "RANN" and "MTP".')
+                raise ValueError('The provided formalism is not currently accepted. '
+                'Accepted formalisms are "RANN", "MTP", and "SOAP".')
             else:
                 if formalism == 'nn' or formalism == 'rann' or formalism == 'input':
                     formalism = 'rann'
@@ -74,7 +77,9 @@ class processing:
         """
         Returns a string representation of the input file.
 
-        Returns:
+        Returns
+        -------
+        str
             A string representation of the input file.
         """
         return self.__input_file
@@ -84,11 +89,15 @@ class processing:
         """
         Sets the input file for the processing class.
 
-        Args:
-            value (str): Relative path of the input file.
+        Parameters
+        ----------
+        value
+            Relative path of the input file.
 
-        Raises:
-            ValueError: If the input file cannot be found.
+        Raises
+        ------
+        ValueError
+            If the input file cannot be found.
         """
         relative_base = Path('.')
         files = list(relative_base.rglob(value))
@@ -102,7 +111,9 @@ class processing:
         """
         Returns the current formalism.
 
-        Returns:
+        Returns
+        -------
+        str
             The current formalism.
         """
         return self.__formalism
@@ -112,14 +123,16 @@ class processing:
         """
         Sets the formalism for the processing class.
 
-        Args:
-            value (str): The formalism of the ML potential under
-            investigation. Current options are RANN and MTP. If not provided,
-            it tries to infer based on input_file extension.
+        Parameters
+        ----------
+        value
+            The formalism of the ML potential under investigation. Current options are RANN, MTP, and GAP (or SOAP).
+            If not provided, it tries to infer based on input_file extension.
 
-        Raises:
-            ValueError: If the provided formalism is not accepted. Currently
-            accepted formalisms are "RANN" and "MTP".
+        Raises
+        ------
+        ValueError
+            If the provided formalism is not accepted. Currently accepted formalisms are "RANN", "MTP", and "GAP".
         """
         if value is None:
             input_ext = self.input_file.lower().split('.')[-1]
@@ -133,7 +146,8 @@ class processing:
             formalism = value.lower()
             formalisms = ['rann', 'nn', 'mtp', 'xml', 'soap', 'gap']
             if formalism not in formalisms:
-                raise ValueError('The provided formalism is not currently accepted. Accepted formalisms are "RANN" and "MTP".')
+                raise ValueError('The provided formalism is not currently accepted. '
+                'Accepted formalisms are "RANN", "MTP", and "SOAP".')
             else:
                 if formalism == 'nn' or formalism == 'rann':
                     formalism = 'rann'
@@ -149,8 +163,10 @@ class processing:
         """
         Returns the features
 
-        Returns:
-            np.ndarray: features of shape (natoms, nfeatures)
+        Returns
+        -------
+        np.ndarray
+            Features of shape (natoms, nfeatures)
         """
         return self.__features
     @features.setter
@@ -161,20 +177,22 @@ class processing:
         the database and nfeatures is the length of each feature
         vector.
 
-        Args:
-            value: Features array of shape (natoms, nfeatures).
+        Parameters
+        ----------
+        value
+            Features array of shape (natoms, nfeatures).
         """
         self.__features = value
 
     @property
     def global_sim_num(self) -> np.ndarray:
         """
-        Returns array of the global simulation number each atom
-        belongs to.
+        Returns array of the global simulation number each atom belongs to.
 
-        Returns:
-            np.ndarray: 1-D array of global simulation numbers
-            each atom belongs to.
+        Returns
+        -------
+        np.ndarray
+            1-D array of global simulation numbers each atom belongs to.
         """
         return self.__global_sim_num
 
@@ -183,11 +201,66 @@ class processing:
         """
         Sets the global simulation number for each atom
 
-        Args:
-            value: 1-D array of global simulation numbers
-            that each atom belongs to
+        Parameters
+        ----------
+        value
+            1-D array of global simulation numbers that each atom belongs to
         """
-        self.__global_sim_num = value
+        global_sim_num = np.asarray(value)
+        assert global_sim_num.ndim == 1, "global_sim_num array must be 1-dimensional"
+        self.__global_sim_num = global_sim_num
+
+    @property
+    def local_sim_num(self) -> np.ndarray:
+        """
+        Returns 1-D array of local (within-file) simulation numbers for each atom.
+
+        Returns
+        -------
+        np.ndarray
+            1-D array of local simulation numbers for each atom
+        """
+        return self.__local_sim_num
+
+    @local_sim_num.setter
+    def local_sim_num(self, value: npt.ArrayLike):
+        """
+        Sets the local simulation number for each atom
+
+        Parameters
+        ----------
+        value
+            1-D array of local simulation numbers for each atom.
+        """
+        local_sim_num = np.asarray(value)
+        assert local_sim_num.ndim == 1, "local_sim_num array must be 1-dimensional"
+        self.__local_sim_num = local_sim_num
+
+    @property
+    def local_id(self) -> np.ndarray:
+        """
+        Returns the local (within-simulation) atom id for each atom.
+
+        Returns
+        -------
+        np.ndarray
+            1-D array of local atom ids.
+        """
+        return self.__local_id
+
+    @local_id.setter
+    def local_id(self, value: npt.ArrayLike):
+        """
+        Sets the local (within-simulation) id for each atom
+
+        Parameters
+        ----------
+        value
+            1-D array of atom ids
+        """
+        local_id = np.asarray(value)
+        assert local_id.ndim == 1, "local_id array must be 1-dimensional"
+        self.__local_id = local_id
 
     def get_features(self,
                      standardize: Optional[bool] = True,
@@ -195,24 +268,31 @@ class processing:
                      **kwargs
                      ):
         """
-        Gets and sets the filenames, global simulation numbers, local simulation numbers,
-        atom ids, and features for the current formalism and input_file.
+        Calculates and sets the features for the current formalism and input file.
+        Also gets and sets filenames, global simulation numbers, local simulation numbers,
+        and atom ids for the current formalism and input_file.
 
-        Args:
-            standardize: True if the features need to be standardized using
-                StandardScalar
-            file_fmt: File format for the structures to be investigated. 
-                Only neccessary if the file format does not match the default
-                file format of the current formalism. The files will be 
-                converted to support the current set formalism.
-            **kwargs: Any other necessary arguments needed for the current
-                formalism. Currently, the only time this should be used is 
-                to provide the element symbol(s) if the formalism uses soap
-                descriptors (i.e. symbol='Mg').
+        Parameters
+        ----------
+        standardize
+            True if the features need to be standardized using StandardScalar
+        file_fmt
+            File format for the structures to be investigated. 
+            Only neccessary if the file format does not match the default
+            file format of the current formalism. The files will be 
+            converted to support the current set formalism. If formalism is GAP,
+            structures and file_fmt must be in a support pyRANN format. See "load"
+            for supported formats.
+        **kwargs
+            Any other necessary arguments needed for the current
+            formalism. Currently, the only time this should be used is 
+            to provide the element symbol(s) if the formalism uses soap
+            descriptors (i.e. symbol='Mg').
 
-        Sets:
-            features (np.ndarray): An array of size (natoms, nfeatures). 
-                Gives the features for all atoms.
+        Notes
+        -----
+        features, filenames, global_sim_num, local_id, and local_sim_num attributes
+        are set after calling this function. 
         """
 
         path = os.getcwd()
@@ -276,46 +356,81 @@ class processing:
             self.pair_rann = a
 
         elif self.formalism == 'mtp':
-            if not importlib.util.find_spec('pyrann.mtp_bindings'):
-                raise ImportError('\nPlease compile mtp_bindings shared library file.\n')
-            else:
+            try:
                 from . import mtp_bindings
-                cfgs = []
-                filename_list = []
-                loaded_cfgs = []
-                for file in os.listdir(path):
-                    if file.lower().endswith('.cfg'):
-                        loaded_cfgs.append(load(file, series=True))
-                        filename_list.append(file)
-                        cfgs.append(mtp_bindings.Configuration(file))
-                pot = mtp_bindings.MTP(self.input_file)
-                cutoff = pot.cutoff()
-                for i in cfgs:
-                    i.init_nbhs(cutoff)
-                if len(cfgs) == 1:
-                    features = np.array([pot.calc_basis_funcs(k)[1:] for i in cfgs for j in range(i.ncfg()) for k in i.nbhs(j)]) 
-                    filenames = np.array([filename_list[i] for i in range(len(filename_list)) for j in range(len(loaded_cfgs[i].systems)) for k in range(loaded_cfgs[i].systems[j].natoms)])
-                    local_sim_num = np.array([j for i in range(len(filename_list)) for j in range(len(loaded_cfgs[i].systems)) for k in range(loaded_cfgs[i].systems[j].natoms)])
-                    # Working under the assumption that MTP trains over only 1 .cfg file
-                    global_sim_num = np.array([j for i in range(len(filename_list)) for j in range(len(loaded_cfgs[i].systems)) for k in range(loaded_cfgs[i].systems[j].natoms)])
-                    local_id = np.array([k for i in range(len(filename_list)) for j in range(len(loaded_cfgs[i].systems)) for k in range(loaded_cfgs[i].systems[j].natoms)])
-                else:
-                    features = np.array([pot.calc_basis_funcs(k) for i in cfgs for j in range(i.ncfg()) for k in i.nbhs(j)]) 
-                    filenames = np.array([filename_list[i] for i in range(len(filename_list)) for j in range(len(loaded_cfgs[i].systems)) for k in range(loaded_cfgs[i].systems[j].natoms)])
-                    local_sim_num = np.array([j for i in range(len(filename_list)) for j in range(len(loaded_cfgs[i].systems)) for k in range(loaded_cfgs[i].systems[j].natoms)])
-                    # global_temp = 0
-                    # TODO - MAKE SURE THIS MATH IS CORRECT
-                    # global_sim_num = np.array([global_temp:=global_temp*i+(j+i) for i in range(len(filename_list)) for j in range(len(loaded_cfgs[i].systems)) for k in range(loaded_cfgs[i].systems[j].natoms)])
-                    global_sim_num = []
-                    global_temp = 0
-                    for i in range(len(filename_list)):
-                        for j in range(len(loaded_cfgs[i].systems)):
-                            for k in range(loaded_cfgs[i].systems[j].natoms):
-                                global_sim_num.append(global_temp)
-                            global_temp += 1
-                    global_sim_num = np.asarray(global_sim_num)
+            except ImportError:
+                raise ImportError('Please install the additional pyrann_mtp package '
+                                  'by one of the following methods: \n'
+                                  'pip3 install "pyrann[mtp]"\n'
+                                  'pip3 install "pyrann[all]"\n')
+            # if not importlib.util.find_spec('pyrann_mtp.mtp_bindings'):
+            # if not importlib.util.find_spec('pyrann.mtp_bindings'):
+                # raise ImportError('\nPlease compile mtp_bindings shared library file.\n')
+            # else:
+                # from . import mtp_bindings
+            cfgs = []
+            filename_list = []
+            loaded_cfgs = []
+            for file in os.listdir(path):
+                if file.lower().endswith('.cfg'):
+                    loaded_cfgs.append(load(file, series=True))
+                    filename_list.append(file)
+                    cfgs.append(mtp_bindings.Configuration(file))
+            pot = mtp_bindings.MTP(self.input_file)
+            cutoff = pot.cutoff()
+            for i in cfgs:
+                i.init_nbhs(cutoff)
+            if len(cfgs) == 1:
+                features = np.array([pot.calc_basis_funcs(k)[1:] 
+                                     for i in cfgs 
+                                     for j in range(i.ncfg()) 
+                                     for k in i.nbhs(j)]) 
+                filenames = np.array([filename_list[i] 
+                                      for i in range(len(filename_list)) 
+                                      for j in range(len(loaded_cfgs[i].systems)) 
+                                      for k in range(loaded_cfgs[i].systems[j].natoms)])
+                local_sim_num = np.array([j 
+                                          for i in range(len(filename_list)) 
+                                          for j in range(len(loaded_cfgs[i].systems)) 
+                                          for k in range(loaded_cfgs[i].systems[j].natoms)])
+                # Working under the assumption that MTP trains over only 1 .cfg file
+                global_sim_num = np.array([j 
+                                           for i in range(len(filename_list)) 
+                                           for j in range(len(loaded_cfgs[i].systems)) 
+                                           for k in range(loaded_cfgs[i].systems[j].natoms)])
+                local_id = np.array([k 
+                                     for i in range(len(filename_list)) 
+                                     for j in range(len(loaded_cfgs[i].systems)) 
+                                     for k in range(loaded_cfgs[i].systems[j].natoms)])
+            else:
+                features = np.array([pot.calc_basis_funcs(k) 
+                                     for i in cfgs 
+                                     for j in range(i.ncfg()) 
+                                     for k in i.nbhs(j)]) 
+                filenames = np.array([filename_list[i] 
+                                      for i in range(len(filename_list)) 
+                                      for j in range(len(loaded_cfgs[i].systems)) 
+                                      for k in range(loaded_cfgs[i].systems[j].natoms)])
+                local_sim_num = np.array([j 
+                                          for i in range(len(filename_list)) 
+                                          for j in range(len(loaded_cfgs[i].systems)) 
+                                          for k in range(loaded_cfgs[i].systems[j].natoms)])
+                # global_temp = 0
+                # TODO - MAKE SURE THIS MATH IS CORRECT
+                # global_sim_num = np.array([global_temp:=global_temp*i+(j+i) for i in range(len(filename_list)) for j in range(len(loaded_cfgs[i].systems)) for k in range(loaded_cfgs[i].systems[j].natoms)])
+                global_sim_num = []
+                global_temp = 0
+                for i in range(len(filename_list)):
+                    for j in range(len(loaded_cfgs[i].systems)):
+                        for k in range(loaded_cfgs[i].systems[j].natoms):
+                            global_sim_num.append(global_temp)
+                        global_temp += 1
+                global_sim_num = np.asarray(global_sim_num)
 
-                    local_id = np.array([k for i in range(len(filename_list)) for j in range(len(loaded_cfgs[i].systems)) for k in range(loaded_cfgs[i].systems[j].natoms)])
+                local_id = np.array([k 
+                                     for i in range(len(filename_list)) 
+                                     for j in range(len(loaded_cfgs[i].systems)) 
+                                     for k in range(loaded_cfgs[i].systems[j].natoms)])
         elif self.formalism == 'soap':
             from quippy.descriptors import Descriptor
             import ase
@@ -328,7 +443,8 @@ class processing:
             for elem in root.iter('descriptor'):
                 if 'soap' in elem.text:
                     soap = elem.text
-            ase_dict = {'dump':  'lammps-dump-text', 'cfg': 'cfg', 'dat': 'lammps-data', 'data': 'lammps-data', 'poscar': 'vasp'}
+            ase_dict = {'dump':  'lammps-dump-text', 'cfg': 'cfg', 
+                        'dat': 'lammps-data', 'data': 'lammps-data', 'poscar': 'vasp'}
 
             loaded_files = []
             filename_list = []
@@ -360,9 +476,12 @@ class processing:
             features = np.asarray([k for i in features for j in i for k in j['data']])
             # features = np.asarray([j['data'].reshape(-1, j['data'].shape[-1]) for i in features for j in i])
             # features = features.reshape(-1, features.shape[-1])
-            print(f'\n\n{features.shape = }\n\n')
-            print(f'{features = }\n\n')
-            filenames = np.asarray([filename_list[i] for i in range(len(filename_list)) for j in range(len(loaded_files[i].systems)) for k in range(loaded_files[i].systems[j].natoms)])
+            # print(f'\n\n{features.shape = }\n\n')
+            # print(f'{features = }\n\n')
+            filenames = np.asarray([filename_list[i] 
+                                    for i in range(len(filename_list)) 
+                                    for j in range(len(loaded_files[i].systems)) 
+                                    for k in range(loaded_files[i].systems[j].natoms)])
             # global_sim_num = np.asarray([
             global_sim_num = []
             global_temp = 0
@@ -372,21 +491,19 @@ class processing:
                         global_sim_num.append(global_temp)
                     global_temp += 1
             global_sim_num = np.asarray(global_sim_num)
-            local_sim_num = np.asarray([j for i in range(len(filename_list)) for j in range(len(loaded_files[i].systems)) for k in range(loaded_files[i].systems[j].natoms)])
-            local_id = np.asarray([k for i in range(len(filename_list)) for j in range(len(loaded_files[i].systems)) for k in range(loaded_files[i].systems[j].natoms)])
-
-
-
-
-
+            local_sim_num = np.asarray([j 
+                                        for i in range(len(filename_list)) 
+                                        for j in range(len(loaded_files[i].systems)) 
+                                        for k in range(loaded_files[i].systems[j].natoms)])
+            local_id = np.asarray([k 
+                                   for i in range(len(filename_list)) 
+                                   for j in range(len(loaded_files[i].systems)) 
+                                   for k in range(loaded_files[i].systems[j].natoms)])
 
         self.filenames = filenames
         self.global_sim_num = global_sim_num
         self.local_sim_num = local_sim_num
         self.local_id = local_id
-
-
-
 
         if standardize:
             scaler = StandardScaler()
@@ -396,15 +513,18 @@ class processing:
 
     def density(self) -> np.ndarray:
         """
-        Finds the average feature-space density for each simulation using the
-        100 nearest neighbors for each atom. Excludes atoms that belong to the
-        same global simulation number.
+        Finds the average feature-space density for each simulation using the 100 nearest neighbors for each atom. 
+        Excludes atoms that belong to the same global simulation number.
 
-        Returns:
-            np.ndarray: 1-D array (length nsims) of average feature-space density.
+        Returns
+        -------
+        np.ndarray
+            1-D array (length nsims) of average feature-space density.
 
-        Raises:
-            ValueError: If either features or global_sim_num is not set
+        Raises
+        ------
+        ValueError
+            If either features or global_sim_num is not set
         """
         # if self.features == np.zeros((100,100)) or self.global_sim_num == np.zeros(100):
         if not np.any(self.features) or not np.any(self.global_sim_num):
@@ -444,18 +564,24 @@ class processing:
                **kwargs
                ) -> np.ndarray:
         """
-        Reduces the database. The default metric is to delete simulations in
-        the most dense regions of the fingerprint space.
+        Reduces the database by ${percent}%. 
+        The default metric is to delete simulations in the most dense regions of the fingerprint space.
 
-        Args:
-            percent: The percentage of data to delete.
-            metric: If given, this must be a user defined function that takes
-                in values and deletes a certain amount of data.
-            **kwargs: Any additional arguments that the user defined function
-                needs.
+        Parameters
+        ----------
+        percent
+            The percentage of data to delete.
+        metric
+            If given, this must be a user defined function that takes
+            in values and deletes a certain amount of data.
+        **kwargs
+            Any additional arguments that the user defined function
+            needs.
 
-        Returns:
-            np.ndarray: 1-D array of global simulation numbers to keep in the database.
+        Returns
+        -------
+        np.ndarray
+            1-D array of global simulation numbers to keep in the database.
         """
         # loop_size = int(len(self.global_sim_num)*(percent/100))
         # print(f'{loop_size = }')
@@ -507,19 +633,33 @@ class processing:
 
     def get_umap(self, **kwargs):
         """
-        Initializes UMAP for the set features
+        Initializes UMAP for the set features.
 
-        Args:
-            **kwargs: Any UMAP arguments. pyRANN defaults use UMAP defaults
-                except for the following: verbose=True, init="pca", n_neighbors=54.
-                If kwargs are defined, all undefined UMAP args will default back
-                to UMAP default.
+        Parameters
+        ----------
+        **kwargs
+            Any UMAP arguments. pyRANN defaults use UMAP defaults
+            except for the following: verbose=True, init="pca", n_neighbors=54.
+            If kwargs are defined, all undefined UMAP args will default back
+            to UMAP default.
 
-        Returns:
-            An instance of UMAP to visualize the descriptor space
+        Returns
+        -------
+        An instance of UMAP to visualize the descriptor space
 
-        Raises:
-            ValueError: If the features are not set
+        Raises
+        ------
+        ValueError
+            If the features are not set
+
+        Notes
+        -----
+        Uniform Manifold Approximation and Projection for Dimension Reduction (UMAP) [1]_.
+        Please see https://umap-learn.readthedocs.io/en/latest/
+
+        References
+        ----------
+        .. [1] McInnes, L, Healy, J, UMAP: Uniform Manifold Approximation and Projection for Dimension Reduction, ArXiv e-prints 1802.03426, 2018
         """
         import umap
         # import umap.plot
@@ -545,24 +685,38 @@ class processing:
         """
         Saves an interactive bokeh html plot to visualize the feature-space.
 
-        Args:
-            mapper: UMAP instance
-            color_data: The data that determines how each data point in the 
-                interactive plot is colored. 
-            hover_info: Dictionary containing the information that will appear when a
-                data point is hovered over in the interactive plot. The key will be
-                the label and the values should be arrays of length natoms.
-            color_type: Type of coloring to use. If categorical, each unique item
-                in color_data gets its own color. If linear, viridis colormap will be
-                used to color the data from min(color_data) to max(color_data).
-                Defaults to categorical.
-            rescale_colorbar: Boolean to rescale colorbar when changing the visible
-                range on the plot if color_type == 'linear'. Ignored if
-                color_type == 'categorical'.
-            cmap: String representation of desiried 256 color palette from Bokeh.
-            subset_points: 1-D array of booleans of length natoms. True means that 
-                the data point for that atom should be plotted.
-            key_str: The string to name the html file.
+        Parameters
+        ----------
+        mapper
+            UMAP instance
+        color_data
+            The data that determines how each data point in the interactive plot is colored. 
+        hover_info
+            Dictionary containing the information that will appear when a
+            data point is hovered over in the interactive plot. The key will be
+            the label and the values should be arrays of length natoms.
+        color_type
+            Type of coloring to use. If categorical, each unique item
+            in color_data gets its own color. If linear, viridis colormap will be
+            used to color the data from min(color_data) to max(color_data).
+            Defaults to categorical.
+        rescale_colorbar
+            Boolean to rescale colorbar when changing the visible
+            range on the plot if color_type == 'linear'. Ignored if
+            color_type == 'categorical'.
+        cmap
+            String representation of desiried 256 color palette from Bokeh.
+        subset_points
+            1-D array of booleans of length natoms. True means that 
+            the data point for that atom should be plotted.
+        key_str
+            The string to name the html file.
+
+        Notes
+        -----
+        Todo
+            * Change method to where rescale_colorbar, cmap are kwargs.
+            * Add in kwargs for plot size and background fill color. 
         """
         hover_data = pd.DataFrame(hover_info)
         data = pd.DataFrame(mapper.embedding_, columns=('x', 'y'))
@@ -579,7 +733,9 @@ class processing:
             unique, index = np.unique(color_data, return_index=True)
             index = np.argsort(index)
             unique = unique[index]
-            color_key = [plc.to_hex(c) for c in plt.get_cmap('cet_glasbey_category10')(np.linspace(0,1,np.unique(color_data).shape[0]))]
+            color_key = [plc.to_hex(c) 
+                         for c in 
+                         plt.get_cmap('cet_glasbey_category10')(np.linspace(0,1,np.unique(color_data).shape[0]))]
             new_color = dict(zip(unique, color_key))
             data['label'] = color_data
             data['color'] = pd.Series(color_data).map(new_color)
@@ -770,11 +926,5 @@ class processing:
             layout = column(fig, slider)
 
             bpl.save(layout)
-            # TODO - Fix hovertools
-            # bpl.show()
-            # if key_str:
-            #     py_file = os.path.basename(__file__)
-            #     base_file = py_file.split('.')[0]
-            #     os.system(f'mv {base_file}.html {key_str}.html')
         else:
             raise ValueError('color_type must either be "categorical" or "linear"')

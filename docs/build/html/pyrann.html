@@ -16,10 +16,11 @@
       <script src="_static/documentation_options.js?v=f3915c0e"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="pyRANN TUTORIAL" href="tutorial.html" />
+    <link rel="next" title="pyrann.calibration.PairRANN" href="generated/pyrann.calibration.PairRANN.html" />
     <link rel="prev" title="RANNDIP DOCUMENTATION" href="index.html" /> 
 </head>
 
@@ -45,7 +46,53 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">pyRANN PACKAGE</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#pyrann.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pyrann.system.system"><code class="docutils literal notranslate"><span class="pre">system</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pyrann.system.system.change_type"><code class="docutils literal notranslate"><span class="pre">system.change_type()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyrann.system.system.createsupercell"><code class="docutils literal notranslate"><span class="pre">system.createsupercell()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyrann.system.system.export"><code class="docutils literal notranslate"><span class="pre">system.export()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyrann.system.system.gsfe"><code class="docutils literal notranslate"><span class="pre">system.gsfe()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyrann.system.system.solidsolution"><code class="docutils literal notranslate"><span class="pre">system.solidsolution()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyrann.system.system.strain"><code class="docutils literal notranslate"><span class="pre">system.strain()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyrann.system.system.surface"><code class="docutils literal notranslate"><span class="pre">system.surface()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyrann.system.system.thermal"><code class="docutils literal notranslate"><span class="pre">system.thermal()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyrann.system.system.vacancy"><code class="docutils literal notranslate"><span class="pre">system.vacancy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyrann.system.system.atoms"><code class="docutils literal notranslate"><span class="pre">system.atoms</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyrann.system.system.box"><code class="docutils literal notranslate"><span class="pre">system.box</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyrann.system.system.descriptor"><code class="docutils literal notranslate"><span class="pre">system.descriptor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyrann.system.system.elements"><code class="docutils literal notranslate"><span class="pre">system.elements</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyrann.system.system.energy"><code class="docutils literal notranslate"><span class="pre">system.energy</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyrann.system.system.force"><code class="docutils literal notranslate"><span class="pre">system.force</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyrann.system.system.natoms"><code class="docutils literal notranslate"><span class="pre">system.natoms</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyrann.system.system.stress"><code class="docutils literal notranslate"><span class="pre">system.stress</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyrann.system.system.timestep"><code class="docutils literal notranslate"><span class="pre">system.timestep</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyrann.system.system.types"><code class="docutils literal notranslate"><span class="pre">system.types</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#pyrann.series.series"><code class="docutils literal notranslate"><span class="pre">series</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pyrann.series.series.export"><code class="docutils literal notranslate"><span class="pre">series.export()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyrann.series.series.descriptor"><code class="docutils literal notranslate"><span class="pre">series.descriptor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyrann.series.series.systems"><code class="docutils literal notranslate"><span class="pre">series.systems</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyrann.series.series.timesteps"><code class="docutils literal notranslate"><span class="pre">series.timesteps</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#pyrann.processing.processing"><code class="docutils literal notranslate"><span class="pre">processing</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pyrann.processing.processing.density"><code class="docutils literal notranslate"><span class="pre">processing.density()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyrann.processing.processing.get_features"><code class="docutils literal notranslate"><span class="pre">processing.get_features()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyrann.processing.processing.get_umap"><code class="docutils literal notranslate"><span class="pre">processing.get_umap()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyrann.processing.processing.plot"><code class="docutils literal notranslate"><span class="pre">processing.plot()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyrann.processing.processing.reduce"><code class="docutils literal notranslate"><span class="pre">processing.reduce()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyrann.processing.processing.features"><code class="docutils literal notranslate"><span class="pre">processing.features</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyrann.processing.processing.formalism"><code class="docutils literal notranslate"><span class="pre">processing.formalism</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyrann.processing.processing.global_sim_num"><code class="docutils literal notranslate"><span class="pre">processing.global_sim_num</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyrann.processing.processing.input_file"><code class="docutils literal notranslate"><span class="pre">processing.input_file</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyrann.processing.processing.local_id"><code class="docutils literal notranslate"><span class="pre">processing.local_id</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyrann.processing.processing.local_sim_num"><code class="docutils literal notranslate"><span class="pre">processing.local_sim_num</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#module-pyrann.calibration">calibration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/pyrann.calibration.PairRANN.html">pyrann.calibration.PairRANN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pyrann.calibration.Simulation.html">pyrann.calibration.Simulation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pyrann.calibration.PairRANN"><code class="docutils literal notranslate"><span class="pre">PairRANN</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#pyrann.calibration.PairRANN.feature"><code class="docutils literal notranslate"><span class="pre">PairRANN.feature()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pyrann.calibration.PairRANN.finish"><code class="docutils literal notranslate"><span class="pre">PairRANN.finish()</span></code></a></li>
@@ -60,6 +107,17 @@
 <li class="toctree-l4"><a class="reference internal" href="#pyrann.calibration.PairRANN.sims_per_file"><code class="docutils literal notranslate"><span class="pre">PairRANN.sims_per_file</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pyrann.calibration.PairRANN.natoms.html">pyrann.calibration.PairRANN.natoms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pyrann.calibration.PairRANN.nsims.html">pyrann.calibration.PairRANN.nsims</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pyrann.calibration.PairRANN.sims_per_file.html">pyrann.calibration.PairRANN.sims_per_file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pyrann.calibration.PairRANN.feature.html">pyrann.calibration.PairRANN.feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pyrann.calibration.PairRANN.finish.html">pyrann.calibration.PairRANN.finish</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pyrann.calibration.PairRANN.firstneigh.html">pyrann.calibration.PairRANN.firstneigh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pyrann.calibration.PairRANN.force.html">pyrann.calibration.PairRANN.force</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pyrann.calibration.PairRANN.id.html">pyrann.calibration.PairRANN.id</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pyrann.calibration.PairRANN.run.html">pyrann.calibration.PairRANN.run</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pyrann.calibration.PairRANN.setup.html">pyrann.calibration.PairRANN.setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pyrann.calibration.PairRANN.types.html">pyrann.calibration.PairRANN.types</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pyrann.calibration.Simulation"><code class="docutils literal notranslate"><span class="pre">Simulation</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#pyrann.calibration.Simulation.feature"><code class="docutils literal notranslate"><span class="pre">Simulation.feature()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pyrann.calibration.Simulation.energy"><code class="docutils literal notranslate"><span class="pre">Simulation.energy</span></code></a></li>
@@ -68,57 +126,11 @@
 <li class="toctree-l4"><a class="reference internal" href="#pyrann.calibration.Simulation.types"><code class="docutils literal notranslate"><span class="pre">Simulation.types</span></code></a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#load-function">load function</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#pyrann.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#system-class">system class</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#pyrann.system"><code class="docutils literal notranslate"><span class="pre">system</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#pyrann.system.change_type"><code class="docutils literal notranslate"><span class="pre">system.change_type()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pyrann.system.createsupercell"><code class="docutils literal notranslate"><span class="pre">system.createsupercell()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pyrann.system.export"><code class="docutils literal notranslate"><span class="pre">system.export()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pyrann.system.gsfe"><code class="docutils literal notranslate"><span class="pre">system.gsfe()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pyrann.system.solidsolution"><code class="docutils literal notranslate"><span class="pre">system.solidsolution()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pyrann.system.strain"><code class="docutils literal notranslate"><span class="pre">system.strain()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pyrann.system.surface"><code class="docutils literal notranslate"><span class="pre">system.surface()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pyrann.system.thermal"><code class="docutils literal notranslate"><span class="pre">system.thermal()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pyrann.system.thermal_test"><code class="docutils literal notranslate"><span class="pre">system.thermal_test()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pyrann.system.vacancy"><code class="docutils literal notranslate"><span class="pre">system.vacancy()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pyrann.system.atoms"><code class="docutils literal notranslate"><span class="pre">system.atoms</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pyrann.system.box"><code class="docutils literal notranslate"><span class="pre">system.box</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pyrann.system.energy"><code class="docutils literal notranslate"><span class="pre">system.energy</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pyrann.system.natoms"><code class="docutils literal notranslate"><span class="pre">system.natoms</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pyrann.system.timestep"><code class="docutils literal notranslate"><span class="pre">system.timestep</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pyrann.system.types"><code class="docutils literal notranslate"><span class="pre">system.types</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#series-class">series class</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#pyrann.series"><code class="docutils literal notranslate"><span class="pre">series</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#pyrann.series.export"><code class="docutils literal notranslate"><span class="pre">series.export()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pyrann.series.write_vasp"><code class="docutils literal notranslate"><span class="pre">series.write_vasp()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pyrann.series.descriptor"><code class="docutils literal notranslate"><span class="pre">series.descriptor</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pyrann.series.timesteps"><code class="docutils literal notranslate"><span class="pre">series.timesteps</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#processing-class">processing class</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#pyrann.processing"><code class="docutils literal notranslate"><span class="pre">processing</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#pyrann.processing.density"><code class="docutils literal notranslate"><span class="pre">processing.density()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pyrann.processing.get_features"><code class="docutils literal notranslate"><span class="pre">processing.get_features()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pyrann.processing.get_umap"><code class="docutils literal notranslate"><span class="pre">processing.get_umap()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pyrann.processing.plot"><code class="docutils literal notranslate"><span class="pre">processing.plot()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pyrann.processing.reduce"><code class="docutils literal notranslate"><span class="pre">processing.reduce()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pyrann.processing.features"><code class="docutils literal notranslate"><span class="pre">processing.features</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pyrann.processing.formalism"><code class="docutils literal notranslate"><span class="pre">processing.formalism</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pyrann.processing.global_sim_num"><code class="docutils literal notranslate"><span class="pre">processing.global_sim_num</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pyrann.processing.input_file"><code class="docutils literal notranslate"><span class="pre">processing.input_file</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pyrann.calibration.Simulation.energy.html">pyrann.calibration.Simulation.energy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pyrann.calibration.Simulation.filename.html">pyrann.calibration.Simulation.filename</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pyrann.calibration.Simulation.inum.html">pyrann.calibration.Simulation.inum</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pyrann.calibration.Simulation.types.html">pyrann.calibration.Simulation.types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/pyrann.calibration.Simulation.feature.html">pyrann.calibration.Simulation.feature</a></li>
 </ul>
 </li>
 </ul>
@@ -150,15 +162,918 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="pyrann-package">
-<h1>pyRANN PACKAGE<a class="headerlink" href="#pyrann-package" title="Link to this heading"></a></h1>
+  <section id="module-pyrann">
+<span id="pyrann-package"></span><h1>pyRANN PACKAGE<a class="headerlink" href="#module-pyrann" title="Link to this heading"></a></h1>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyrann.load" title="pyrann.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(…)</p></td>
+<td><p>Loads in a poscar file, LAMMPS data file, LAMMPS dump file, or cfg file and assigns the corresponding atoms, box, types, elements, number of atoms, and timestep to a system object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#module-pyrann.system" title="pyrann.system"><code class="xref py py-obj docutils literal notranslate"><span class="pre">system</span></code></a>(…)</p></td>
+<td><p>A class representing a physical system with atoms, box dimensions, and various properties.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#module-pyrann.series" title="pyrann.series"><code class="xref py py-obj docutils literal notranslate"><span class="pre">series</span></code></a>(…)</p></td>
+<td><p>A class to represent a series of atomistic systems, which can be exported to various file formats.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#module-pyrann.calibration" title="pyrann.calibration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calibration</span></code></a></p></td>
+<td><p>Calibration module.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#module-pyrann.processing" title="pyrann.processing"><code class="xref py py-obj docutils literal notranslate"><span class="pre">processing</span></code></a>(…)</p></td>
+<td><p>A class to obtain atomic descriptors for RANN, MTP, and GAP formalisms.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyrann.load">
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filetype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">series</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.load" title="Link to this definition"></a></dt>
+<dd><p>Loads in a poscar file, LAMMPS data file, LAMMPS dump file, or cfg file and assigns
+the corresponding atoms, box, types, elements, number of atoms, and timestep to a
+system object. Stresses and forces will be added soon</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – A string representation of the desired file to be loaded.</p></li>
+<li><p><strong>filetype</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – Type of file to be loaded. Supported filetypes are poscar,
+data, dump, and cfg. If no filetype is given, it will be inferred from the
+filename</p></li>
+<li><p><strong>timestep</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">ArrayLike</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – A string or integer representation of the timestep for the atomic
+system being loaded. Defaults to 0.</p></li>
+<li><p><strong>series</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">False</span></code>)) – Boolean value to determine if the file being loaded contains
+multiple timesteps.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>System Object or Series Object</dt><dd><p>A system object if series == False, otherwise a series object</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the filetype is unsupported.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class" id="module-pyrann.system">
+<dt class="sig sig-object py" id="pyrann.system.system">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">system</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">box</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">types</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">natoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">energy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">descriptor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.system.system" title="Link to this definition"></a></dt>
+<dd><p>A class representing a physical system with atoms, box dimensions, and various properties.</p>
+<p>Initializes a system with atom positions, types, box dimensions, and other optional properties.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>box</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ArrayLike</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – The 3x3 matrix representing the simulation box. Default is the identity matrix.</p></li>
+<li><p><strong>atoms</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ArrayLike</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – A 3xN array representing the atom positions. This is required.</p></li>
+<li><p><strong>types</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">ArrayLike</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – Atom types, either as a string, integer, or list. Default is an array of ones.</p></li>
+<li><p><strong>elements</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – Elements corresponding to atom types. If None, elements are generated.</p></li>
+<li><p><strong>natoms</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – Number of atoms in the system. If None, derived from <cite>atoms</cite>.</p></li>
+<li><p><strong>timestep</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – The current timestep of the simulation. Default is 0.</p></li>
+<li><p><strong>energy</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – The energy of the system in <span class="math notranslate nohighlight">\(eV\)</span>.</p></li>
+<li><p><strong>stress</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">ArrayLike</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – A 3x3 stress tensor array. Default is None.</p></li>
+<li><p><strong>force</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">ArrayLike</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – A 3xN force array. Default is None.</p></li>
+<li><p><strong>descriptor</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – A description of the system. Default is None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If <cite>atoms</cite> is not provided.</p>
+</dd>
+</dl>
+<p class="rubric">Attributes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyrann.system.system.atoms" title="pyrann.system.system.atoms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atoms</span></code></a></p></td>
+<td><p>Returns (3, natoms) shaped np.ndarray of the atom positions.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyrann.system.system.box" title="pyrann.system.system.box"><code class="xref py py-obj docutils literal notranslate"><span class="pre">box</span></code></a></p></td>
+<td><p>Returns the system's box vectors.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyrann.system.system.descriptor" title="pyrann.system.system.descriptor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">descriptor</span></code></a></p></td>
+<td><p>Returns a description of the system.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyrann.system.system.elements" title="pyrann.system.system.elements"><code class="xref py py-obj docutils literal notranslate"><span class="pre">elements</span></code></a></p></td>
+<td><p>Returns the element types of the system.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyrann.system.system.energy" title="pyrann.system.system.energy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">energy</span></code></a></p></td>
+<td><p>Returns the energy of the system</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyrann.system.system.force" title="pyrann.system.system.force"><code class="xref py py-obj docutils literal notranslate"><span class="pre">force</span></code></a></p></td>
+<td><p>Returns the x, y, and z force components of each atom if applicable.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyrann.system.system.natoms" title="pyrann.system.system.natoms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">natoms</span></code></a></p></td>
+<td><p>Returns the number of atoms in the system.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyrann.system.system.stress" title="pyrann.system.system.stress"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stress</span></code></a></p></td>
+<td><p>Returns the stress tensor of the system if applicable.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyrann.system.system.timestep" title="pyrann.system.system.timestep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">timestep</span></code></a></p></td>
+<td><p>Returns the timestep.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyrann.system.system.types" title="pyrann.system.system.types"><code class="xref py py-obj docutils literal notranslate"><span class="pre">types</span></code></a></p></td>
+<td><p>Returns the atom types.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyrann.system.system.change_type" title="pyrann.system.system.change_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">change_type</span></code></a>(…)</p></td>
+<td><p>Changes the integer type for selected atoms.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyrann.system.system.createsupercell" title="pyrann.system.system.createsupercell"><code class="xref py py-obj docutils literal notranslate"><span class="pre">createsupercell</span></code></a>(…)</p></td>
+<td><p>Creates a supercell by replicating the atoms in the original unit cell and placing them within a new box.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyrann.system.system.export" title="pyrann.system.system.export"><code class="xref py py-obj docutils literal notranslate"><span class="pre">export</span></code></a>(…)</p></td>
+<td><p>Exports the system data to a specified file in a given format.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyrann.system.system.gsfe" title="pyrann.system.system.gsfe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gsfe</span></code></a>(…)</p></td>
+<td><p>Generates a series of simulations for computing the Generalized Stacking Fault Energy.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyrann.system.system.solidsolution" title="pyrann.system.system.solidsolution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">solidsolution</span></code></a>(…)</p></td>
+<td><p>Adds a solid solution to the atomic system by introducing solute atoms into the lattice.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyrann.system.system.strain" title="pyrann.system.system.strain"><code class="xref py py-obj docutils literal notranslate"><span class="pre">strain</span></code></a>(…)</p></td>
+<td><p>Strains the simulation cell in even increments from <cite>-maximum_strain</cite> to <cite>maximum_strain</cite>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyrann.system.system.surface" title="pyrann.system.system.surface"><code class="xref py py-obj docutils literal notranslate"><span class="pre">surface</span></code></a>(…)</p></td>
+<td><p>Creates a surface by modifying the atomic system and box dimensions based on a specified direction.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyrann.system.system.thermal" title="pyrann.system.system.thermal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">thermal</span></code></a>(…)</p></td>
+<td><p>Simulates thermal perturbations on the atomic system by applying random displacements and box strain.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyrann.system.system.vacancy" title="pyrann.system.system.vacancy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vacancy</span></code></a>(…)</p></td>
+<td><p>Removes atoms from the system to create vacancies by removing atoms close to randomly selected points.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrann.system.system.change_type">
+<span class="sig-name descname"><span class="pre">change_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_types</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.system.system.change_type" title="Link to this definition"></a></dt>
+<dd><p>Changes the integer type for selected atoms.</p>
+<p>Changes the integer atom type for the system object. “new_types” should
+be array-like where the first position represents the new type for
+current atom type 1. For example, if a system contains Ti as type
+and Al as type 2, they could be flipped using “new_types=[2,1]”.
+“new_types” should have the same length as the desired number of
+atom types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>new_types</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ArrayLike</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – An array-like item that represents new atom types.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>None</em> – This method updates the system’s types attribute.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrann.system.system.createsupercell">
+<span class="sig-name descname"><span class="pre">createsupercell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_box</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.system.system.createsupercell" title="Link to this definition"></a></dt>
+<dd><p>Creates a supercell by replicating the atoms in the original unit cell and placing them within a new box.</p>
+<p>This method takes the original box and atom positions and generates a new supercell with atoms placed according
+to the new box dimensions. It accounts for periodic boundary conditions and generates a new set of atom types
+and positions based on the replication.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>new_box</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ArrayLike</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – Column vector array of new box dimensions.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>None</em> – This method updates the system’s attributes: <cite>types</cite>, <cite>atoms</cite>, <cite>box</cite>, and <cite>natoms</cite>
+based on the new supercell.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If any unexpected issues arise during supercell creation.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrann.system.system.export">
+<span class="sig-name descname"><span class="pre">export</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filetype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.system.system.export" title="Link to this definition"></a></dt>
+<dd><p>Exports the system data to a specified file in a given format.</p>
+<p>This method allows the user to export the system’s atoms and box dimensions to various file formats,
+such as POSCAR, LAMMPS data, and others. The user can choose the output file’s name, type, and
+coordinate style (e.g., Cartesian, direct, or crystal).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – String of the filename to write.</p></li>
+<li><p><strong>filetype</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – String of the file extension. Not needed if extension is given in filetype.
+filetypes are ‘poscar’, ‘pos’, ‘data’, ‘dat’, ‘dump’, ‘qe’, ‘quantum_espresso’, ‘vasp’, or ‘INCAR’
+Note: Some of these filetypes may not be implemented yet.</p></li>
+<li><p><strong>style</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – String of type of atom coordinates desired (direct, crystal, or cartesian).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>None</em> – This method writes the system data to the specified file in the given format.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If an invalid <cite>filetype</cite> or <cite>style</cite> is provided.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrann.system.system.gsfe">
+<span class="sig-name descname"><span class="pre">gsfe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nsims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([[1,</span> <span class="pre">0,</span> <span class="pre">0],</span> <span class="pre">[0,</span> <span class="pre">1,</span> <span class="pre">0],</span> <span class="pre">[0,</span> <span class="pre">0,</span> <span class="pre">1]])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([1,</span> <span class="pre">1,</span> <span class="pre">12])</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.system.system.gsfe" title="Link to this definition"></a></dt>
+<dd><p>Generates a series of simulations for computing the Generalized Stacking Fault Energy.</p>
+<p>This method creates a series of simulations by generating different
+configurations of a system’s atomic positions, shifting the
+positions and box based on specified replication parameters.
+It uses the <cite>makelattice3</cite> method to construct the lattice and
+applies transformations to simulate different strain states or
+surface configurations. The direction should be a 3x3 matrix with
+x, y, and z as column vectors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nsims</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">100</span></code>)) – The total number of unique structures to generate moving along the fault.</p></li>
+<li><p><strong>direction</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ArrayLike</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">array([[1,</span> <span class="pre">0,</span> <span class="pre">0],</span>
+&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[0,</span> <span class="pre">1,</span> <span class="pre">0],</span>
+&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[0,</span> <span class="pre">0,</span> <span class="pre">1]])</span></code>)) – Array of column vectors representing the miller indicies of the given
+simulation cell. The stacking fault plane should be the x direction.</p></li>
+<li><p><strong>reps</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ArrayLike</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">array([</span> <span class="pre">1,</span>&#160; <span class="pre">1,</span> <span class="pre">12])</span></code>)) – An array of size (1,3) representing the number of replications of the final
+simulation cell in the x, y, and z directions.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>series</em> – A series object containing the configurations generated in
+each simulation, with atomic positions, box, and types.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>Exception</strong> – If the direction vectors lead to an invalid configuration
+    (i.e., a left-handed coordinate system).</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The method iteratively modifies the atomic positions and the
+simulation box to generate different configurations. It also
+creates a series of simulations that can be used to analyze
+the GSFE by comparing different atomic configurations under
+strain. The final series of configurations is returned as a
+<cite>series</cite> object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrann.system.system.solidsolution">
+<span class="sig-name descname"><span class="pre">solidsolution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solute_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solute_element</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_neighbors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.system.system.solidsolution" title="Link to this definition"></a></dt>
+<dd><p>Adds a solid solution to the atomic system by introducing solute atoms into the lattice.</p>
+<p>This method randomly selects a position in the system and changes the type of
+num_neighbor closest atoms corresponding to the solute. The solute atoms
+are added to the system’s atomic types and elements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>solute_type</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – Integer value for the atom type of the solute.</p></li>
+<li><p><strong>num_atoms</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">1</span></code>)) – Integer value for the number of solute atoms.</p></li>
+<li><p><strong>solute_element</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – Element type of the solute.</p></li>
+<li><p><strong>num_neighbors</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">1</span></code>)) – Integer value representing the number of neighbors to a random point
+to change to the solute type.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>None</em> – The method modifies the <cite>types</cite> attribute of the atomic system by
+assigning the selected solute type to the chosen nearest neighbor atoms.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the solute type or element is not valid.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrann.system.system.strain">
+<span class="sig-name descname"><span class="pre">strain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strain_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximum_strain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.system.system.strain" title="Link to this definition"></a></dt>
+<dd><p>Strains the simulation cell in even increments from <cite>-maximum_strain</cite> to <cite>maximum_strain</cite>.</p>
+<p>Strains the simulation cell in even increments up to “maximum_strain”
+in the following ways: volumetric strain, strain along x, strain
+along y, strain along z, yz shear strain, xz shear strain, xy shear
+strain, strain along (111), xy in-plane strain, xy in-plane shear
+strain, and global strain. Strain points indicates how many different
+simulation cells to create for each type of strain. The “maximum_strain”
+parameter is the decimal form of a percentage (0.1 for 10% maximum strain).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>strain_points</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">100</span></code>)) – The number of unique structures to create for each strain mode (14 strain modes
+currently used?)</p></li>
+<li><p><strong>maximum_strain</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float64</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">0.05</span></code>)) – Maximum percentage (in decimal format) of the lattice parameter of the given
+simulation cell to strain the box.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>A series class object</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrann.system.system.surface">
+<span class="sig-name descname"><span class="pre">surface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">direction</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.system.system.surface" title="Link to this definition"></a></dt>
+<dd><p>Creates a surface by modifying the atomic system and box dimensions based on a specified direction.</p>
+<p>This method uses the input direction to define the orientation of the system,
+transforms the system to a new basis, and generates a supercell by filling
+the box with atoms. It then applies a transformation to the system’s atomic
+positions and box to create a surface-like structure. The result is a
+modified system with a new set of atoms and box dimensions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>direction</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ArrayLike</span></code></span>) – An array of column vectors representing the new simulation cell.
+Free surface will be on the x? plane.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>None</em> – The method modifies the <cite>atoms</cite> and <cite>box</cite> attributes of the system in place.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>Exception</strong> – If the input direction results in an invalid configuration
+    where the cross product leads to a zero vector.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrann.system.system.thermal">
+<span class="sig-name descname"><span class="pre">thermal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">temp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nsims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ss_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.system.system.thermal" title="Link to this definition"></a></dt>
+<dd><p>Simulates thermal perturbations on the atomic system by applying random displacements and box strain.</p>
+<p>This method generates a series of configurations by thermally perturbing
+the atomic positions and box dimensions. The perturbations are applied
+to a base system, and the resulting atomic configurations are stored in
+a series for further analysis or export.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>temp</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Maximum random perturbation of atoms.
+Currently, this should be a percentage of the given simulation cell’s lattice parameter (in decimal
+format).</p></li>
+<li><p><strong>strain</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">0</span></code>)) – Maximum strain given as a percentage (in decimal format) of the given simulation
+cell’s lattice parameter.</p></li>
+<li><p><strong>nsims</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">100</span></code>)) – The number of unique structures to produce.</p></li>
+<li><p><strong>N</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – Number of atoms to perturb. Useful if you only want to perturb a few random atoms.</p></li>
+<li><p><strong>ss_dict</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – dictionary of keywords for doing thermal perturbation on solid solution.
+ss_keys = [‘solute_type’, ‘num_neighbors’, ‘num_atoms’]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>series</em> – A series containing the generated configurations, each with
+perturbed atomic positions and box dimensions.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the number of simulations (<cite>nsims</cite>) is not provided or invalid keywords are found in <cite>ss_dict</cite>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrann.system.system.vacancy">
+<span class="sig-name descname"><span class="pre">vacancy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_neighbors</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.system.system.vacancy" title="Link to this definition"></a></dt>
+<dd><p>Removes atoms from the system to create vacancies by removing atoms close to randomly selected points.</p>
+<p>This method randomly selects points within the simulation box and identifies
+the nearest neighbors to those points. It then removes a specified number
+of nearest neighbors from the atomic system, effectively creating vacancies
+in the structure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>num_neighbors</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – The number of neighbors to delete from a randomly selected points.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>None</em> – The method modifies the <cite>atoms</cite> and <cite>types</cite> attributes of the system
+in place, removing the specified number of atoms.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrann.system.system.atoms">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">atoms</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#pyrann.system.system.atoms" title="Link to this definition"></a></dt>
+<dd><p>Returns (3, natoms) shaped np.ndarray of the atom positions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>np.ndarray</em> – A 3xN array representing the positions of the atoms.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrann.system.system.box">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">box</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#pyrann.system.system.box" title="Link to this definition"></a></dt>
+<dd><p>Returns the system’s box vectors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>np.ndarray</strong> (<em>A 3x3 matrix representing the simulation box where x,</em>) – y, and z are column vectors.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrann.system.system.descriptor">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">descriptor</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pyrann.system.system.descriptor" title="Link to this definition"></a></dt>
+<dd><p>Returns a description of the system. Helpful to determine the file loaded from or operations done on the system.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>str</em> – User defined string describing the system.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrann.system.system.elements">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">elements</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ArrayLike</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pyrann.system.system.elements" title="Link to this definition"></a></dt>
+<dd><p>Returns the element types of the system.
+If element types are unknown, the element type becomes “Type_n” where n is an integer
+representing the atom type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>np.ndarray</em> – Array of element types.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrann.system.system.energy">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">energy</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float64</span></span><a class="headerlink" href="#pyrann.system.system.energy" title="Link to this definition"></a></dt>
+<dd><p>Returns the energy of the system</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>np.float64</em> – Float value of the energy.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrann.system.system.force">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">force</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ArrayLike</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pyrann.system.system.force" title="Link to this definition"></a></dt>
+<dd><p>Returns the x, y, and z force components of each atom if applicable.
+Returns None otherwise.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>np.ndarray</em> – An array of shape (3, natoms) of the x, y, and z force components for each atom.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrann.system.system.natoms">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">natoms</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><a class="headerlink" href="#pyrann.system.system.natoms" title="Link to this definition"></a></dt>
+<dd><p>Returns the number of atoms in the system.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>int</em> – The number of atoms in the system.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrann.system.system.stress">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">stress</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ArrayLike</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pyrann.system.system.stress" title="Link to this definition"></a></dt>
+<dd><p>Returns the stress tensor of the system if applicable.
+Returns None otherwise.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>np.ndarray</em> – A 3x3 matrix representing the stress tensor.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrann.system.system.timestep">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">timestep</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><a class="headerlink" href="#pyrann.system.system.timestep" title="Link to this definition"></a></dt>
+<dd><p>Returns the timestep.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>int</em> – The integer value of the timestep.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrann.system.system.types">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">types</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#pyrann.system.system.types" title="Link to this definition"></a></dt>
+<dd><p>Returns the atom types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>np.ndarray</em> – A 1D array representing the atom types.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class" id="module-pyrann.series">
+<dt class="sig sig-object py" id="pyrann.series.series">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">series</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">systems</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">descriptor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.series.series" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class to represent a series of atomistic systems, which can be exported to various file formats.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>systems</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ArrayLike</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – A list or array of atomistic systems to be contained in the series.</p></li>
+<li><p><strong>descriptor</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – A descriptor to label the series (e.g., a string identifier).</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Attributes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyrann.series.series.descriptor" title="pyrann.series.series.descriptor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">descriptor</span></code></a></p></td>
+<td><p>Gets the descriptor for the series.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyrann.series.series.systems" title="pyrann.series.series.systems"><code class="xref py py-obj docutils literal notranslate"><span class="pre">systems</span></code></a></p></td>
+<td><p>Returns 1-D array of system objects in the series object</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyrann.series.series.timesteps" title="pyrann.series.series.timesteps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">timesteps</span></code></a></p></td>
+<td><p>Returns 1-D array of timesteps for all systems.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyrann.series.series.export" title="pyrann.series.series.export"><code class="xref py py-obj docutils literal notranslate"><span class="pre">export</span></code></a>(…)</p></td>
+<td><p>Exports the systems in the series to a specified file format.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrann.series.series.export">
+<span class="sig-name descname"><span class="pre">export</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filetype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.series.series.export" title="Link to this definition"></a></dt>
+<dd><p>Exports the systems in the series to a specified file format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – The name of the file to export (without extension).</p></li>
+<li><p><strong>directory</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – The directory where the file will be saved. If None, saves in the current directory.</p></li>
+<li><p><strong>filetype</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – The format of the file (e.g., ‘poscar’, ‘data’). If None, inferred from filename.</p></li>
+<li><p><strong>style</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – The style for representing atomic positions (e.g., ‘cartesian’, ‘direct’).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If an unsupported filetype is provided, or if the style is invalid.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>None</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrann.series.series.descriptor">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">descriptor</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pyrann.series.series.descriptor" title="Link to this definition"></a></dt>
+<dd><p>Gets the descriptor for the series.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>str</em> – The current descriptor for the series.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrann.series.series.systems">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">systems</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#pyrann.series.series.systems" title="Link to this definition"></a></dt>
+<dd><p>Returns 1-D array of system objects in the series object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>np.ndarray</em> – 1-D array of system objects in the series object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrann.series.series.timesteps">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">timesteps</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#pyrann.series.series.timesteps" title="Link to this definition"></a></dt>
+<dd><p>Returns 1-D array of timesteps for all systems.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>np.ndarray</em> – 1-D array of timesteps.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class" id="module-pyrann.processing">
+<dt class="sig sig-object py" id="pyrann.processing.processing">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">processing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">formalism</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.processing.processing" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class to obtain atomic descriptors for RANN, MTP, and GAP formalisms. Also used to
+investigate and refine databases and metaparameters for MLIPs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_file</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The name (relative path) of the file that contains the ML potential information.</p></li>
+<li><p><strong>formalism</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – The formalism of the ML potential under investigation. Current options are RANN, MTP, and GAP (or SOAP).
+If not provided, it tries to infer based on input_file extension.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Attributes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyrann.processing.processing.features" title="pyrann.processing.processing.features"><code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code></a></p></td>
+<td><p>Returns the features</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyrann.processing.processing.formalism" title="pyrann.processing.processing.formalism"><code class="xref py py-obj docutils literal notranslate"><span class="pre">formalism</span></code></a></p></td>
+<td><p>Returns the current formalism.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyrann.processing.processing.global_sim_num" title="pyrann.processing.processing.global_sim_num"><code class="xref py py-obj docutils literal notranslate"><span class="pre">global_sim_num</span></code></a></p></td>
+<td><p>Returns array of the global simulation number each atom belongs to.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyrann.processing.processing.input_file" title="pyrann.processing.processing.input_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_file</span></code></a></p></td>
+<td><p>Returns a string representation of the input file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyrann.processing.processing.local_id" title="pyrann.processing.processing.local_id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">local_id</span></code></a></p></td>
+<td><p>Returns the local (within-simulation) atom id for each atom.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyrann.processing.processing.local_sim_num" title="pyrann.processing.processing.local_sim_num"><code class="xref py py-obj docutils literal notranslate"><span class="pre">local_sim_num</span></code></a></p></td>
+<td><p>Returns 1-D array of local (within-file) simulation numbers for each atom.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyrann.processing.processing.density" title="pyrann.processing.processing.density"><code class="xref py py-obj docutils literal notranslate"><span class="pre">density</span></code></a>()</p></td>
+<td><p>Finds the average feature-space density for each simulation using the 100 nearest neighbors for each atom.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyrann.processing.processing.get_features" title="pyrann.processing.processing.get_features"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_features</span></code></a>(…)</p></td>
+<td><p>Calculates and sets the features for the current formalism and input file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyrann.processing.processing.get_umap" title="pyrann.processing.processing.get_umap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_umap</span></code></a>(…)</p></td>
+<td><p>Initializes UMAP for the set features.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyrann.processing.processing.plot" title="pyrann.processing.processing.plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code></a>(…)</p></td>
+<td><p>Saves an interactive bokeh html plot to visualize the feature-space.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyrann.processing.processing.reduce" title="pyrann.processing.processing.reduce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reduce</span></code></a>(…)</p></td>
+<td><p>Reduces the database by ${percent}%.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrann.processing.processing.density">
+<span class="sig-name descname"><span class="pre">density</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.processing.processing.density" title="Link to this definition"></a></dt>
+<dd><p>Finds the average feature-space density for each simulation using the 100 nearest neighbors for each atom.
+Excludes atoms that belong to the same global simulation number.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>np.ndarray</em> – 1-D array (length nsims) of average feature-space density.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If either features or global_sim_num is not set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrann.processing.processing.get_features">
+<span class="sig-name descname"><span class="pre">get_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">standardize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.processing.processing.get_features" title="Link to this definition"></a></dt>
+<dd><p>Calculates and sets the features for the current formalism and input file.
+Also gets and sets filenames, global simulation numbers, local simulation numbers,
+and atom ids for the current formalism and input_file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>standardize</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">True</span></code>)) – True if the features need to be standardized using StandardScalar</p></li>
+<li><p><strong>file_fmt</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – File format for the structures to be investigated.
+Only neccessary if the file format does not match the default
+file format of the current formalism. The files will be
+converted to support the current set formalism. If formalism is GAP,
+structures and file_fmt must be in a support pyRANN format. See “load”
+for supported formats.</p></li>
+<li><p><strong>**kwargs</strong> – Any other necessary arguments needed for the current
+formalism. Currently, the only time this should be used is
+to provide the element symbol(s) if the formalism uses soap
+descriptors (i.e. symbol=’Mg’).</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>features, filenames, global_sim_num, local_id, and local_sim_num attributes
+are set after calling this function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrann.processing.processing.get_umap">
+<span class="sig-name descname"><span class="pre">get_umap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.processing.processing.get_umap" title="Link to this definition"></a></dt>
+<dd><p>Initializes UMAP for the set features.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>**kwargs</strong> – Any UMAP arguments. pyRANN defaults use UMAP defaults
+except for the following: verbose=True, init=”pca”, n_neighbors=54.
+If kwargs are defined, all undefined UMAP args will default back
+to UMAP default.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>An instance of UMAP to visualize the descriptor space</em></p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the features are not set</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Uniform Manifold Approximation and Projection for Dimension Reduction (UMAP) <a class="footnote-reference brackets" href="#id2" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.
+Please see <a class="reference external" href="https://umap-learn.readthedocs.io/en/latest/">https://umap-learn.readthedocs.io/en/latest/</a></p>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id2" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>McInnes, L, Healy, J, UMAP: Uniform Manifold Approximation and Projection for Dimension Reduction, ArXiv e-prints 1802.03426, 2018</p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrann.processing.processing.plot">
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapper</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hover_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'categorical'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rescale_colorbar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Viridis256'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subset_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key_str</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.processing.processing.plot" title="Link to this definition"></a></dt>
+<dd><p>Saves an interactive bokeh html plot to visualize the feature-space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mapper</strong> – UMAP instance</p></li>
+<li><p><strong>color_data</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ArrayLike</span></code></span>) – The data that determines how each data point in the interactive plot is colored.</p></li>
+<li><p><strong>hover_info</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span>) – Dictionary containing the information that will appear when a
+data point is hovered over in the interactive plot. The key will be
+the label and the values should be arrays of length natoms.</p></li>
+<li><p><strong>color_type</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">'categorical'</span></code>)) – Type of coloring to use. If categorical, each unique item
+in color_data gets its own color. If linear, viridis colormap will be
+used to color the data from min(color_data) to max(color_data).
+Defaults to categorical.</p></li>
+<li><p><strong>rescale_colorbar</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">False</span></code>)) – Boolean to rescale colorbar when changing the visible
+range on the plot if color_type == ‘linear’. Ignored if
+color_type == ‘categorical’.</p></li>
+<li><p><strong>cmap</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">'Viridis256'</span></code>)) – String representation of desiried 256 color palette from Bokeh.</p></li>
+<li><p><strong>subset_points</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ArrayLike</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – 1-D array of booleans of length natoms. True means that
+the data point for that atom should be plotted.</p></li>
+<li><p><strong>key_str</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – The string to name the html file.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<dl class="simple">
+<dt>Todo</dt><dd><ul class="simple">
+<li><p>Change method to where rescale_colorbar, cmap are kwargs.</p></li>
+<li><p>Add in kwargs for plot size and background fill color.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyrann.processing.processing.reduce">
+<span class="sig-name descname"><span class="pre">reduce</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">percent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.processing.processing.reduce" title="Link to this definition"></a></dt>
+<dd><p>Reduces the database by ${percent}%.
+The default metric is to delete simulations in the most dense regions of the fingerprint space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>percent</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">50.0</span></code>)) – The percentage of data to delete.</p></li>
+<li><p><strong>metric</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Callable</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – If given, this must be a user defined function that takes
+in values and deletes a certain amount of data.</p></li>
+<li><p><strong>**kwargs</strong> – Any additional arguments that the user defined function
+needs.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>np.ndarray</em> – 1-D array of global simulation numbers to keep in the database.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrann.processing.processing.features">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">features</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#pyrann.processing.processing.features" title="Link to this definition"></a></dt>
+<dd><p>Returns the features</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>np.ndarray</em> – Features of shape (natoms, nfeatures)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrann.processing.processing.formalism">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">formalism</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pyrann.processing.processing.formalism" title="Link to this definition"></a></dt>
+<dd><p>Returns the current formalism.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>str</em> – The current formalism.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrann.processing.processing.global_sim_num">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">global_sim_num</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#pyrann.processing.processing.global_sim_num" title="Link to this definition"></a></dt>
+<dd><p>Returns array of the global simulation number each atom belongs to.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>np.ndarray</em> – 1-D array of global simulation numbers each atom belongs to.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrann.processing.processing.input_file">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">input_file</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pyrann.processing.processing.input_file" title="Link to this definition"></a></dt>
+<dd><p>Returns a string representation of the input file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>str</em> – A string representation of the input file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrann.processing.processing.local_id">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">local_id</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#pyrann.processing.processing.local_id" title="Link to this definition"></a></dt>
+<dd><p>Returns the local (within-simulation) atom id for each atom.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>np.ndarray</em> – 1-D array of local atom ids.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrann.processing.processing.local_sim_num">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">local_sim_num</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#pyrann.processing.processing.local_sim_num" title="Link to this definition"></a></dt>
+<dd><p>Returns 1-D array of local (within-file) simulation numbers for each atom.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>np.ndarray</em> – 1-D array of local simulation numbers for each atom</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 <section id="module-pyrann.calibration">
 <span id="calibration"></span><h2>calibration<a class="headerlink" href="#module-pyrann.calibration" title="Link to this heading"></a></h2>
 <p>Calibration module. Run a = pyrann.calibration.PairRANN(‘input_file’) then a.setup() to have the c++ code calculate fingerprints for all dump files in input file’s dumpdirectory. The fingerprints can then be accessed by using the following classes and methods.</p>
+<p class="rubric">Class</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyrann.calibration.PairRANN" title="pyrann.calibration.PairRANN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PairRANN</span></code></a></p></td>
+<td><p>Class for accessing RANN calibration code.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyrann.calibration.Simulation" title="pyrann.calibration.Simulation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Simulation</span></code></a></p></td>
+<td><p>Class for accessing some per-simulation properties.</p></td>
+</tr>
+</tbody>
+</table>
 <dl class="py class">
 <dt class="sig sig-object py" id="pyrann.calibration.PairRANN">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">PairRANN</span></span><a class="headerlink" href="#pyrann.calibration.PairRANN" title="Link to this definition"></a></dt>
-<dd><p>Class for accessing RANN calibration code. To use methods, you must set a variable equal to calibration.PairRANN(‘input_file’) first. Then run methods on the chosen variable.</p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pybind11_object</span></code></p>
+<p>Class for accessing RANN calibration code. To use methods, you must set a variable equal to calibration.PairRANN(‘input_file’) first. Then run methods on the chosen variable.</p>
+<p class="rubric">Attributes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyrann.calibration.PairRANN.natoms" title="pyrann.calibration.PairRANN.natoms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">natoms</span></code></a></p></td>
+<td><p>Total number of atoms read.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyrann.calibration.PairRANN.nsims" title="pyrann.calibration.PairRANN.nsims"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nsims</span></code></a></p></td>
+<td><p>Total number of simulations read.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyrann.calibration.PairRANN.sims_per_file" title="pyrann.calibration.PairRANN.sims_per_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sims_per_file</span></code></a></p></td>
+<td><p>An array of simulations per dump file.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyrann.calibration.PairRANN.feature" title="pyrann.calibration.PairRANN.feature"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature</span></code></a>(…)</p></td>
+<td><p>Array of fingerprint (non-normalized) values for a given simulation (global) for a given atom id (local).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyrann.calibration.PairRANN.finish" title="pyrann.calibration.PairRANN.finish"><code class="xref py py-obj docutils literal notranslate"><span class="pre">finish</span></code></a>(…)</p></td>
+<td><p>Clean up after running calibration code.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyrann.calibration.PairRANN.firstneigh" title="pyrann.calibration.PairRANN.firstneigh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">firstneigh</span></code></a>(…)</p></td>
+<td><p>Array of neighbors for a given atom id (local) in a given simulation (global).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyrann.calibration.PairRANN.force" title="pyrann.calibration.PairRANN.force"><code class="xref py py-obj docutils literal notranslate"><span class="pre">force</span></code></a>(…)</p></td>
+<td><p>Array of forces for a given simulation (global) for a given atom id (local).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyrann.calibration.PairRANN.id" title="pyrann.calibration.PairRANN.id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">id</span></code></a>(…)</p></td>
+<td><p>Array of atom id's (local) for a given simulation number (global).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyrann.calibration.PairRANN.run" title="pyrann.calibration.PairRANN.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code></a>(…)</p></td>
+<td><p>Run Calibration code to train a RANN potential.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyrann.calibration.PairRANN.setup" title="pyrann.calibration.PairRANN.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup</span></code></a>(…)</p></td>
+<td><p>Set up RANN calibration code.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyrann.calibration.PairRANN.types" title="pyrann.calibration.PairRANN.types"><code class="xref py py-obj docutils literal notranslate"><span class="pre">types</span></code></a>(…)</p></td>
+<td><p>Array of atom types for a given simulation (global).</p></td>
+</tr>
+</tbody>
+</table>
 <dl class="py method">
 <dt class="sig sig-object py" id="pyrann.calibration.PairRANN.feature">
 <span class="sig-name descname"><span class="pre">feature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyrann.calibration.PairRANN" title="pyrann.calibration.PairRANN"><span class="pre">pyrann.calibration.PairRANN</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsInt</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsInt</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.typing.NDArray</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.float64</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyrann.calibration.PairRANN.feature" title="Link to this definition"></a></dt>
@@ -294,7 +1209,33 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="pyrann.calibration.Simulation">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Simulation</span></span><a class="headerlink" href="#pyrann.calibration.Simulation" title="Link to this definition"></a></dt>
-<dd><p>Class for accessing some per-simulation properties. Once setup() has been run, this can be used. setup() produces a list of simulation objects</p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pybind11_object</span></code></p>
+<p>Class for accessing some per-simulation properties. Once setup() has been run, this can be used. setup() produces a list of simulation objects</p>
+<p class="rubric">Attributes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyrann.calibration.Simulation.energy" title="pyrann.calibration.Simulation.energy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">energy</span></code></a></p></td>
+<td><p>Energy of a simulation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyrann.calibration.Simulation.filename" title="pyrann.calibration.Simulation.filename"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filename</span></code></a></p></td>
+<td><p>Filename for a simulation number.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyrann.calibration.Simulation.inum" title="pyrann.calibration.Simulation.inum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">inum</span></code></a></p></td>
+<td><p>Number of atoms.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyrann.calibration.Simulation.types" title="pyrann.calibration.Simulation.types"><code class="xref py py-obj docutils literal notranslate"><span class="pre">types</span></code></a></p></td>
+<td><p>Array of atom types for a simulation.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyrann.calibration.Simulation.feature" title="pyrann.calibration.Simulation.feature"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature</span></code></a>(…)</p></td>
+<td><p>Array of fingerprint (non-normalized) values for a given atom.</p></td>
+</tr>
+</tbody>
+</table>
 <dl class="py method">
 <dt class="sig sig-object py" id="pyrann.calibration.Simulation.feature">
 <span class="sig-name descname"><span class="pre">feature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyrann.calibration.Simulation" title="pyrann.calibration.Simulation"><span class="pre">pyrann.calibration.Simulation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LAMMPS_NS::PairRANN</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsInt</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.typing.NDArray</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.float64</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyrann.calibration.Simulation.feature" title="Link to this definition"></a></dt>
@@ -339,674 +1280,6 @@
 </dd></dl>
 
 </section>
-<section id="load-function">
-<h2>load function<a class="headerlink" href="#load-function" title="Link to this heading"></a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="pyrann.load">
-<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filetype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">series</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.load" title="Link to this definition"></a></dt>
-<dd><p>Loads in a poscar file, LAMMPS data file, LAMMPS dump file, or cfg file and assigns
-the corresponding atoms, box, types, elements, number of atoms, and timestep to a
-system object. Stresses and forces will be added soon</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – A string representation of the desired file to be loaded.</p></li>
-<li><p><strong>filetype</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – Type of file to be loaded. Supported filetypes are poscar,
-data, dump, and cfg. If no filetype is given, it will be inferred from the
-filename</p></li>
-<li><p><strong>timestep</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">TypeAliasType</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – A string or integer representation of the timestep for the atomic
-system being loaded. Defaults to 0.</p></li>
-<li><p><strong>series</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">False</span></code>)) – Boolean value to determine if the file being loaded contains
-multiple timesteps.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A system object if series == False, otherwise a series object</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>System Object or Series Object</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError if the filetype is unsupported.</strong> – </p>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
-<section id="system-class">
-<h2>system class<a class="headerlink" href="#system-class" title="Link to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="pyrann.system">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">system</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">box</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">types</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">natoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">energy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">descriptor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.system" title="Link to this definition"></a></dt>
-<dd><p>A class representing a physical system with atoms, box dimensions, and various properties.</p>
-<p>Initializes a system with atom positions, types, box dimensions, and other optional properties.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>box</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">TypeAliasType</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – The 3x3 matrix representing the simulation box. Default is the identity matrix.</p></li>
-<li><p><strong>atoms</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">TypeAliasType</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – A 3xN array representing the atom positions. This is required.</p></li>
-<li><p><strong>types</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – Atom types, either as a string, integer, or list. Default is an array of ones.</p></li>
-<li><p><strong>elements</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – Elements corresponding to atom types. If None, elements are generated.</p></li>
-<li><p><strong>natoms</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – Number of atoms in the system. If None, derived from <cite>atoms</cite>.</p></li>
-<li><p><strong>timestep</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – The current timestep of the simulation. Default is 0.</p></li>
-<li><p><strong>stress</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">TypeAliasType</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – A 3x3 stress tensor array. Default is None.</p></li>
-<li><p><strong>force</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">TypeAliasType</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – A 3xN force array. Default is None.</p></li>
-<li><p><strong>descriptor</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – A description of the system. Default is None.</p></li>
-<li><p><strong>energy</strong> (<em>str</em><em> | </em><em>float64</em><em> | </em><em>float</em><em> | </em><em>None</em>)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If <cite>atoms</cite> is not provided.</p>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="pyrann.system.change_type">
-<span class="sig-name descname"><span class="pre">change_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_types</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.system.change_type" title="Link to this definition"></a></dt>
-<dd><p>Changes the integer atom type for the system object. “new_types” should be array-like where the first position represents the new type for current atom type 1. For example, if a system contains Ti as type 1 and Al as type 2, they could be flipped using “new_types=[2,1]”. “new_types” should have the same length as the desired number of atom types.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>new_types</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">TypeAliasType</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – An array-like item that represents new atom types.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>None. This method updates the system’s types attribute.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pyrann.system.createsupercell">
-<span class="sig-name descname"><span class="pre">createsupercell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_box</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.system.createsupercell" title="Link to this definition"></a></dt>
-<dd><p>Creates a supercell by replicating the atoms in the original unit cell and placing them within a new box.</p>
-<p>This method takes the original box and atom positions and generates a new supercell with atoms placed according
-to the new box dimensions. It accounts for periodic boundary conditions and generates a new set of atom types
-and positions based on the replication.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>new_box</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">TypeAliasType</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – Column vector array of new box dimensions.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>This method updates the system’s attributes: <cite>types</cite>, <cite>atoms</cite>, <cite>box</cite>, and <cite>natoms</cite> based on the new supercell.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If any unexpected issues arise during supercell creation.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pyrann.system.export">
-<span class="sig-name descname"><span class="pre">export</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filetype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.system.export" title="Link to this definition"></a></dt>
-<dd><p>Exports the system data to a specified file in a given format.
-self._original_atoms = self.atoms+0</p>
-<p>This method allows the user to export the system’s atoms and box dimensions to various file formats, such as POSCAR,
-LAMMPS data, and others. The user can choose the output file’s name, type, and coordinate style (e.g., Cartesian,
-direct, or crystal).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – String of the filename to write.</p></li>
-<li><p><strong>filetype</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – String of the file extension. Not needed if extension is given in filetype.
-filetypes are ‘poscar’, ‘pos’, ‘data’, ‘dat’, ‘dump’, ‘qe’, ‘quantum_espresso’, ‘vasp’, or ‘INCAR’
-Note: Some of these filetypes may not be implemented yet.</p></li>
-<li><p><strong>style</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – String of type of atom coordinates desired (direct, crystal, or cartesian).</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>This method writes the system data to the specified file in the given format.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If an invalid <cite>filetype</cite> or <cite>style</cite> is provided.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pyrann.system.gsfe">
-<span class="sig-name descname"><span class="pre">gsfe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nsims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([[1,</span> <span class="pre">0,</span> <span class="pre">0],</span> <span class="pre">[0,</span> <span class="pre">1,</span> <span class="pre">0],</span> <span class="pre">[0,</span> <span class="pre">0,</span> <span class="pre">1]])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([1,</span> <span class="pre">1,</span> <span class="pre">12])</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.system.gsfe" title="Link to this definition"></a></dt>
-<dd><p>Generates a series of simulations for computing the Generalized Surface Formation Energy (GSFE) by modifying the atomic positions
-and box based on a given direction and replication parameters.</p>
-<p>This method creates a series of simulations by generating different configurations of a system’s atomic positions,
-shifting the positions and box based on specified replication parameters. It uses the <cite>makelattice3</cite> method to construct
-the lattice and applies transformations to simulate different strain states or surface configurations. The direction
-should be a 3x3 matrix with x, y, and z as column vectors.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>nsims</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">100</span></code>)) – The total number of unique structures to generate moving along the fault.</p></li>
-<li><p><strong>direction</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">TypeAliasType</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">array([[1,</span> <span class="pre">0,</span> <span class="pre">0],</span>
-&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[0,</span> <span class="pre">1,</span> <span class="pre">0],</span>
-&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[0,</span> <span class="pre">0,</span> <span class="pre">1]])</span></code>)) – Array of column vectors representing the miller indicies of the given
-simulation cell. The stacking fault plane should be the x direction.</p></li>
-<li><p><strong>reps</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">TypeAliasType</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">array([</span> <span class="pre">1,</span>&#160; <span class="pre">1,</span> <span class="pre">12])</span></code>)) – An array of size (1,3) representing the number of replications of the final
-simulation cell in the x, y, and z directions.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A series object containing the configurations generated in each simulation, with atomic positions, box, and types.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#pyrann.series" title="pyrann.series">series</a></p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>Exception</strong> – If the direction vectors lead to an invalid configuration (i.e., a left-handed coordinate system).</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>The method iteratively modifies the atomic positions and the simulation box to generate different configurations. It also
-creates a series of simulations that can be used to analyze the GSFE by comparing different atomic configurations under
-strain. The final series of configurations is returned as a <cite>series</cite> object.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pyrann.system.solidsolution">
-<span class="sig-name descname"><span class="pre">solidsolution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solute_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solute_element</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_neighbors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.system.solidsolution" title="Link to this definition"></a></dt>
-<dd><p>Adds a solid solution to the atomic system by introducing solute atoms into the lattice.</p>
-<p>This method randomly selects a position in the system and changes the type of num_neighbor closest atoms corresponding to the solute.
-The solute atoms are added to the system’s atomic types and elements.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>solute_type</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – Integer value for the atom type of the solute.</p></li>
-<li><p><strong>num_atoms</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">1</span></code>)) – Integer value for the number of solute atoms.</p></li>
-<li><p><strong>solute_element</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – Element type of the solute.</p></li>
-<li><p><strong>num_neighbors</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">1</span></code>)) – Integer value representing the number of neighbors to a random point
-to change to the solute type.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>The method modifies the <cite>types</cite> attribute of the atomic system by assigning the selected solute type to</dt><dd><p>the chosen nearest neighbor atoms.</p>
-</dd>
-</dl>
-</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-<p>Raises:
-ValueError: If the solute type or element is not valid.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pyrann.system.strain">
-<span class="sig-name descname"><span class="pre">strain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strain_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximum_strain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.system.strain" title="Link to this definition"></a></dt>
-<dd><p>Strains the simulation cell in even increments up to “maximum_strain” in the following ways: volumetric strain, strain along x, strain along y, strain along z, yz shear strain, xz shear strain, xy shear strain, strain along (111), xy in-plane strain, xy in-plane shear strain, and global strain. Strain points indicates how many different simulation cells to create for each type of strain. The “maximum_strain” parameter is the decimal form of a percentage (0.1 for 10% maximum strain).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>strain_points</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">100</span></code>)) – The number of unique structures to create for each strain mode (14 strain modes
-currently used?)</p></li>
-<li><p><strong>maximum_strain</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float64</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">0.05</span></code>)) – Maximum percentage (in decimal format) of the lattice parameter of the given
-simulation cell to strain the box.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A series class object</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pyrann.system.surface">
-<span class="sig-name descname"><span class="pre">surface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">direction</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.system.surface" title="Link to this definition"></a></dt>
-<dd><p>Creates a surface by modifying the atomic system and box dimensions based on a specified direction.</p>
-<p>This method uses the input direction to define the orientation of the system, transforms the system to a new basis,
-and generates a supercell by filling the box with atoms. It then applies a transformation to the system’s atomic positions
-and box to create a surface-like structure. The result is a modified system with a new set of atoms and box dimensions.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>direction</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">TypeAliasType</span></code></span>) – An array of column vectors representing the new simulation cell.
-Free surface will be on the x? plane.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The method modifies the <cite>atoms</cite> and <cite>box</cite> attributes of the system in place.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>Exception</strong> – If the input direction results in an invalid configuration where the cross product leads to a zero vector.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pyrann.system.thermal">
-<span class="sig-name descname"><span class="pre">thermal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">temp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nsims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ss_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.system.thermal" title="Link to this definition"></a></dt>
-<dd><p>Simulates thermal perturbations on the atomic system by applying random displacements and box strain.</p>
-<p>This method generates a series of configurations by thermally perturbing the atomic positions and box dimensions.
-The perturbations are applied to a base system, and the resulting atomic configurations are stored in a series
-for further analysis or export.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>temp</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Maximum random perturbation of atoms.
-Currently, this should be a percentage of the given simulation cell’s lattice parameter (in decimal
-format).</p></li>
-<li><p><strong>strain</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">0</span></code>)) – Maximum strain given as a percentage (in decimal format) of the given simulation
-cell’s lattice parameter.</p></li>
-<li><p><strong>nsims</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">100</span></code>)) – The number of unique structures to produce.</p></li>
-<li><p><strong>N</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – Number of atoms - Ignore this. Not sure why I made this an argument at the moment.</p></li>
-<li><p><strong>ss_dict</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – dictionary of keywords for doing thermal perturbation on solid solution.
-ss_keys = [‘solute_type’, ‘num_neighbors’, ‘num_atoms’]</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A series containing the generated configurations, each with perturbed atomic positions and box dimensions.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#pyrann.series" title="pyrann.series">series</a></p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If the number of simulations (<cite>nsims</cite>) is not provided or invalid keywords are found in <cite>ss_dict</cite>.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pyrann.system.thermal_test">
-<span class="sig-name descname"><span class="pre">thermal_test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">temp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shear</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nsims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ss_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.system.thermal_test" title="Link to this definition"></a></dt>
-<dd><p>Simulates thermal perturbations on the atomic system by applying random displacements and box strain.</p>
-<p>This method generates a series of configurations by thermally perturbing the atomic positions and box dimensions.
-The perturbations are applied to a base system, and the resulting atomic configurations are stored in a series
-for further analysis or export.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>temp</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Maximum random perturbation of atoms.
-Currently, this should be a percentage of the given simulation cell’s lattice parameter (in decimal
-format).</p></li>
-<li><p><strong>strain</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">0</span></code>)) – Maximum strain given as a percentage (in decimal format) of the given simulation
-cell’s lattice parameter.</p></li>
-<li><p><strong>nsims</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">100</span></code>)) – The number of unique structures to produce.</p></li>
-<li><p><strong>N</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – Number of atoms - Ignore this. Not sure why I made this an argument at the moment.</p></li>
-<li><p><strong>ss_dict</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – dictionary of keywords for doing thermal perturbation on solid solution.
-ss_keys = [‘solute_type’, ‘num_neighbors’, ‘num_atoms’]</p></li>
-<li><p><strong>shear</strong> (<em>str</em><em> | </em><em>int</em><em> | </em><em>float</em><em> | </em><em>None</em>)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A series containing the generated configurations, each with perturbed atomic positions and box dimensions.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#pyrann.series" title="pyrann.series">series</a></p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If the number of simulations (<cite>nsims</cite>) is not provided or invalid keywords are found in <cite>ss_dict</cite>.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pyrann.system.vacancy">
-<span class="sig-name descname"><span class="pre">vacancy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_neighbors</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.system.vacancy" title="Link to this definition"></a></dt>
-<dd><p>Removes atoms from the system to create vacancies by removing atoms close to randomly selected points.</p>
-<p>This method randomly selects points within the simulation box and identifies the nearest neighbors to those points.
-It then removes a specified number of nearest neighbors from the atomic system, effectively creating vacancies in the structure.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>num_neighbors</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – The number of neighbors to delete from a randomly selected points.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The method modifies the <cite>atoms</cite> and <cite>types</cite> attributes of the system in place, removing the specified number of atoms.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pyrann.system.atoms">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">atoms</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#pyrann.system.atoms" title="Link to this definition"></a></dt>
-<dd><p>Returns the atom positions.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A 3xN array representing the positions of the atoms.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>np.ndarray</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pyrann.system.box">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">box</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#pyrann.system.box" title="Link to this definition"></a></dt>
-<dd><p>Returns the system’s box dimensions.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A 3x3 matrix representing the simulation box where x, y, and z
-are column vectors.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>np.ndarray</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pyrann.system.energy">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">energy</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float64</span></span><a class="headerlink" href="#pyrann.system.energy" title="Link to this definition"></a></dt>
-<dd><p>Returns the energy of the system</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Float value of the energy.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>np.float64</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pyrann.system.natoms">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">natoms</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><a class="headerlink" href="#pyrann.system.natoms" title="Link to this definition"></a></dt>
-<dd><p>Returns the number of atoms in the system.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The number of atoms in the system.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pyrann.system.timestep">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">timestep</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><a class="headerlink" href="#pyrann.system.timestep" title="Link to this definition"></a></dt>
-<dd><p>Returns the timestep.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The integer value of the timestep.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pyrann.system.types">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">types</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#pyrann.system.types" title="Link to this definition"></a></dt>
-<dd><p>Returns the atom types.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A 1D array representing the atom types.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>np.ndarray</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-</section>
-<section id="series-class">
-<h2>series class<a class="headerlink" href="#series-class" title="Link to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="pyrann.series">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">series</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">systems</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">descriptor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.series" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>A class to represent a series of atomistic systems, which can be exported to various file formats.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>systems</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">TypeAliasType</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – A list or array of atomistic systems to be contained in the series.</p></li>
-<li><p><strong>descriptor</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – A descriptor to label the series (e.g., a string identifier).</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="pyrann.series.export">
-<span class="sig-name descname"><span class="pre">export</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filetype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.series.export" title="Link to this definition"></a></dt>
-<dd><p>Exports the systems in the series to a specified file format.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – The name of the file to export (without extension).</p></li>
-<li><p><strong>directory</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – The directory where the file will be saved. If None, saves in the current directory.</p></li>
-<li><p><strong>filetype</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – The format of the file (e.g., ‘poscar’, ‘data’). If None, inferred from filename.</p></li>
-<li><p><strong>style</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – The style for representing atomic positions (e.g., ‘cartesian’, ‘direct’).</p></li>
-</ul>
-</dd>
-</dl>
-<p>Raises:
-ValueError: If an unsupported filetype is provided, or if the style is invalid.</p>
-<p>Returns:
-None</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pyrann.series.write_vasp">
-<span class="sig-name descname"><span class="pre">write_vasp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">INCAR</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">KPOINTS</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.series.write_vasp" title="Link to this definition"></a></dt>
-<dd><p>Writes VASP DFT inputs</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>INCAR</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>KPOINTS</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pyrann.series.descriptor">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">descriptor</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pyrann.series.descriptor" title="Link to this definition"></a></dt>
-<dd><p>Gets the descriptor for the series.</p>
-<p>Returns:
-str: The current descriptor for the series.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pyrann.series.timesteps">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">timesteps</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#pyrann.series.timesteps" title="Link to this definition"></a></dt>
-<dd><p>Gets 1-D array of timesteps for all systems.</p>
-<p>Returns:
-np.ndarray: 1-D array of timesteps.</p>
-</dd></dl>
-
-</dd></dl>
-
-</section>
-<section id="processing-class">
-<h2>processing class<a class="headerlink" href="#processing-class" title="Link to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="pyrann.processing">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">processing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">formalism</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.processing" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Initializes a processing class instance</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>input_file</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The name (relative path) of the file that contains the ML
-potential information.</p></li>
-<li><p><strong>formalism</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – The formalism of the ML potential under
-investigation. Current options are RANN and MTP. If not provided,
-it tries to infer based on input_file extension.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="pyrann.processing.density">
-<span class="sig-name descname"><span class="pre">density</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.processing.density" title="Link to this definition"></a></dt>
-<dd><p>Finds the average feature-space density for each simulation using the
-100 nearest neighbors for each atom. Excludes atoms that belong to the
-same global simulation number.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>1-D array (length nsims) of average feature-space density.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
-</dd>
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>ValueError</strong> – If either features or global_sim_num is not set</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pyrann.processing.get_features">
-<span class="sig-name descname"><span class="pre">get_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">standardize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.processing.get_features" title="Link to this definition"></a></dt>
-<dd><p>Gets and sets the filenames, global simulation numbers, local simulation numbers,
-atom ids, and features for the current formalism and input_file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>standardize</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">True</span></code>)) – True if the features need to be standardized using
-StandardScalar</p></li>
-<li><p><strong>file_fmt</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – File format for the structures to be investigated.
-Only neccessary if the file format does not match the default
-file format of the current formalism. The files will be
-converted to support the current set formalism.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="simple">
-<dt>Sets:</dt><dd><dl class="simple">
-<dt>features (np.ndarray): An array of size (natoms, nfeatures).</dt><dd><p>Gives the features for all atoms.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pyrann.processing.get_umap">
-<span class="sig-name descname"><span class="pre">get_umap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.processing.get_umap" title="Link to this definition"></a></dt>
-<dd><p>Initializes UMAP for the set features</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>**kwargs</strong> – Any UMAP arguments. pyRANN defaults use UMAP defaults
-except for the following: verbose=True, init=”pca”, n_neighbors=54.
-If kwargs are defined, all undefined UMAP args will default back
-to UMAP default.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>An instance of UMAP to visualize the descriptor space</p>
-</dd>
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>ValueError</strong> – If the features are not set</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pyrann.processing.plot">
-<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapper</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hover_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'categorical'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subset_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key_str</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.processing.plot" title="Link to this definition"></a></dt>
-<dd><p>Saves an interactive bokeh html plot to visualize the feature-space.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>mapper</strong> – UMAP instance</p></li>
-<li><p><strong>color_data</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">TypeAliasType</span></code></span>) – The data that determines how each data point in the
-interactive plot is colored.</p></li>
-<li><p><strong>hover_info</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span>) – Dictionary containing the information that will appear when a
-data point is hovered over in the interactive plot. The key will be
-the label and the values should be arrays of length natoms.</p></li>
-<li><p><strong>color_type</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">'categorical'</span></code>)) – Type of coloring to use. If categorical, each unique item
-in color_data gets its own color. If linear, viridis colormap will be
-used to color the data from min(color_data) to max(color_data).
-Defaults to categorical</p></li>
-<li><p><strong>subset_points</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">TypeAliasType</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – 1-D array of booleans of length natoms. True means that
-the data point for that atom should be plotted.</p></li>
-<li><p><strong>key_str</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – The string to name the html file.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pyrann.processing.reduce">
-<span class="sig-name descname"><span class="pre">reduce</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">percent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyrann.processing.reduce" title="Link to this definition"></a></dt>
-<dd><p>Reduces the database. The default metric is to delete simulations in
-the most dense regions of the fingerprint space.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>percent</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">50.0</span></code>)) – The percentage of data to delete.</p></li>
-<li><p><strong>metric</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Callable</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – If given, this must be a user defined function that takes
-in values and deletes a certain amount of data.</p></li>
-<li><p><strong>**kwargs</strong> – Any additional arguments that the user defined function
-needs.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>1-D array of global simulation numbers to keep in the database.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pyrann.processing.features">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">features</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#pyrann.processing.features" title="Link to this definition"></a></dt>
-<dd><p>Returns the features</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>features of shape (natoms, nfeatures)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>np.ndarray</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pyrann.processing.formalism">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">formalism</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pyrann.processing.formalism" title="Link to this definition"></a></dt>
-<dd><p>Returns the current formalism.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The current formalism.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pyrann.processing.global_sim_num">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">global_sim_num</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#pyrann.processing.global_sim_num" title="Link to this definition"></a></dt>
-<dd><p>Returns array of the global simulation number each atom
-belongs to.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>1-D array of global simulation numbers
-each atom belongs to.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>np.ndarray</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pyrann.processing.input_file">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">input_file</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pyrann.processing.input_file" title="Link to this definition"></a></dt>
-<dd><p>Returns a string representation of the input file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A string representation of the input file.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<p>tutorial</p>
-</section>
 </section>
 
 
@@ -1014,7 +1287,7 @@ each atom belongs to.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="index.html" class="btn btn-neutral float-left" title="RANNDIP DOCUMENTATION" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="tutorial.html" class="btn btn-neutral float-right" title="pyRANN TUTORIAL" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="generated/pyrann.calibration.PairRANN.html" class="btn btn-neutral float-right" title="pyrann.calibration.PairRANN" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

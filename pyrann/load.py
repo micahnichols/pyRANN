@@ -7,28 +7,38 @@ from .system import system
 from .series import series as series1
 
 def load(filename: str,
-         filetype: Optional[Union[str, None]] = None,
-         timestep: Optional[Union[str, int, npt.ArrayLike, None]] = None,
-         series: Optional[bool] = False):
-    '''
+         filetype: Optional[str] = None,
+         timestep: Optional[Union[str, int, npt.ArrayLike]] = None,
+         series: bool = False):
+    """
     Loads in a poscar file, LAMMPS data file, LAMMPS dump file, or cfg file and assigns
     the corresponding atoms, box, types, elements, number of atoms, and timestep to a
     system object. Stresses and forces will be added soon
 
-    Args:
-        filename : A string representation of the desired file to be loaded.
-        filetype : Type of file to be loaded. Supported filetypes are poscar,
-            data, dump, and cfg. If no filetype is given, it will be inferred from the 
-            filename
-        timestep: A string or integer representation of the timestep for the atomic
-            system being loaded. Defaults to 0.
-        series: Boolean value to determine if the file being loaded contains
-            multiple timesteps.
-    Returns:
-        System Object or Series Object: A system object if series == False, otherwise a series object
-    Raises:
-        ValueError if the filetype is unsupported.
-    '''
+    Parameters
+    ----------
+    filename
+        A string representation of the desired file to be loaded.
+    filetype
+        Type of file to be loaded. Supported filetypes are poscar,
+        data, dump, and cfg. If no filetype is given, it will be inferred from the 
+        filename
+    timestep
+        A string or integer representation of the timestep for the atomic
+        system being loaded. Defaults to 0.
+    series
+        Boolean value to determine if the file being loaded contains
+        multiple timesteps.
+
+    Returns
+    -------
+        System Object or Series Object
+            A system object if series == False, otherwise a series object
+    Raises
+    ------
+        ValueError 
+            If the filetype is unsupported.
+    """
     if timestep is None:
         timestep = 0
     else:
@@ -39,12 +49,14 @@ def load(filename: str,
         if ext.lower() in ext_keys:
             filetype = ext
         else:
-            raise ValueError(f'Either filetype must be given or the file extension must be one of the following:\n{ext_keys}')
+            raise ValueError(f'Either filetype must be given or the file extension '
+            'must be one of the following:\n{ext_keys}')
     else:
         filename = '.'.join([filename, filetype])
     if series:
         if filetype.lower() != 'dump' and filetype.lower() != 'cfg':
-            raise ValueError('Currently, only a dump file containing multiple timesteps can be loaded as a series. This may change in the future.')
+            raise ValueError('Currently, only a dump file or a cfg file containing multiple timesteps '
+            'can be loaded as a series. This may change in the future.')
 
     if filetype.lower() == 'pos' or filetype.lower() == 'poscar':
         file = open(filename,'r')
@@ -175,6 +187,7 @@ def load(filename: str,
         # return (atoms,box,types,Id)
 
     elif filetype == 'dump' and not series:
+        # TODO - ADD IN STRESSES
         # nsims = int(np.genfromtxt(filename, skip_header=1, max_rows=1, usecols=-1, dtype=int))
         nsims = 1
         file = open(filename,'r')
@@ -211,7 +224,8 @@ def load(filename: str,
                 box[i,1]=float(bs[1])
                 if (len(bs)>=3):
                     tilt[i]=float(bs[2])
-            new_box[0,0] = (box[0,1]-max([0, tilt[0], tilt[1], tilt[0]+tilt[1]])) - (box[0,0]-min([0, tilt[0], tilt[1], tilt[0]+tilt[1]]))
+            new_box[0,0] = ((box[0,1]-max([0, tilt[0], tilt[1], tilt[0]+tilt[1]]))
+                            - (box[0,0]-min([0, tilt[0], tilt[1], tilt[0]+tilt[1]])))
             new_box[1,0] = tilt[0]
             new_box[1,1] = (box[1,1]-max(0,tilt[2])) - (box[1,0]-min(0,tilt[2]))
             new_box[2,0] = tilt[1]
@@ -257,7 +271,8 @@ def load(filename: str,
         timestep_arr = timestep_arr[0]
         energy_arr = np.array([energy_arr])[0]
         # atoms = Data_arr[0,:,2:].T
-        atoms = np.array([v for k, v in per_atom_dict.items() if k.startswith('x') or k.startswith('y') or k.startswith('z')])
+        atoms = np.array([v for k, v in per_atom_dict.items()
+                          if k.startswith('x') or k.startswith('y') or k.startswith('z')])
         # print(f'atoms = \n{atoms.shape}')
         # types = Data_arr[0,:,1].T
         box = box_arr[0]
@@ -300,7 +315,12 @@ def load(filename: str,
             file.close()
         # print(nsims)
         file = open(filename,'r')
-        dt = np.dtype([('index', int, (1,)), ('box', float, (3,3)),('natoms',int, (1,)),('x',float,(maxsize,3)),('f',float,(maxsize,3)),('id',int,maxsize),('type',int,(maxsize,)),('stress',float,(3,3)),('energy',float,(1,)),('energy_weight',float,(1,)),('force_weight',float,(1,))])
+        dt = np.dtype([('index', int, (1,)), ('box', float, (3,3)),
+                       ('natoms',int, (1,)),('x',float,(maxsize,3)),
+                       ('f',float,(maxsize,3)),('id',int,maxsize),
+                       ('type',int,(maxsize,)),('stress',float,(3,3)),
+                       ('energy',float,(1,)),('energy_weight',float,(1,)),
+                       ('force_weight',float,(1,))])
         # print(f'{dt = }')
         sims = np.empty((nsims),dtype=dt)
         series_list = []
@@ -347,7 +367,7 @@ def load(filename: str,
                     do_stress = True
                     # print(' PlusStress\n')
                     line = file.readline()
-                    ls = line.split()
+                    ls = line.strip().split()
                     stressvoight = (float(ls[0]),float(ls[1]),float(ls[2]),float(ls[3]),float(ls[4]),float(ls[5]))
                     sims[nn]['stress'][0,0]=stressvoight[0]
                     sims[nn]['stress'][1,1]=stressvoight[1]
@@ -391,8 +411,13 @@ def load(filename: str,
             if do_force:
                 force = sims[timestep]['f'][:sims[timestep]['natoms'][0]].T
             else:
-                force=None
-            series_list.append(system(atoms=atoms, box=box, types=types, timestep=nn, energy=energy, force=force))
+                force = None
+            if do_stress:
+                stress = sims[timestep]['stress']
+            else:
+                stress = None
+            series_list.append(system(atoms=atoms, box=box, types=types,
+                                      timestep=nn, energy=energy, force=force, stress=stress))
 
         # TODO - ADD IN STRESSES, FORCES, ETC
         # print(sims[-2]['x'][:sims[-2]['natoms'][0]].T)
@@ -404,6 +429,8 @@ def load(filename: str,
         descriptor = filename
         # return system(atoms=atoms, box=box, types=types, descriptor=descriptor)
         return series1(series_list, descriptor=descriptor)
+
+    # TODO - ADD IN STRESSES
     elif filetype.lower() == 'dump' and series:
         with open(filename, 'r') as f:
             content = f.read()
@@ -446,7 +473,8 @@ def load(filename: str,
                 box[i,1]=float(bs[1])
                 if (len(bs)>=3):
                     tilt[i]=float(bs[2])
-            new_box[0,0] = (box[0,1]-max([0, tilt[0], tilt[1], tilt[0]+tilt[1]])) - (box[0,0]-min([0, tilt[0], tilt[1], tilt[0]+tilt[1]]))
+            new_box[0,0] = ((box[0,1]-max([0, tilt[0], tilt[1], tilt[0]+tilt[1]]))
+                            - (box[0,0]-min([0, tilt[0], tilt[1], tilt[0]+tilt[1]])))
             new_box[1,0] = tilt[0]
             new_box[1,1] = (box[1,1]-max(0,tilt[2])) - (box[1,0]-min(0,tilt[2]))
             new_box[2,0] = tilt[1]
@@ -472,7 +500,8 @@ def load(filename: str,
             natoms_arr.append(natoms)
             timestep_arr.append(timestep)
             energy_arr.append(energy)
-            per_atom_keywords = ['id', 'mass', 'type', 'x', 'y', 'z', 'xs', 'ys', 'zs', 'fx', 'fy', 'fz', 'vx', 'vy', 'vz']
+            per_atom_keywords = ['id', 'mass', 'type', 'x', 'y', 'z', 'xs',
+                                 'ys', 'zs', 'fx', 'fy', 'fz', 'vx', 'vy', 'vz']
             per_atom_dict = dict.fromkeys(per_atom_keywords)
             # print(f'{colvec = }')
             # print(f'{per_atom_keywords = }')
@@ -483,7 +512,8 @@ def load(filename: str,
                     per_atom_index = colvec.index(i)
                     per_atom_dict[i] = Data[:,per_atom_index].T
             per_atom_dict = {k: v for k, v in per_atom_dict.items() if v is not None}
-            atoms = np.array([v for k, v in per_atom_dict.items() if k.startswith('x') or k.startswith('y') or k.startswith('z')])
+            atoms = np.array([v for k, v in per_atom_dict.items()
+                              if k.startswith('x') or k.startswith('y') or k.startswith('z')])
             # print(f'{atoms = }')
             if 'fx' in per_atom_dict.keys():
                 force = np.array([per_atom_dict['fx'], per_atom_dict['fy'], per_atom_dict['fz']])
@@ -498,8 +528,8 @@ def load(filename: str,
                 types = per_atom_dict['type']
             else:
                 types = np.ones(atoms.shape[1])
-            # series_list.append(system(atoms=Data[:,2:5].T, box=new_box.T, types=Data[:,1], natoms=natoms, timestep=timestep, energy=energy))
-            series_list.append(system(atoms=atoms, box=new_box.T, types=types, natoms=natoms, timestep=timestep, energy=energy, force=force, descriptor=filename))
+            series_list.append(system(atoms=atoms, box=new_box.T, types=types, natoms=natoms,
+                                      timestep=timestep, energy=energy, force=force, descriptor=filename))
         # file.close()
         # Data_arr = np.array([Data_arr])[0]
         # colstr_arr = np.array([colstr_arr])[0]
@@ -509,5 +539,3 @@ def load(filename: str,
         # energy_arr = np.array([energy_arr])[0]
         # return (Data_arr,colstr_arr,box_arr,natoms_arr,timestep_arr, energy_arr
         return  series1(series_list, descriptor=filename)
-                
-                    

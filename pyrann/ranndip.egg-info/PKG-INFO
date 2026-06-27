@@ -1,8 +1,0 @@
-Metadata-Version: 2.4
-Name: ranndip
-Version: 1.0.0.dev3
-Summary: Python package to generate atomic systems for use in DFT database for RANN interatomic potentials
-Requires-Dist: numpy
-Requires-Dist: scipy
-Dynamic: requires-dist
-Dynamic: summary

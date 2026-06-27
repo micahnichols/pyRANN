@@ -7,7 +7,7 @@ RANNDIP DOCUMENTATION
 =====================
 .. toctree::
    :caption: Contents:
-   :maxdepth: 5
+   :maxdepth: -1
 
    pyrann
    tutorial

@@ -1,0 +1,245 @@
+#!/bin/bash
+#
+# MLIP configure script
+
+# output file for config makefile.
+MKFILE=make/config.mk
+
+# Defaults
+# prefix=/usr/local
+prefix=.
+debug=
+mpi=0
+compiler=gnu
+blas=embedded
+blasroot=
+public=
+selftest=1
+extra=
+heavytests=
+cxxflag=
+
+# halt
+Halt() { echo -e "Error: $*" 1>&2; exit 1; }
+
+# check installed package
+Check() { which ${1} 2> /dev/null; }
+
+# usage output function
+Usage() 
+{
+  echo $header
+  cat >&1 <<EndUsage 
+Usage: ./configure [options]
+Options:
+  --prefix=<path>              installation prefix
+  --no-mpi                     disable MPI libraries [autodetect]
+  --no-selftest                disable selftest implementation
+  --heavytests                 include heavy shell tests
+  --enable-debug               include debug symbols [no]
+  --compiler=[intel|gnu]       which compilers to use [autodetect]
+  --blas=NAME                  BLAS library [autodetect]
+BLAS option names:
+  mkl                          Intel MKL library
+  openblas                     OpenBLAS library
+  embedded                     Embedded BLAS 
+EndUsage
+  exit 1
+}
+
+# autodetect mpi support
+test $(Check mpicc) && mpi=1
+# autodetect compiler and blas library ( intel and mkl only )
+test $(Check icc) && compiler="intel"
+[[ "${compiler}" = "intel" ]] && test ${MKLROOT} && blas=mkl
+
+#[[ "`make has-feature WHAT=second-expansion`" != "second-expansion" ]] \
+#    && { echo -e "Your make does not support second-expansion. This is unexpected. Please contact the developers."; exit 1; }
+
+# LP64 or non-LP64 for the Intel MKL
+arch=$(arch)
+if [[ "${arch}" == i386 || "${arch}" == i486 || "${arch}" == i586 || "${arch}" == i686 ]]; then
+  arch_lp64=0
+else
+  arch_lp64=1
+fi
+
+# options
+for arg in "$@"; do
+    case "${arg}" in
+    --prefix=* )
+        prefix=$(echo $arg | sed 's/--prefix=//') ;;
+    --no-mpi )
+        mpi=0 ;;
+    --no-selftest )
+        selftest=0 ;;
+    --enable-debug )
+        debug=1 ;;
+    --compiler=* )
+        compiler=$(echo $arg | sed 's/--compiler=//') ;;
+    --blas=*)
+        blas=$(echo $arg | sed 's/--blas=//') ;;
+    --blas-root=* )
+        blasroot=$(echo $arg | sed 's/--blas-root=//') ;;
+    --heavytests )
+        heavytests=1 ;;
+    --help )
+        Usage ;;
+
+    * ) Halt "unknown option - \"$arg\"." ;;
+    esac
+done
+
+echo 'Generating makefile configuration ...'
+
+cat > ${MKFILE} <<MKEOF
+# Directories
+PREFIX = $prefix
+BIN_DIR = \$(PREFIX)/bin
+OBJ_DIR = \$(PREFIX)/obj
+LIB_DIR = \$(PREFIX)/lib
+MKEOF
+
+if [ "${debug}" == 1 ]; then
+  debugflag="-DDEBUG -g"
+fi
+
+case "${compiler}" in
+    intel )
+        echo "" >> ${MKFILE}
+        echo "# MPI Compilers" >> ${MKFILE}
+        if [ $mpi = 1 ]; then
+            echo "CC_MPI  = mpiicc #for C" >> ${MKFILE}
+            echo "CXX_MPI = mpiicpc #for C++" >> ${MKFILE}
+            echo "FC_MPI  = mpiifort #for fortran" >> ${MKFILE}
+        fi
+        echo "" >> ${MKFILE}
+        echo "# Serial Compilers" >> ${MKFILE}
+        echo "CC  = icc #for C" >> ${MKFILE}
+        echo "CXX = icpc #for C++" >> ${MKFILE}
+        echo "FC  = ifort #for fortran" >> ${MKFILE}
+        if [ $mpi = 1 ]; then
+            CC="mpiicc"
+            CXX="mpiicpc"
+        else
+            CC="icc"
+            CXX="icpc"
+        fi
+        ;;
+    gnu )
+        echo "" >> ${MKFILE}
+        echo "# MPI Compilers" >> ${MKFILE}
+        if [ $mpi = 1 ]; then
+            fc=mpif90;
+            test $(Check mpifc) && fc=mpifc
+            echo "CC_MPI  = mpicc  #for C" >> ${MKFILE}
+            echo "CXX_MPI = mpicxx  #for C++" >> ${MKFILE}
+            echo "FC_MPI  = ${fc}  #for fortran" >> ${MKFILE}
+        fi
+        echo "" >> ${MKFILE}
+        echo "# Serial Compilers" >> ${MKFILE}
+        echo "CC  = gcc  #for C" >> ${MKFILE}
+        echo "CXX = g++  #for C++" >> ${MKFILE}
+        echo "FC  = gfortran #for fortran" >> ${MKFILE}
+        if [ $mpi = 1 ]; then
+            CC="mpicc"
+            CXX="mpicxx"
+        else
+            CC="gcc"
+            CXX="g++"
+        fi
+        ;;
+    * ) Halt "unknown compiler \"${compiler}\"." ;;
+esac
+echo "" >> ${MKFILE}
+echo "# Compile and link flags" >> ${MKFILE}
+echo "# CPPFLAGS are preprocessor flags" >> ${MKFILE}
+echo "# CXXFLAGS are c++ compiler flags" >> ${MKFILE}
+echo "# CCFLAGS are c compiler flags" >> ${MKFILE}
+echo "# FFLAGS are flags for fortran compiler" >> ${MKFILE}
+echo "# LDFLAGS are flags for linker" >> ${MKFILE}
+echo "CPPFLAGS += ${debugflag}" >> ${MKFILE}
+echo "CXXFLAGS += -O3 -std=c++11 -fPIC" >> ${MKFILE}
+echo "CCFLAGS += -O3 -fPIC" >> ${MKFILE}
+echo "FFLAGS += -O3 -fPIC ${debugflag}" >> ${MKFILE}
+if [ "${mpi}" == 1 ]; then
+	echo "# Flag for mpi preprocessor" >> ${MKFILE}
+	echo "CPPFLAGS_MPI += -DMLIP_MPI" >> ${MKFILE}
+fi
+echo "# Flag for compilation of developer version" >> ${MKFILE}
+
+if [ "${mpi}" == 1 ]; then
+	echo "# Compile mpi version" >> ${MKFILE}
+	echo "USE_MPI = 1" >> ${MKFILE}
+else 
+	echo "# Compile mpi version" >> ${MKFILE}
+	echo "USE_MPI = 0" >> ${MKFILE}
+fi
+if [ "${selftest}" == 0 ]; then
+	echo "# No running of test suite" >> ${MKFILE}
+	cxxflag+=" -DMLIP_NO_SELFTEST"  >> ${MKFILE}
+fi
+if [ "${heavytests}" == 1 ]; then
+        echo "# Run heavy shell tests" >> ${MKFILE}
+        echo "RUN_HEAVY_TESTS = 1" >> ${MKFILE}
+fi
+if [ -n "${cxxflag}" ]; then
+  echo "CXXFLAGS +=${cxxflag}" >> ${MKFILE}
+fi
+
+case "${compiler}" in
+    intel )
+        linklib="-lifcore"
+        pythonlibs="ifcore"
+        ;;
+    gnu )
+        #"FFLAGS += -fbounds-check"
+        linklib="-lgfortran"
+        pythonlibs="gfortran" 
+        ;;
+esac
+case "${blas}" in
+    mkl ) 
+        if [[ "${arch_lp64}" = 1 ]]; then
+            mkllib="intel64"
+        else
+            mkllib="ia32"
+        fi
+	echo "" >> ${MKFILE}
+	echo "# Flags for compilation using MKL BLAS" >> ${MKFILE}
+        echo "LDFLAGS += -L${MKLROOT}/lib/${mkllib} -lmkl_rt ${linklib}" >> ${MKFILE}
+        echo "CPPFLAGS += -I${MKLROOT}/include" >> ${MKFILE}
+        echo "CXXFLAGS += -DMLIP_INTEL_MKL " >> ${MKFILE}
+        pythonlibs+=" mkl_rt"
+        pythonlibdir="${MKLROOT}/lib/${mkllib}"
+        pythonincdir="${MKLROOT}/include"
+        ;;
+    openblas )
+	echo "" >> ${MKFILE}
+	echo "# Flags for compilation using OpenBLAS" >> ${MKFILE}
+        echo "LDFLAGS += -L${blasroot}/lib -l:libopenblas.a ${linklib}" >> ${MKFILE}
+        echo "CPPFLAGS += -I${blasroot}/include" >> ${MKFILE}
+        pythonlibs+=" :libopenblas.a"
+        pythonlibdir="${blasroot}/lib"
+        pythonincdir="${blasroot}/include"
+        ;;
+    embedded )
+	echo "" >> ${MKFILE}
+	echo "# Flags for compilation using embedded BLAS" >> ${MKFILE}
+	echo "# Dependence on mlip_cblas and ${linklib}"  >> ${MKFILE}
+        echo "LDFLAGS += \$(LIB_DIR)/lib_mlip_cblas.a ${linklib}" >> ${MKFILE}
+	echo "# Include path to cblas"  >> ${MKFILE}
+        echo "CPPFLAGS += -Iblas/cblas" >> ${MKFILE}
+	echo "# Dependence on mlip_cblas" >> ${MKFILE}
+        echo "PREREQ = \$(LIB_DIR)/lib_mlip_cblas.a" >> ${MKFILE}
+        pythonlibs+=" _mlip_cblas"
+        pythonlibdir=""
+        pythonincdir="blas/cblas"
+        ;;
+    * ) Halt "unknown BLAS library name \"${blas}\"." ;;
+esac
+
+echo "" >> ${MKFILE}
+## echo "# Extra variables" >> ${MKFILE}
+
+echo 'Configuration complete.'

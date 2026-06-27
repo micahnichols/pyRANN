@@ -1,2 +1,16 @@
 numpy
 scipy
+pandas
+scikit-learn
+bokeh
+matplotlib
+colorcet
+quippy-ase
+ase
+umap-learn
+
+[all]
+pyrann-mtp @ file:./pyrann-mtp
+
+[mtp]
+pyrann-mtp @ file:./pyrann-mtp

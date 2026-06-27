@@ -8,28 +8,32 @@ from numpy import ceil, sign, array, zeros, round
 from numpy.linalg import inv, det, norm
 from numpy import sqrt, cross, dot, array
 
-from typing import Union
+from typing import Union, Optional
 from copy import deepcopy
-# from .system import system
+# from .system import system 
+from . import system
 
 class series:
     """
     A class to represent a series of atomistic systems, which can be exported to various file formats.
 
-    Parameters:
-        systems (Union[npt.ArrayLike, None]): A list or array of atomistic systems to be contained in the series.
-        descriptor (Union[str, None]): A descriptor to label the series (e.g., a string identifier).
+    Parameters
+    ----------
+    systems
+        A list or array of atomistic systems to be contained in the series.
+    descriptor
+        A descriptor to label the series (e.g., a string identifier).
 
     """
     def __init__(self,
-                 systems: Union[npt.ArrayLike, None] = None,
-                 descriptor: Union[str, None] = None):
+                 systems: Optional[npt.ArrayLike] = None,
+                 descriptor: Optional[str] = None):
         """
         Initializes a `series` object.
 
         Parameters:
-        systems (Union[npt.ArrayLike, None]): A list or array of atomistic systems to be contained in the series.
-        descriptor (Union[str, None]): A descriptor to label the series (e.g., a string identifier).
+        systems: A list or array of atomistic systems to be contained in the series.
+        descriptor: A descriptor to label the series (e.g., a string identifier).
         """
         if systems is not None:
             systems = np.asarray(systems)
@@ -44,19 +48,26 @@ class series:
 
         The output includes information such as box dimensions, atom count, element types, atom positions, and more.
 
-        Returns:
-        str: A formatted string containing details of each system in the series.
+        Returns
+        -------
+        str
+            A formatted string containing details of each system in the series.
         """
-        string = ['\n'.join([f'box = \n{i.box}', f'natoms = {i.natoms}', f'elements = {i.elements}', f'timestep = {i.timestep}', f'types = {i.types}', f'atoms = \n{i.atoms}']) for i in self.systems]
-        return '\n-------------------------------------------------\n'.join(string)
+        # string = ['\n'.join([f'box = \n{i.box}', f'natoms = {i.natoms}', f'elements = {i.elements}',
+        #                      f'timestep = {i.timestep}', f'types = {i.types}',
+        #                      f'atoms = \n{i.atoms}']) for i in self.systems]
+        string = [str(i) for i in self.systems]
+        return '\n\n---------------------------------------------------------------------------------\n\n'.join(string)
 
     @property
     def descriptor(self) -> str:
         """
         Gets the descriptor for the series.
 
-        Returns:
-        str: The current descriptor for the series.
+        Returns
+        -------
+        str
+            The current descriptor for the series.
         """
         return self.__descriptor
     @descriptor.setter
@@ -64,8 +75,10 @@ class series:
         """
         Sets the descriptor for the series.
 
-        Parameters:
-        value (str): The new descriptor to set for the series.
+        Parameters
+        ----------
+        value
+            The new descriptor to set for the series.
         """
         descriptor = value
         self.__descriptor = descriptor
@@ -73,10 +86,12 @@ class series:
     @property
     def timesteps(self) -> np.ndarray:
         """
-        Gets 1-D array of timesteps for all systems.
+        Returns 1-D array of timesteps for all systems.
 
-        Returns:
-        np.ndarray: 1-D array of timesteps.
+        Returns
+        -------
+        np.ndarray
+            1-D array of timesteps.
         """
         return self.__timesteps
 
@@ -85,10 +100,41 @@ class series:
         """
         Sets the timesteps for all systems
 
-        Args:
-        value: 1-D array of timesteps for all systems in class
+        Parameters
+        ----------
+        value
+            1-D array of timesteps for all systems in class
         """
         self.__timesteps = value
+
+    @property
+    def systems(self) -> np.ndarray:
+        """
+        Returns 1-D array of system objects in the series object
+
+        Returns
+        -------
+        np.ndarray
+            1-D array of system objects in the series object
+        """
+        return self.__systems
+    
+    @systems.setter
+    def systems(self, value: npt.ArrayLike):
+        """
+        Sets the list of systems for the series object
+
+        Parameters
+        ----------
+        value
+            ArrayLike item consisting of system objects
+        """
+        if all(isinstance(i, system.system) for i in value):
+            systems = value
+        else:
+            raise ValueError('systems must be an ArrayLike object '
+                             'and contain only system class instances')
+        self.__systems = systems
 
     def export(self,
                filename: Union[str, None],
@@ -98,16 +144,24 @@ class series:
         """
         Exports the systems in the series to a specified file format.
 
-        Parameters:
-            filename: The name of the file to export (without extension).
-            directory: The directory where the file will be saved. If None, saves in the current directory.
-            filetype: The format of the file (e.g., 'poscar', 'data'). If None, inferred from filename.
-            style: The style for representing atomic positions (e.g., 'cartesian', 'direct').
+        Parameters
+        ----------
+        filename
+            The name of the file to export (without extension).
+        directory
+            The directory where the file will be saved. If None, saves in the current directory.
+        filetype
+            The format of the file (e.g., 'poscar', 'data'). If None, inferred from filename.
+        style
+            The style for representing atomic positions (e.g., 'cartesian', 'direct').
 
-        Raises:
-        ValueError: If an unsupported filetype is provided, or if the style is invalid.
+        Raises
+        ------
+        ValueError
+            If an unsupported filetype is provided, or if the style is invalid.
 
-        Returns:
+        Returns
+        -------
         None
         """
         nsims = len(self.systems)
@@ -119,7 +173,8 @@ class series:
                 if filename.split('.')[-1].lower() in ext_keys:
                     filetype = filename.split('.')[-1]
                 else:
-                    raise ValueError(f'Either filetype must be given, or the file extension must be one of the following:\n{ext_keys}')
+                    raise ValueError(f'Either filetype must be given, or the file extension must '
+                    f'be one of the following:\n{ext_keys}')
             else:
                 filename = '.'.join([filename, filetype])
         if directory is None:
@@ -154,7 +209,7 @@ class series:
             filetype = 'cfg'
 
 
-        if filetype == 'poscar':
+        if filetype.lower() == 'poscar':
             original_filename = filename
             for mwn in range(nsims):
                 filename = f'{directory}{original_filename.split(".")[0]}_{mwn}.{original_filename.split(".")[-1]}'
@@ -162,9 +217,15 @@ class series:
                 # natoms = Lattice.shape[1]
                 file.write("#Atomistic data file created by python\n")
                 file.write("1.0\n")
-                file.write("%f   %f   %f\n" % (self.systems[mwn].box[0,0],self.systems[mwn].box[1,0],self.systems[mwn].box[2,0]))
-                file.write("%f   %f   %f\n" % (self.systems[mwn].box[0,1],self.systems[mwn].box[1,1],self.systems[mwn].box[2,1]))
-                file.write("%f   %f   %f\n" % (self.systems[mwn].box[0,2],self.systems[mwn].box[1,2],self.systems[mwn].box[2,2]))
+                file.write("%f   %f   %f\n" % (self.systems[mwn].box[0,0],
+                                               self.systems[mwn].box[1,0],
+                                               self.systems[mwn].box[2,0]))
+                file.write("%f   %f   %f\n" % (self.systems[mwn].box[0,1],
+                                               self.systems[mwn].box[1,1],
+                                               self.systems[mwn].box[2,1]))
+                file.write("%f   %f   %f\n" % (self.systems[mwn].box[0,2],
+                                               self.systems[mwn].box[1,2],
+                                               self.systems[mwn].box[2,2]))
                 typesum = []
                 for i in range(len(self.systems[mwn].elements)):
                     file.write(self.systems[mwn].elements[i]+' ')
@@ -180,7 +241,10 @@ class series:
                     Lattice = self.systems[mwn].atoms
                 I = np.argsort(self.systems[mwn].types)
                 for i in range(self.systems[mwn].natoms):
-                    file.write("\t {0:f} {1:f} {2:f} {3:s}\n" .format(Lattice[0,I[i]],Lattice[1,I[i]],Lattice[2,I[i]],self.systems[mwn].elements[int(self.systems[mwn].types[I[i]])-1]))
+                    file.write("\t {0:f} {1:f} {2:f} {3:s}\n" .format(
+                        Lattice[0,I[i]],Lattice[1,I[i]],Lattice[2,I[i]],
+                        self.systems[mwn].elements[int(self.systems[mwn].types[I[i]])-1])
+                               )
                 file.close()
 
         elif filetype == 'data':
@@ -190,13 +254,21 @@ class series:
                 (xlo,ylo,zlo)=(0,0,0)
                 xhi = norm(self.systems[mwn].box[:,0])
                 xy = dot(self.systems[mwn].box[:,1],self.systems[mwn].box[:,0]/norm(self.systems[mwn].box[:,0]))
-                yhi = norm(cross(self.systems[mwn].box[:,0]/norm(self.systems[mwn].box[:,0]),self.systems[mwn].box[:,1]))
+                yhi = norm(cross(self.systems[mwn].box[:,0]/norm(self.systems[mwn].box[:,0]),
+                                 self.systems[mwn].box[:,1]))
                 xz = dot(self.systems[mwn].box[:,2],self.systems[mwn].box[:,0]/norm(self.systems[mwn].box[:,0]))
                 yz = (dot(self.systems[mwn].box[:,2],self.systems[mwn].box[:,1])-xy*xz)/yhi
                 zhi = sqrt(dot(self.systems[mwn].box[:,2],self.systems[mwn].box[:,2])-xz**2-yz**2)
                 new_box = array([[xlo, xhi],[ylo, yhi],[zlo, zhi]])
                 tilt = array([xy, xz, yz]);
-                R = array([[xhi, xy, xz],[0, yhi, yz],[0, 0, zhi]])@array([cross(self.systems[mwn].box[:,1],self.systems[mwn].box[:,2]),cross(self.systems[mwn].box[:,2],self.systems[mwn].box[:,0]),cross(self.systems[mwn].box[:,0],self.systems[mwn].box[:,1])])/det(array([[xhi, xy, xz],[0, yhi, yz],[0, 0, zhi]]))
+                R = (array([[xhi, xy, xz],[0, yhi, yz],[0, 0, zhi]])
+                     @array([cross(self.systems[mwn].box[:,1],
+                                   self.systems[mwn].box[:,2]),
+                             cross(self.systems[mwn].box[:,2],
+                                   self.systems[mwn].box[:,0]),
+                             cross(self.systems[mwn].box[:,0],
+                                   self.systems[mwn].box[:,1])])
+                     /det(array([[xhi, xy, xz],[0, yhi, yz],[0, 0, zhi]])))
                 x = R@self.systems[mwn].atoms
                 lammpsbox = new_box
                 # (atoms,lammpsbox,tilt,R)=triclinic2lammps(Atoms,Box)
@@ -212,8 +284,9 @@ class series:
                 file.write("%f   %f  %f xy xz yz\n" % (tilt[0],tilt[1],tilt[2]))
                 file.write("Atoms\n\n")
                 for i in range(self.systems[mwn].natoms):
-                    # file.write("\t {0:d} {1:.0f} {2:f} {3:f} {4:f}\n" .format(i+1,self.types[i],self.atoms[0,i],self.atoms[1,i],self.atoms[2,i]))
-                    file.write("\t {0:d} {1:.0f} {2:f} {3:f} {4:f}\n" .format(i+1,self.systems[mwn].types[i],x[0,i],x[1,i],x[2,i]))
+                    file.write("\t {0:d} {1:.0f} {2:f} {3:f} {4:f}\n" .format(i+1,
+                                                                              self.systems[mwn].types[i],
+                                                                              x[0,i],x[1,i],x[2,i]))
                 file.close()
 
         elif filetype == 'dump':
@@ -237,7 +310,9 @@ class series:
             # stress1 = np.zeros((nsims,3))
             for nn in range(nsims):
                file.write("ITEM: TIMESTEP energy, energy_weight, force_weight, nsims\n")
-               file.write("%d %f %f %f %d\n" % (self.systems[nn].timestep,self.systems[nn].energy,energy_weight[nn],force_weight[nn],nsims))
+               file.write("%d %f %f %f %d\n" % (self.systems[nn].timestep,
+                                                self.systems[nn].energy,
+                                                energy_weight[nn],force_weight[nn],nsims))
                file.write("ITEM: NUMBER OF ATOMS\n")
                natoms = self.systems[nn].natoms
                file.write("%d\n" % natoms)
@@ -255,7 +330,11 @@ class series:
                zhi = sqrt(dot(Box[:,2],Box[:,2])-xz**2-yz**2)
                box = array([[xlo, xhi],[ylo, yhi],[zlo, zhi]])
                tilt = array([xy, xz, yz]);
-               R = array([[xhi, xy, xz],[0, yhi, yz],[0, 0, zhi]])@array([cross(Box[:,1],Box[:,2]),cross(Box[:,2],Box[:,0]),cross(Box[:,0],Box[:,1])])/det(array([[xhi, xy, xz],[0, yhi, yz],[0, 0, zhi]]))
+               R = (array([[xhi, xy, xz],[0, yhi, yz],[0, 0, zhi]])
+                    @array([cross(Box[:,1],Box[:,2]),
+                            cross(Box[:,2],Box[:,0]),
+                            cross(Box[:,0],Box[:,1])])
+                    /det(array([[xhi, xy, xz],[0, yhi, yz],[0, 0, zhi]])))
                x = R@X
                lammpsbox = box
                if tilt[0]>0:
@@ -273,12 +352,12 @@ class series:
                # return (x,lammpsbox,tilt,R)%
 
                # (x,box,tilt,R)=triclinic2lammps(X,Box)
-               if self.systems[nn].stress is None:
-                   do_stress = False 
-               else:
-                   do_stress = True
+               # if self.systems[nn].stress is None:
+               #     do_stress = False 
+               # else:
+               #     do_stress = True
                    stress = self.systems[nn].stress
-               if do_stress:
+               if self.systems[nn]._do_stress:
                    file.write("ITEM: BOX BOUNDS xy xz yz pp pp pp stress\n")
                else:
                    file.write("ITEM: BOX BOUNDS xy xz yz pp pp pp\n")
@@ -287,26 +366,32 @@ class series:
                for i in range(3):
                    # file.write("%f %f %f %f %f %f\n" % (box[i,0],box[i,1],tilt[i],stress[i,0],stress[i,1],stress[i,2]))
                    # file.write("%f %f %f %f %f %f\n" % (box[i,0],box[i,1],tilt[i],stress[0],stress[1],stress[2]))
-                   if do_stress:
-                       file.write("%f %f %f %f %f %f\n" % (lammpsbox[i,0],lammpsbox[i,1],tilt[i],stress[0],stress[1],stress[2]))
+                   if self.systems[nn]._do_stress:
+                       file.write("%f %f %f %f %f %f\n" % (lammpsbox[i,0],
+                                                           lammpsbox[i,1],
+                                                           tilt[i],stress[0],
+                                                           stress[1],stress[2]))
                    else:
                        file.write("%f %f %f\n" % (lammpsbox[i,0],lammpsbox[i,1],tilt[i]))
                file.write("ITEM: ATOMS id type x y z fx fy fz\n")
                # f = sims[nn]['f']
-               do_force = True
-               f = self.systems[nn].force
-               if f is None:
-                   do_force = False
+               # do_force = True
+               # f = self.systems[nn].force
+               # if f is None:
+               #     do_force = False
                # ids = sims[nn]['id']
                # types = sims[nn]['type']
                for i in range(natoms):
-                   # file.write("%d %d %f %f %f %f %f %f\n" % (ids[i], types[i], x[i][0], x[i][1], x[i][2], f[i][0], f[i][1], f[i][2]))
                    # if self.systems[nn].force != None:
-                   if do_force:
-                       file.write("%d %d %f %f %f %f %f %f\n" % (i+1, self.systems[nn].types[i], x[0][i], x[1][i], x[2][i], f[0][i], f[1][i], f[2][i]))
+                   if self.systems[nn]._do_force:
+                       file.write("%d %d %f %f %f %f %f %f\n" % (i+1, self.systems[nn].types[i],
+                                                                 x[0][i], x[1][i], x[2][i],
+                                                                 f[0][i], f[1][i], f[2][i]))
                    else:
-                       file.write("%d %d %f %f %f %f %f %f\n" % (i+1, self.systems[nn].types[i], x[0][i], x[1][i], x[2][i], 0.0, 0.0, 0.0))
-                   #file.write("\t {0:d} {1:.0f} {2:f} {3:f} {4:f}\n" .format(i+1,types[i],Lattice[0,i],Lattice[1,i],Lattice[2,i]))
+                       # TODO - FIX TO WHERE FORCES ARE NOT WRITTEN IF _do_force == False
+                       file.write("%d %d %f %f %f %f %f %f\n" % (i+1, self.systems[nn].types[i],
+                                                                 x[0][i], x[1][i], x[2][i],
+                                                                 0.0, 0.0, 0.0))
             file.close()
         elif filetype == 'cfg':
             original_filename = filename
@@ -334,204 +419,124 @@ class series:
                 f.write(f'    {self.systems[nn].natoms}\n')
                 f.write(' Supercell\n')
                 for i in range(3):
-                    f.write("%.16f      %.16f      %.16f\n" % (self.systems[nn].box[0,i], self.systems[nn].box[1,i], self.systems[nn].box[2,i]))
-                if self.systems[nn].force[0,0]:
-                    f.write(' AtomData:  id type       cartes_x      cartes_y      cartes_z           fx          fy          fz\n')
+                    f.write("%.16f      %.16f      %.16f\n" % (self.systems[nn].box[0,i],
+                                                               self.systems[nn].box[1,i],
+                                                               self.systems[nn].box[2,i]))
+                # if isinstance(self.systems[nn].force, np.ndarray):
+                if self.systems[nn]._do_force:
+                    f.write(' AtomData:  id type       cartes_x      '
+                    'cartes_y      cartes_z           fx          fy          fz\n')
                     for j in range(self.systems[nn].natoms):
-                        f.write("             %d    %d       %.16f      %.16f      %.16f    %.16f    %.16f    %.16f\n" % (ids[j], self.systems[nn].types[j]-1, self.systems[nn].atoms[j,i], self.systems[nn].atoms[1,j], self.systems[nn].atoms[2,j], self.systems[nn].force[0,j], self.systems[nn].force[1,j], self.systems[nn].force[2,j]))
+                        f.write("             %d    %d       %.16f      %.16f      "
+                        "%.16f    %.16f    %.16f    %.16f\n" % (ids[j], 
+                                                                self.systems[nn].types[j]-1,
+                                                                self.systems[nn].atoms[0,j],
+                                                                self.systems[nn].atoms[1,j],
+                                                                self.systems[nn].atoms[2,j],
+                                                                self.systems[nn].force[0,j],
+                                                                self.systems[nn].force[1,j],
+                                                                self.systems[nn].force[2,j]))
                 else:
                     f.write(' AtomData:  id type       cartes_x      cartes_y      cartes_z\n')
                     for j in range(self.systems[nn].natoms):
-                        f.write("             %d    %d       %.16f      %.16f      %.16f\n" % (ids[j], self.systems[nn].types[j]-1, self.systems[nn].atoms[0,j], self.systems[nn].atoms[1,j], self.systems[nn].atoms[2,j]))
+                        f.write("             %d    %d       %.16f      %.16f      %.16f"
+                                "\n" % (ids[j],
+                                        self.systems[nn].types[j]-1,
+                                        self.systems[nn].atoms[0,j],
+                                        self.systems[nn].atoms[1,j],
+                                        self.systems[nn].atoms[2,j]))
                 f.write(' Energy\n')
                 f.write("        %.16f\n" % (self.systems[nn].energy))
-                if self.systems[nn].stress:
+                # if self.systems[nn].stress:
+                if self.systems[nn]._do_stress:
                     f.write(' PlusStress:  xx          yy          zz          yz          xz          xy\n')
-                    f.write("        %.16f    %.16f    %.16f    %.16f    %.16f    %.16f\n" % (self.systems[nn].stress[0,0], self.systems[nn].stress[1,1], self.systems[nn].stress[2,2], self.systems[nn].stress[1,2], self.systems[nn].stress[0,2], self.systems[nn].stress[0,1]))
+                    f.write("        %.16f    %.16f    %.16f    %.16f    %.16f    %.16f"
+                    "\n" % (self.systems[nn].stress[0,0],
+                            self.systems[nn].stress[1,1],
+                            self.systems[nn].stress[2,2],
+                            self.systems[nn].stress[1,2],
+                            self.systems[nn].stress[0,2],
+                            self.systems[nn].stress[0,1]))
                 f.write('END_CFG\n')
                 f.write('\n')
             f.close()
 
+    # TODO - IMPLEMENT VASP FUNCTIONALITY
 
-
-        # BREAK HERE
-
-        #     (xlo,ylo,zlo)=(0,0,0)
-        #     xhi = norm(self.box[:,0])
-        #     xy = dot(self.box[:,1],self.box[:,0]/norm(self.box[:,0]))
-        #     yhi = norm(cross(self.box[:,0]/norm(self.box[:,0]),self.box[:,1]))
-        #     xz = dot(self.box[:,2],self.box[:,0]/norm(self.box[:,0]))
-        #     yz = (dot(self.box[:,2],self.box[:,1])-xy*xz)/yhi
-        #     zhi = sqrt(dot(self.box[:,2],self.box[:,2])-xz**2-yz**2)
-        #     new_box = array([[xlo, xhi],[ylo, yhi],[zlo, zhi]])
-        #     tilt = array([xy, xz, yz]);
-        #     R = array([[xhi, xy, xz],[0, yhi, yz],[0, 0, zhi]])@array([cross(self.box[:,1],self.box[:,2]),cross(self.box[:,2],self.box[:,0]),cross(self.box[:,0],self.box[:,1])])/det(array([[xhi, xy, xz],[0, yhi, yz],[0, 0, zhi]]))
-        #     x = R@self.atoms
-        #     lammpsbox = new_box
-        #     if tilt[0]>0:
-        #         lammpsbox[0][1] += tilt[0]
-        #     else:
-        #         lammpsbox[0][0] += tilt[0]
-        #     if tilt[1]>0:
-        #         lammpsbox[0][1] += tilt[1]
-        #     else:
-        #         lammpsbox[0][0] += tilt[1]
-        #     if tilt[2]>0:
-        #         lammpsbox[1][1] += tilt[2]
-        #     else:
-        #         lammpsbox[1][0] += tilt[2]
-
-        #     file = open(filename,"w")
-        #     file.write("ITEM: TIMESTEP\n")
-        #     file.write("%d\n" % (self.timestep))
-        #     file.write("ITEM: NUMBER OF ATOMS\n")
-        #     # natoms=Atoms.shape[1]
-        #     file.write("%d\n" % self.natoms)
-        #     origin = np.zeros((3))
-        #     # (x,box,tilt,R)=triclinic2lammps(Atoms,Box)
-        #     file.write("ITEM: BOX BOUNDS xy xz yz pp pp pp stress\n")
-        #     for i in range(3):
-        #         file.write("%f %f %f\n" % (lammpsbox[i,0],lammpsbox[i,1],tilt[i]))
-        #     # TODO - ADD IN FORCE ATTRIBUTES
-        #     # file.write("ITEM: ATOMS id type x y z fx fy fz\n")
-        #     file.write("ITEM: ATOMS id type x y z\n")
-        #     for i in range(self.natoms):
-        #         file.write("%d %d %f %f %f\n" % (i+1, self.types[i], x[0,i], x[1,i], x[2,i]))
-        #     file.close()
-
-    #def writedumpseries(self,filename: Union[str, None]):
-    #    if filename is None:
-    #        filename = 'Atomic_series.dump'
+    #def write_vasp(self,
+    #               INCAR: Union[str, None] = None,
+    #               KPOINTS: Union[str, None] = None):
+    #    """
+    #    Writes VASP DFT inputs
+    #    """
+    #    if INCAR != None:
+    #        with open(INCAR, 'r') as f:
+    #            INCAR = f.read()
     #    else:
-    #        if filename.lower().split('.')[-1] != 'dump':
-    #            filename = '.'.join([filename.split('.')[0], 'dump'])
+    #        INCAR = textwrap.dedent('''\
+    #        System = Fe bcc fero
+    #        # Parameters
+    #            PREC = Accurate
+    #            LASPH = True
+    #            LORBIT = 10
 
-    #    file = open(filename,"w")
-    #    # nsims = sims.size
+    #        #Electronic relaxation
+    #            ALGO = Normal
+
+    #        #Electronic Relaxation
+    #           ENCUT  =    520.00
+    #           NELM   =    300    #max SCF steps
+    #           NELMIN =      4    #min SCF steps
+    #           EDIFF  =   1E-7    #stopping-criterion for ELM
+    #           LREAL = F    # RM and RH
+
+
+    #        #DOS related values:
+    #            ISMEAR = 0
+    #            SIGMA = 0.2
+
+    #        #Write flags
+    #            LWAVE  =      F    #write WAVECAR
+    #            LCHARG =      F    #write CHGCAR
+    #            LELF   =      F    #write electronic localiz. function (ELF)
+
+    #        #Ionic relaxation
+    #        #   NSW    =     100    #number of steps for IOM
+    #            ISIF   =      2
+    #            IBRION =      -1   # no update
+    #        #   POTIM  =    0.1    #time-step for ionic-motion
+    #        #   ISYM   =      0    #0-off
+    #        ''')
+    #        with open('INCAR', 'w') as f:
+    #            f.write(INCAR)
+    #    if KPOINTS != None:
+    #        with open(KPOINTS, 'r') as f:
+    #            KPOINTS = f.read()
+    #    else:
+    #        KPOINTS = textwrap.dedent('''\
+    #        K-Spacing Value to Generate K-Mesh: 0.020
+    #        0
+    #        Monkhorst-Pack
+    #          5 5 5
+    #        0.0  0.0  0.0
+    #        ''')
+    #        with open('KPOINTS', 'w') as f:
+    #            f.write(KPOINTS)
     #    nsims = len(self.systems)
-    #    for nn in range(nsims):
-    #        file.write("ITEM: TIMESTEP energy, energy_weight, force_weight, nsims\n")
-    #        file.write("%d %f %f %f %d\n" % (nn,sims[nn]['energy'][0],sims[nn]['energy_weight'][0],sims[nn]['force_weight'][0],nsims))
-    #        file.write("ITEM: NUMBER OF ATOMS\n")
-    #        natoms = sims[nn]['natoms'][0]
-    #        file.write("%d\n" % natoms)
-    #        origin = np.zeros((3))
-    #        Box = sims[nn]['box']
-    #        X = sims[nn]['x']
-
-    #        (xlo,ylo,zlo)=(0,0,0)
-    #        xhi = norm(Box[:,0])
-    #        xy = dot(Box[:,1],Box[:,0]/norm(Box[:,0]))
-    #        yhi = norm(cross(Box[:,0]/norm(Box[:,0]),Box[:,1]))
-    #        xz = dot(Box[:,2],Box[:,0]/norm(Box[:,0]))
-    #        yz = (dot(Box[:,2],Box[:,1])-xy*xz)/yhi
-    #        zhi = sqrt(dot(Box[:,2],Box[:,2])-xz**2-yz**2)
-    #        box = array([[xlo, xhi],[ylo, yhi],[zlo, zhi]])
-    #        tilt = array([xy, xz, yz]);
-    #        R = array([[xhi, xy, xz],[0, yhi, yz],[0, 0, zhi]])@array([cross(Box[:,1],Box[:,2]),cross(Box[:,2],Box[:,0]),cross(Box[:,0],Box[:,1])])/det(array([[xhi, xy, xz],[0, yhi, yz],[0, 0, zhi]]))
-    #        x = R@X
-    #        lammpsbox = box
-    #        if tilt[0]>0:
-    #            lammpsbox[0][1] += tilt[0]
-    #        else:
-    #            lammpsbox[0][0] += tilt[0]
-    #        if tilt[1]>0:
-    #            lammpsbox[0][1] += tilt[1]
-    #        else:
-    #            lammpsbox[0][0] += tilt[1]
-    #        if tilt[2]>0:
-    #            lammpsbox[1][1] += tilt[2]
-    #        else:
-    #            lammpsbox[1][0] += tilt[2]
-    #        # return (x,lammpsbox,tilt,R)%
-
-    #        (x,box,tilt,R)=triclinic2lammps(X,Box)
-    #        file.write("ITEM: BOX BOUNDS xy xz yz pp pp pp stress\n")
-    #        stress = sims[nn]['stress']
-    #        for i in range(3):
-    #            file.write("%f %f %f %f %f %f\n" % (box[i,0],box[i,1],tilt[i],stress[i,0],stress[i,1],stress[i,2]))
-    #        file.write("ITEM: ATOMS id type x y z fx fy fz\n")
-    #        f = sims[nn]['f']
-    #        ids = sims[nn]['id']
-    #        types = sims[nn]['type']
-    #        for i in range(natoms):
-    #            file.write("%d %d %f %f %f %f %f %f\n" % (ids[i], types[i], x[i][0], x[i][1], x[i][2], f[i][0], f[i][1], f[i][2]))
-    #            #file.write("\t {0:d} {1:.0f} {2:f} {3:f} {4:f}\n" .format(i+1,types[i],Lattice[0,i],Lattice[1,i],Lattice[2,i]))
-    #    file.close()%
-    def write_vasp(self,
-                   INCAR: Union[str, None] = None,
-                   KPOINTS: Union[str, None] = None):
-        """
-        Writes VASP DFT inputs
-        """
-        if INCAR != None:
-            with open(INCAR, 'r') as f:
-                INCAR = f.read()
-        else:
-            INCAR = textwrap.dedent('''\
-            System = Fe bcc fero
-            # Parameters
-                PREC = Accurate
-                LASPH = True
-                LORBIT = 10
-
-            #Electronic relaxation
-                ALGO = Normal
-
-            #Electronic Relaxation
-               ENCUT  =    520.00
-               NELM   =    300    #max SCF steps
-               NELMIN =      4    #min SCF steps
-               EDIFF  =   1E-7    #stopping-criterion for ELM
-               LREAL = F    # RM and RH
-
-
-            #DOS related values:
-                ISMEAR = 0
-                SIGMA = 0.2
-
-            #Write flags
-                LWAVE  =      F    #write WAVECAR
-                LCHARG =      F    #write CHGCAR
-                LELF   =      F    #write electronic localiz. function (ELF)
-
-            #Ionic relaxation
-            #   NSW    =     100    #number of steps for IOM
-                ISIF   =      2
-                IBRION =      -1   # no update
-            #   POTIM  =    0.1    #time-step for ionic-motion
-            #   ISYM   =      0    #0-off
-            ''')
-            with open('INCAR', 'w') as f:
-                f.write(INCAR)
-        if KPOINTS != None:
-            with open(KPOINTS, 'r') as f:
-                KPOINTS = f.read()
-        else:
-            KPOINTS = textwrap.dedent('''\
-            K-Spacing Value to Generate K-Mesh: 0.020
-            0
-            Monkhorst-Pack
-              5 5 5
-            0.0  0.0  0.0
-            ''')
-            with open('KPOINTS', 'w') as f:
-                f.write(KPOINTS)
-        nsims = len(self.systems)
-        # print(nsims)
-        sys.path.append(os.getcwd())
-        self.export(filename='POSCAR',
-                    filetype='poscar',
-                    directory='all_poscars')
-        for i in range(nsims):
-            directory = f'input_{i+1}'
-            if not os.path.isdir(directory):
-                os.mkdir(directory)
-            os.system(f'cp INCAR KPOINTS {directory}/.')
-            os.chdir(directory)
-            self.systems[i].export(filename='POSCAR',
-                                   filetype='poscar')
-            os.system('mv POSCAR.poscar POSCAR')
-            os.chdir('../')
+    #    # print(nsims)
+    #    sys.path.append(os.getcwd())
+    #    self.export(filename='POSCAR',
+    #                filetype='poscar',
+    #                directory='all_poscars')
+    #    for i in range(nsims):
+    #        directory = f'input_{i+1}'
+    #        if not os.path.isdir(directory):
+    #            os.mkdir(directory)
+    #        os.system(f'cp INCAR KPOINTS {directory}/.')
+    #        os.chdir(directory)
+    #        self.systems[i].export(filename='POSCAR',
+    #                               filetype='poscar')
+    #        os.system('mv POSCAR.poscar POSCAR')
+    #        os.chdir('../')
 
 
