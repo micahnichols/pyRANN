@@ -1,0 +1,16 @@
+Metadata-Version: 2.4
+Name: pyrann_mtp
+Version: 1.0.0a1
+Summary: Pybind11 bindings for mlip-3 (MTP)
+Requires-Dist: numpy
+Requires-Dist: scipy
+Requires-Dist: pandas
+Requires-Dist: scikit-learn
+Requires-Dist: bokeh
+Requires-Dist: matplotlib
+Requires-Dist: colorcet
+Requires-Dist: quippy-ase
+Requires-Dist: ase
+Requires-Dist: umap-learn
+Dynamic: requires-dist
+Dynamic: summary

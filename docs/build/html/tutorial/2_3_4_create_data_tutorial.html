@@ -1,0 +1,519 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Creating data with pyRANN &mdash; pyrann 1.0.0.a1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=f3915c0e"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="MLIP Atomic Descriptors with pyRANN" href="Atomic_Descriptors.html" />
+    <link rel="prev" title="Introduction to pyRANN" href="0_load_tutorial.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            pyrann
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../pyrann.html">pyRANN API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="0_load_tutorial.html">Introduction to pyRANN</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Creating data with pyRANN</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#elastic-strain">2) Elastic Strain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#create-supercell">3) Create Supercell</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#thermal-perturbations">4) Thermal Perturbations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vacancies">5) Vacancies</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Atomic_Descriptors.html">MLIP Atomic Descriptors with pyRANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Database_Reduction.html">Database Reduction using pyRANN</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pyrann</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Tutorials</a></li>
+      <li class="breadcrumb-item active">Creating data with pyRANN</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorial/2_3_4_create_data_tutorial.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="creating-data-with-pyrann">
+<h1>Creating data with pyRANN<a class="headerlink" href="#creating-data-with-pyrann" title="Link to this heading"></a></h1>
+<section id="elastic-strain">
+<h2>2) Elastic Strain<a class="headerlink" href="#elastic-strain" title="Link to this heading"></a></h2>
+<p>First, let’s load an FCC Al structure from our POSCAR file, “Al.POSCAR”.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyrann</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">rann</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">fcc</span> <span class="o">=</span> <span class="n">rann</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;Al.POSCAR&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">fcc</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Initializing</span> <span class="n">pyrann</span> <span class="n">version</span> <span class="mf">1.0.0</span><span class="o">.</span><span class="n">a1</span>
+<span class="n">box</span> <span class="ow">and</span> <span class="n">atoms</span> <span class="n">are</span> <span class="n">column</span> <span class="n">vectors</span>
+<span class="n">System</span> <span class="n">created</span> <span class="kn">from</span><span class="w"> </span><span class="nn">Al.POSCAR</span>
+<span class="n">box</span> <span class="o">=</span>
+<span class="p">[[</span><span class="mf">2.473329</span> <span class="mf">0.824443</span> <span class="mf">0.</span>      <span class="p">]</span>
+ <span class="p">[</span><span class="mf">0.</span>       <span class="mf">2.331877</span> <span class="mf">0.</span>      <span class="p">]</span>
+ <span class="p">[</span><span class="mf">1.427977</span> <span class="mf">1.427977</span> <span class="mf">2.855955</span><span class="p">]]</span>
+<span class="n">natoms</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">elements</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Al&#39;</span><span class="p">]</span>
+<span class="n">timestep</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">types</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">atoms</span> <span class="o">=</span>
+<span class="p">[[</span><span class="mf">0.</span><span class="p">]</span>
+ <span class="p">[</span><span class="mf">0.</span><span class="p">]</span>
+ <span class="p">[</span><span class="mf">0.</span><span class="p">]]</span>
+<span class="n">energy</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">forces</span> <span class="o">=</span>
+<span class="kc">None</span>
+<span class="n">stress</span> <span class="o">=</span>
+<span class="kc">None</span>
+</pre></div>
+</div>
+<p>Now we can apply an elastic strain on our system. We will generate 100
+unique structures for each of the following strain modes in Voigt
+notation:</p>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">Strain</span><a class="headerlink" href="#id1" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p><span class="math notranslate nohighlight">\(\varepsilon_1\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(\varepsilon_2\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(\varepsilon_3\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(\varepsilon_4\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(\varepsilon_5\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(\varepsilon_6\)</span></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(\varepsilon\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\varepsilon\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\varepsilon\)</span></p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(\varepsilon\)</span></p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td><p>0</p></td>
+<td><p><span class="math notranslate nohighlight">\(\varepsilon\)</span></p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p><span class="math notranslate nohighlight">\(\varepsilon\)</span></p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p><span class="math notranslate nohighlight">\(\varepsilon\)</span></p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p><span class="math notranslate nohighlight">\(\varepsilon\)</span></p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p><span class="math notranslate nohighlight">\(\varepsilon\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p><span class="math notranslate nohighlight">\(\varepsilon\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\varepsilon\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\varepsilon\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(\varepsilon\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\varepsilon\)</span></p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(\varepsilon\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(-\varepsilon\)</span></p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(\varepsilon\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\varepsilon\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\varepsilon\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\varepsilon\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\varepsilon\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\varepsilon\)</span></p></td>
+</tr>
+</tbody>
+</table>
+<p><span class="math notranslate nohighlight">\(\varepsilon\)</span> will vary from -5% to +5% strain in equal increments
+across the 100 unique structures.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">strain</span> <span class="o">=</span> <span class="n">fcc</span><span class="o">.</span><span class="n">strain</span><span class="p">(</span><span class="n">strain_points</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">maximum_strain</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>“strain” is now an instance of the series class. A series class object
+contains a list of system class objects. We can export the strain series
+instance to a file.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">strain</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="s1">&#39;strain.dump&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If we wanted individual POSCAR files for each unique structure, we can
+do the following:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">strain</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="s1">&#39;strain.POSCAR&#39;</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="s1">&#39;POSCARS&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="create-supercell">
+<h2>3) Create Supercell<a class="headerlink" href="#create-supercell" title="Link to this heading"></a></h2>
+<p>For other types of data, we may want more than just a primitive cell.
+Let’s create a supercell.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">new_box</span> <span class="o">=</span> <span class="n">fcc</span><span class="o">.</span><span class="n">box</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+<span class="n">fcc</span><span class="o">.</span><span class="n">createsupercell</span><span class="p">(</span><span class="n">new_box</span><span class="o">=</span><span class="n">new_box</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">fcc</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">box</span> <span class="ow">and</span> <span class="n">atoms</span> <span class="n">are</span> <span class="n">column</span> <span class="n">vectors</span>
+<span class="n">System</span> <span class="n">created</span> <span class="kn">from</span><span class="w"> </span><span class="nn">Al.POSCAR</span>
+<span class="n">box</span> <span class="o">=</span>
+<span class="p">[[</span><span class="mf">10.5056556</span>   <span class="mf">3.81166298</span>  <span class="mf">0.2694119</span> <span class="p">]</span>
+ <span class="p">[</span> <span class="mf">0.3680234</span>   <span class="mf">9.99030378</span>  <span class="mf">0.2694119</span> <span class="p">]</span>
+ <span class="p">[</span> <span class="mf">6.2209874</span>   <span class="mf">6.28541626</span> <span class="mf">11.97534401</span><span class="p">]]</span>
+<span class="n">natoms</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="n">elements</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Al&#39;</span><span class="p">]</span>
+<span class="n">timestep</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">types</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span>
+ <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">atoms</span> <span class="o">=</span>
+<span class="p">[[</span><span class="mf">3.81879711e-03</span> <span class="mf">7.11717724e-02</span> <span class="mf">1.38524748e-01</span> <span class="mf">2.05877723e-01</span>
+  <span class="mf">9.56734543e-01</span> <span class="mf">1.02408752e+00</span> <span class="mf">1.09144049e+00</span> <span class="mf">1.15879347e+00</span>
+  <span class="mf">1.90965029e+00</span> <span class="mf">1.97700326e+00</span> <span class="mf">2.04435624e+00</span> <span class="mf">2.11170922e+00</span>
+  <span class="mf">2.86256604e+00</span> <span class="mf">2.92991901e+00</span> <span class="mf">2.99727199e+00</span> <span class="mf">3.06462496e+00</span>
+  <span class="mf">2.63023270e+00</span> <span class="mf">2.69758567e+00</span> <span class="mf">2.76493865e+00</span> <span class="mf">2.83229162e+00</span>
+  <span class="mf">3.58314844e+00</span> <span class="mf">3.65050142e+00</span> <span class="mf">3.71785439e+00</span> <span class="mf">3.78520737e+00</span>
+  <span class="mf">4.53606419e+00</span> <span class="mf">4.60341716e+00</span> <span class="mf">4.67077014e+00</span> <span class="mf">4.73812311e+00</span>
+  <span class="mf">5.48897993e+00</span> <span class="mf">5.55633291e+00</span> <span class="mf">5.62368588e+00</span> <span class="mf">5.69103886e+00</span>
+  <span class="mf">5.25664659e+00</span> <span class="mf">5.32399957e+00</span> <span class="mf">5.39135255e+00</span> <span class="mf">5.45870552e+00</span>
+  <span class="mf">6.20956234e+00</span> <span class="mf">6.27691532e+00</span> <span class="mf">6.34426829e+00</span> <span class="mf">6.41162127e+00</span>
+  <span class="mf">7.16247809e+00</span> <span class="mf">7.22983106e+00</span> <span class="mf">7.29718404e+00</span> <span class="mf">7.36453701e+00</span>
+  <span class="mf">8.11539383e+00</span> <span class="mf">8.18274681e+00</span> <span class="mf">8.25009978e+00</span> <span class="mf">8.31745276e+00</span>
+  <span class="mf">7.88306049e+00</span> <span class="mf">7.95041347e+00</span> <span class="mf">8.01776644e+00</span> <span class="mf">8.08511942e+00</span>
+  <span class="mf">8.83597624e+00</span> <span class="mf">8.90332922e+00</span> <span class="mf">8.97068219e+00</span> <span class="mf">9.03803517e+00</span>
+  <span class="mf">9.78889199e+00</span> <span class="mf">9.85624496e+00</span> <span class="mf">9.92359794e+00</span> <span class="mf">9.99095091e+00</span>
+  <span class="mf">1.07418077e+01</span> <span class="mf">1.08091607e+01</span> <span class="mf">1.08765137e+01</span> <span class="mf">1.09438667e+01</span><span class="p">]</span>
+ <span class="p">[</span><span class="mf">2.78233558e-03</span> <span class="mf">7.01353109e-02</span> <span class="mf">1.37488286e-01</span> <span class="mf">2.04841262e-01</span>
+  <span class="mf">2.50035828e+00</span> <span class="mf">2.56771125e+00</span> <span class="mf">2.63506423e+00</span> <span class="mf">2.70241721e+00</span>
+  <span class="mf">4.99793422e+00</span> <span class="mf">5.06528720e+00</span> <span class="mf">5.13264017e+00</span> <span class="mf">5.19999315e+00</span>
+  <span class="mf">7.49551017e+00</span> <span class="mf">7.56286314e+00</span> <span class="mf">7.63021612e+00</span> <span class="mf">7.69756909e+00</span>
+  <span class="mf">9.47881854e-02</span> <span class="mf">1.62141161e-01</span> <span class="mf">2.29494136e-01</span> <span class="mf">2.96847111e-01</span>
+  <span class="mf">2.59236413e+00</span> <span class="mf">2.65971710e+00</span> <span class="mf">2.72707008e+00</span> <span class="mf">2.79442306e+00</span>
+  <span class="mf">5.08994007e+00</span> <span class="mf">5.15729305e+00</span> <span class="mf">5.22464602e+00</span> <span class="mf">5.29199900e+00</span>
+  <span class="mf">7.58751602e+00</span> <span class="mf">7.65486899e+00</span> <span class="mf">7.72222197e+00</span> <span class="mf">7.78957494e+00</span>
+  <span class="mf">1.86794035e-01</span> <span class="mf">2.54147010e-01</span> <span class="mf">3.21499986e-01</span> <span class="mf">3.88852961e-01</span>
+  <span class="mf">2.68436998e+00</span> <span class="mf">2.75172295e+00</span> <span class="mf">2.81907593e+00</span> <span class="mf">2.88642891e+00</span>
+  <span class="mf">5.18194592e+00</span> <span class="mf">5.24929890e+00</span> <span class="mf">5.31665187e+00</span> <span class="mf">5.38400485e+00</span>
+  <span class="mf">7.67952187e+00</span> <span class="mf">7.74687484e+00</span> <span class="mf">7.81422782e+00</span> <span class="mf">7.88158079e+00</span>
+  <span class="mf">2.78799885e-01</span> <span class="mf">3.46152860e-01</span> <span class="mf">4.13505836e-01</span> <span class="mf">4.80858811e-01</span>
+  <span class="mf">2.77637583e+00</span> <span class="mf">2.84372880e+00</span> <span class="mf">2.91108178e+00</span> <span class="mf">2.97843475e+00</span>
+  <span class="mf">5.27395177e+00</span> <span class="mf">5.34130475e+00</span> <span class="mf">5.40865772e+00</span> <span class="mf">5.47601070e+00</span>
+  <span class="mf">7.77152772e+00</span> <span class="mf">7.83888069e+00</span> <span class="mf">7.90623367e+00</span> <span class="mf">7.97358664e+00</span><span class="p">]</span>
+ <span class="p">[</span><span class="mf">6.40930655e-03</span> <span class="mf">3.00024531e+00</span> <span class="mf">5.99408131e+00</span> <span class="mf">8.98791731e+00</span>
+  <span class="mf">1.57776337e+00</span> <span class="mf">4.57159937e+00</span> <span class="mf">7.56543538e+00</span> <span class="mf">1.05592714e+01</span>
+  <span class="mf">3.14911744e+00</span> <span class="mf">6.14295344e+00</span> <span class="mf">9.13678944e+00</span> <span class="mf">1.21306254e+01</span>
+  <span class="mf">4.72047150e+00</span> <span class="mf">7.71430750e+00</span> <span class="mf">1.07081435e+01</span> <span class="mf">1.37019795e+01</span>
+  <span class="mf">1.56165616e+00</span> <span class="mf">4.55549216e+00</span> <span class="mf">7.54932816e+00</span> <span class="mf">1.05431642e+01</span>
+  <span class="mf">3.13301022e+00</span> <span class="mf">6.12684622e+00</span> <span class="mf">9.12068223e+00</span> <span class="mf">1.21145182e+01</span>
+  <span class="mf">4.70436429e+00</span> <span class="mf">7.69820029e+00</span> <span class="mf">1.06920363e+01</span> <span class="mf">1.36858723e+01</span>
+  <span class="mf">6.27571835e+00</span> <span class="mf">9.26955435e+00</span> <span class="mf">1.22633904e+01</span> <span class="mf">1.52572264e+01</span>
+  <span class="mf">3.11690301e+00</span> <span class="mf">6.11073901e+00</span> <span class="mf">9.10457501e+00</span> <span class="mf">1.20984110e+01</span>
+  <span class="mf">4.68825707e+00</span> <span class="mf">7.68209308e+00</span> <span class="mf">1.06759291e+01</span> <span class="mf">1.36697651e+01</span>
+  <span class="mf">6.25961114e+00</span> <span class="mf">9.25344714e+00</span> <span class="mf">1.22472831e+01</span> <span class="mf">1.52411191e+01</span>
+  <span class="mf">7.83096520e+00</span> <span class="mf">1.08248012e+01</span> <span class="mf">1.38186372e+01</span> <span class="mf">1.68124732e+01</span>
+  <span class="mf">4.67214986e+00</span> <span class="mf">7.66598586e+00</span> <span class="mf">1.06598219e+01</span> <span class="mf">1.36536579e+01</span>
+  <span class="mf">6.24350392e+00</span> <span class="mf">9.23733993e+00</span> <span class="mf">1.22311759e+01</span> <span class="mf">1.52250119e+01</span>
+  <span class="mf">7.81485799e+00</span> <span class="mf">1.08086940e+01</span> <span class="mf">1.38025300e+01</span> <span class="mf">1.67963660e+01</span>
+  <span class="mf">9.38621205e+00</span> <span class="mf">1.23800481e+01</span> <span class="mf">1.53738841e+01</span> <span class="mf">1.83677201e+01</span><span class="p">]]</span>
+<span class="n">energy</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">forces</span> <span class="o">=</span>
+<span class="kc">None</span>
+<span class="n">stress</span> <span class="o">=</span>
+<span class="kc">None</span>
+</pre></div>
+</div>
+<p>The createsupercell method modifies the attributes of the system
+instance passed to it. This means you will need to load in a new
+instance of “Al.POSCAR” if you need the primitive cell again.</p>
+</section>
+<section id="thermal-perturbations">
+<h2>4) Thermal Perturbations<a class="headerlink" href="#thermal-perturbations" title="Link to this heading"></a></h2>
+<p>Now that we have a supercell, let’s generate data to mimic thermal
+perturbations.</p>
+<p>We will create 100 “unique” structures with a maximum perturbation of 5%
+of Al lattice constant
+(<span class="math notranslate nohighlight">\(4.0495 \mathring{A} *0.05=0.202475 \mathring{A}\)</span>). We will also
+randomly strain the box by 5% and export to a LAMMPS dump file.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">thermal</span> <span class="o">=</span> <span class="n">fcc</span><span class="o">.</span><span class="n">thermal</span><span class="p">(</span><span class="n">temp</span><span class="o">=</span><span class="mf">0.202475</span><span class="p">,</span> <span class="n">strain</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">nsims</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">thermal</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="s1">&#39;thermal.dump&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="vacancies">
+<h2>5) Vacancies<a class="headerlink" href="#vacancies" title="Link to this heading"></a></h2>
+<p>Now let’s add a vacancy to our supercell. We do this by randomly
+deleting one atom.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fcc</span><span class="o">.</span><span class="n">vacancy</span><span class="p">(</span><span class="n">num_neighbors</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">fcc</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">box</span> <span class="ow">and</span> <span class="n">atoms</span> <span class="n">are</span> <span class="n">column</span> <span class="n">vectors</span>
+<span class="n">System</span> <span class="n">created</span> <span class="kn">from</span><span class="w"> </span><span class="nn">Al.POSCAR</span>
+<span class="n">box</span> <span class="o">=</span>
+<span class="p">[[</span><span class="mf">10.5056556</span>   <span class="mf">3.81166298</span>  <span class="mf">0.2694119</span> <span class="p">]</span>
+ <span class="p">[</span> <span class="mf">0.3680234</span>   <span class="mf">9.99030378</span>  <span class="mf">0.2694119</span> <span class="p">]</span>
+ <span class="p">[</span> <span class="mf">6.2209874</span>   <span class="mf">6.28541626</span> <span class="mf">11.97534401</span><span class="p">]]</span>
+<span class="n">natoms</span> <span class="o">=</span> <span class="mi">63</span>
+<span class="n">elements</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Al&#39;</span><span class="p">]</span>
+<span class="n">timestep</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">types</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span>
+ <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">atoms</span> <span class="o">=</span>
+<span class="p">[[</span><span class="mf">3.81879711e-03</span> <span class="mf">1.38524748e-01</span> <span class="mf">2.05877723e-01</span> <span class="mf">9.56734543e-01</span>
+  <span class="mf">1.02408752e+00</span> <span class="mf">1.09144049e+00</span> <span class="mf">1.15879347e+00</span> <span class="mf">1.90965029e+00</span>
+  <span class="mf">1.97700326e+00</span> <span class="mf">2.04435624e+00</span> <span class="mf">2.11170922e+00</span> <span class="mf">2.86256604e+00</span>
+  <span class="mf">2.92991901e+00</span> <span class="mf">2.99727199e+00</span> <span class="mf">3.06462496e+00</span> <span class="mf">2.63023270e+00</span>
+  <span class="mf">2.69758567e+00</span> <span class="mf">2.76493865e+00</span> <span class="mf">2.83229162e+00</span> <span class="mf">3.58314844e+00</span>
+  <span class="mf">3.65050142e+00</span> <span class="mf">3.71785439e+00</span> <span class="mf">3.78520737e+00</span> <span class="mf">4.53606419e+00</span>
+  <span class="mf">4.60341716e+00</span> <span class="mf">4.67077014e+00</span> <span class="mf">4.73812311e+00</span> <span class="mf">5.48897993e+00</span>
+  <span class="mf">5.55633291e+00</span> <span class="mf">5.62368588e+00</span> <span class="mf">5.69103886e+00</span> <span class="mf">5.25664659e+00</span>
+  <span class="mf">5.32399957e+00</span> <span class="mf">5.39135255e+00</span> <span class="mf">5.45870552e+00</span> <span class="mf">6.20956234e+00</span>
+  <span class="mf">6.27691532e+00</span> <span class="mf">6.34426829e+00</span> <span class="mf">6.41162127e+00</span> <span class="mf">7.16247809e+00</span>
+  <span class="mf">7.22983106e+00</span> <span class="mf">7.29718404e+00</span> <span class="mf">7.36453701e+00</span> <span class="mf">8.11539383e+00</span>
+  <span class="mf">8.18274681e+00</span> <span class="mf">8.25009978e+00</span> <span class="mf">8.31745276e+00</span> <span class="mf">7.88306049e+00</span>
+  <span class="mf">7.95041347e+00</span> <span class="mf">8.01776644e+00</span> <span class="mf">8.08511942e+00</span> <span class="mf">8.83597624e+00</span>
+  <span class="mf">8.90332922e+00</span> <span class="mf">8.97068219e+00</span> <span class="mf">9.03803517e+00</span> <span class="mf">9.78889199e+00</span>
+  <span class="mf">9.85624496e+00</span> <span class="mf">9.92359794e+00</span> <span class="mf">9.99095091e+00</span> <span class="mf">1.07418077e+01</span>
+  <span class="mf">1.08091607e+01</span> <span class="mf">1.08765137e+01</span> <span class="mf">1.09438667e+01</span><span class="p">]</span>
+ <span class="p">[</span><span class="mf">2.78233558e-03</span> <span class="mf">1.37488286e-01</span> <span class="mf">2.04841262e-01</span> <span class="mf">2.50035828e+00</span>
+  <span class="mf">2.56771125e+00</span> <span class="mf">2.63506423e+00</span> <span class="mf">2.70241721e+00</span> <span class="mf">4.99793422e+00</span>
+  <span class="mf">5.06528720e+00</span> <span class="mf">5.13264017e+00</span> <span class="mf">5.19999315e+00</span> <span class="mf">7.49551017e+00</span>
+  <span class="mf">7.56286314e+00</span> <span class="mf">7.63021612e+00</span> <span class="mf">7.69756909e+00</span> <span class="mf">9.47881854e-02</span>
+  <span class="mf">1.62141161e-01</span> <span class="mf">2.29494136e-01</span> <span class="mf">2.96847111e-01</span> <span class="mf">2.59236413e+00</span>
+  <span class="mf">2.65971710e+00</span> <span class="mf">2.72707008e+00</span> <span class="mf">2.79442306e+00</span> <span class="mf">5.08994007e+00</span>
+  <span class="mf">5.15729305e+00</span> <span class="mf">5.22464602e+00</span> <span class="mf">5.29199900e+00</span> <span class="mf">7.58751602e+00</span>
+  <span class="mf">7.65486899e+00</span> <span class="mf">7.72222197e+00</span> <span class="mf">7.78957494e+00</span> <span class="mf">1.86794035e-01</span>
+  <span class="mf">2.54147010e-01</span> <span class="mf">3.21499986e-01</span> <span class="mf">3.88852961e-01</span> <span class="mf">2.68436998e+00</span>
+  <span class="mf">2.75172295e+00</span> <span class="mf">2.81907593e+00</span> <span class="mf">2.88642891e+00</span> <span class="mf">5.18194592e+00</span>
+  <span class="mf">5.24929890e+00</span> <span class="mf">5.31665187e+00</span> <span class="mf">5.38400485e+00</span> <span class="mf">7.67952187e+00</span>
+  <span class="mf">7.74687484e+00</span> <span class="mf">7.81422782e+00</span> <span class="mf">7.88158079e+00</span> <span class="mf">2.78799885e-01</span>
+  <span class="mf">3.46152860e-01</span> <span class="mf">4.13505836e-01</span> <span class="mf">4.80858811e-01</span> <span class="mf">2.77637583e+00</span>
+  <span class="mf">2.84372880e+00</span> <span class="mf">2.91108178e+00</span> <span class="mf">2.97843475e+00</span> <span class="mf">5.27395177e+00</span>
+  <span class="mf">5.34130475e+00</span> <span class="mf">5.40865772e+00</span> <span class="mf">5.47601070e+00</span> <span class="mf">7.77152772e+00</span>
+  <span class="mf">7.83888069e+00</span> <span class="mf">7.90623367e+00</span> <span class="mf">7.97358664e+00</span><span class="p">]</span>
+ <span class="p">[</span><span class="mf">6.40930655e-03</span> <span class="mf">5.99408131e+00</span> <span class="mf">8.98791731e+00</span> <span class="mf">1.57776337e+00</span>
+  <span class="mf">4.57159937e+00</span> <span class="mf">7.56543538e+00</span> <span class="mf">1.05592714e+01</span> <span class="mf">3.14911744e+00</span>
+  <span class="mf">6.14295344e+00</span> <span class="mf">9.13678944e+00</span> <span class="mf">1.21306254e+01</span> <span class="mf">4.72047150e+00</span>
+  <span class="mf">7.71430750e+00</span> <span class="mf">1.07081435e+01</span> <span class="mf">1.37019795e+01</span> <span class="mf">1.56165616e+00</span>
+  <span class="mf">4.55549216e+00</span> <span class="mf">7.54932816e+00</span> <span class="mf">1.05431642e+01</span> <span class="mf">3.13301022e+00</span>
+  <span class="mf">6.12684622e+00</span> <span class="mf">9.12068223e+00</span> <span class="mf">1.21145182e+01</span> <span class="mf">4.70436429e+00</span>
+  <span class="mf">7.69820029e+00</span> <span class="mf">1.06920363e+01</span> <span class="mf">1.36858723e+01</span> <span class="mf">6.27571835e+00</span>
+  <span class="mf">9.26955435e+00</span> <span class="mf">1.22633904e+01</span> <span class="mf">1.52572264e+01</span> <span class="mf">3.11690301e+00</span>
+  <span class="mf">6.11073901e+00</span> <span class="mf">9.10457501e+00</span> <span class="mf">1.20984110e+01</span> <span class="mf">4.68825707e+00</span>
+  <span class="mf">7.68209308e+00</span> <span class="mf">1.06759291e+01</span> <span class="mf">1.36697651e+01</span> <span class="mf">6.25961114e+00</span>
+  <span class="mf">9.25344714e+00</span> <span class="mf">1.22472831e+01</span> <span class="mf">1.52411191e+01</span> <span class="mf">7.83096520e+00</span>
+  <span class="mf">1.08248012e+01</span> <span class="mf">1.38186372e+01</span> <span class="mf">1.68124732e+01</span> <span class="mf">4.67214986e+00</span>
+  <span class="mf">7.66598586e+00</span> <span class="mf">1.06598219e+01</span> <span class="mf">1.36536579e+01</span> <span class="mf">6.24350392e+00</span>
+  <span class="mf">9.23733993e+00</span> <span class="mf">1.22311759e+01</span> <span class="mf">1.52250119e+01</span> <span class="mf">7.81485799e+00</span>
+  <span class="mf">1.08086940e+01</span> <span class="mf">1.38025300e+01</span> <span class="mf">1.67963660e+01</span> <span class="mf">9.38621205e+00</span>
+  <span class="mf">1.23800481e+01</span> <span class="mf">1.53738841e+01</span> <span class="mf">1.83677201e+01</span><span class="p">]]</span>
+<span class="n">energy</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">forces</span> <span class="o">=</span>
+<span class="kc">None</span>
+<span class="n">stress</span> <span class="o">=</span>
+<span class="kc">None</span>
+</pre></div>
+</div>
+<p>Notice that the vacancy method modifies the attributes of the fcc system
+instance. This means that any operation done on “fcc” will now be done
+on an FCC system containing a vacancy. Let’s induce thermal
+perturbations on this system.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">thermal_vacancy</span> <span class="o">=</span> <span class="n">fcc</span><span class="o">.</span><span class="n">thermal</span><span class="p">(</span><span class="n">temp</span><span class="o">=</span><span class="mf">0.202475</span><span class="p">,</span> <span class="n">strain</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">nsims</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">thermal_vacancy</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="s1">&#39;thermal_vacancy.dump&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We can increase the size of the vacancy by increasing the num_neighbors
+argument.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fcc</span><span class="o">.</span><span class="n">vacancy</span><span class="p">(</span><span class="n">num_neighbors</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">fcc</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">box</span> <span class="ow">and</span> <span class="n">atoms</span> <span class="n">are</span> <span class="n">column</span> <span class="n">vectors</span>
+<span class="n">System</span> <span class="n">created</span> <span class="kn">from</span><span class="w"> </span><span class="nn">Al.POSCAR</span>
+<span class="n">box</span> <span class="o">=</span>
+<span class="p">[[</span><span class="mf">10.5056556</span>   <span class="mf">3.81166298</span>  <span class="mf">0.2694119</span> <span class="p">]</span>
+ <span class="p">[</span> <span class="mf">0.3680234</span>   <span class="mf">9.99030378</span>  <span class="mf">0.2694119</span> <span class="p">]</span>
+ <span class="p">[</span> <span class="mf">6.2209874</span>   <span class="mf">6.28541626</span> <span class="mf">11.97534401</span><span class="p">]]</span>
+<span class="n">natoms</span> <span class="o">=</span> <span class="mi">60</span>
+<span class="n">elements</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Al&#39;</span><span class="p">]</span>
+<span class="n">timestep</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">types</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span>
+ <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">atoms</span> <span class="o">=</span>
+<span class="p">[[</span><span class="mf">3.81879711e-03</span> <span class="mf">1.38524748e-01</span> <span class="mf">2.05877723e-01</span> <span class="mf">9.56734543e-01</span>
+  <span class="mf">1.02408752e+00</span> <span class="mf">1.09144049e+00</span> <span class="mf">1.15879347e+00</span> <span class="mf">1.90965029e+00</span>
+  <span class="mf">1.97700326e+00</span> <span class="mf">2.04435624e+00</span> <span class="mf">2.11170922e+00</span> <span class="mf">2.86256604e+00</span>
+  <span class="mf">2.92991901e+00</span> <span class="mf">2.99727199e+00</span> <span class="mf">3.06462496e+00</span> <span class="mf">2.63023270e+00</span>
+  <span class="mf">2.69758567e+00</span> <span class="mf">2.76493865e+00</span> <span class="mf">2.83229162e+00</span> <span class="mf">3.58314844e+00</span>
+  <span class="mf">3.71785439e+00</span> <span class="mf">3.78520737e+00</span> <span class="mf">4.53606419e+00</span> <span class="mf">4.67077014e+00</span>
+  <span class="mf">4.73812311e+00</span> <span class="mf">5.48897993e+00</span> <span class="mf">5.55633291e+00</span> <span class="mf">5.62368588e+00</span>
+  <span class="mf">5.69103886e+00</span> <span class="mf">5.25664659e+00</span> <span class="mf">5.32399957e+00</span> <span class="mf">5.39135255e+00</span>
+  <span class="mf">5.45870552e+00</span> <span class="mf">6.20956234e+00</span> <span class="mf">6.34426829e+00</span> <span class="mf">6.41162127e+00</span>
+  <span class="mf">7.16247809e+00</span> <span class="mf">7.22983106e+00</span> <span class="mf">7.29718404e+00</span> <span class="mf">7.36453701e+00</span>
+  <span class="mf">8.11539383e+00</span> <span class="mf">8.18274681e+00</span> <span class="mf">8.25009978e+00</span> <span class="mf">8.31745276e+00</span>
+  <span class="mf">7.88306049e+00</span> <span class="mf">7.95041347e+00</span> <span class="mf">8.01776644e+00</span> <span class="mf">8.08511942e+00</span>
+  <span class="mf">8.83597624e+00</span> <span class="mf">8.90332922e+00</span> <span class="mf">8.97068219e+00</span> <span class="mf">9.03803517e+00</span>
+  <span class="mf">9.78889199e+00</span> <span class="mf">9.85624496e+00</span> <span class="mf">9.92359794e+00</span> <span class="mf">9.99095091e+00</span>
+  <span class="mf">1.07418077e+01</span> <span class="mf">1.08091607e+01</span> <span class="mf">1.08765137e+01</span> <span class="mf">1.09438667e+01</span><span class="p">]</span>
+ <span class="p">[</span><span class="mf">2.78233558e-03</span> <span class="mf">1.37488286e-01</span> <span class="mf">2.04841262e-01</span> <span class="mf">2.50035828e+00</span>
+  <span class="mf">2.56771125e+00</span> <span class="mf">2.63506423e+00</span> <span class="mf">2.70241721e+00</span> <span class="mf">4.99793422e+00</span>
+  <span class="mf">5.06528720e+00</span> <span class="mf">5.13264017e+00</span> <span class="mf">5.19999315e+00</span> <span class="mf">7.49551017e+00</span>
+  <span class="mf">7.56286314e+00</span> <span class="mf">7.63021612e+00</span> <span class="mf">7.69756909e+00</span> <span class="mf">9.47881854e-02</span>
+  <span class="mf">1.62141161e-01</span> <span class="mf">2.29494136e-01</span> <span class="mf">2.96847111e-01</span> <span class="mf">2.59236413e+00</span>
+  <span class="mf">2.72707008e+00</span> <span class="mf">2.79442306e+00</span> <span class="mf">5.08994007e+00</span> <span class="mf">5.22464602e+00</span>
+  <span class="mf">5.29199900e+00</span> <span class="mf">7.58751602e+00</span> <span class="mf">7.65486899e+00</span> <span class="mf">7.72222197e+00</span>
+  <span class="mf">7.78957494e+00</span> <span class="mf">1.86794035e-01</span> <span class="mf">2.54147010e-01</span> <span class="mf">3.21499986e-01</span>
+  <span class="mf">3.88852961e-01</span> <span class="mf">2.68436998e+00</span> <span class="mf">2.81907593e+00</span> <span class="mf">2.88642891e+00</span>
+  <span class="mf">5.18194592e+00</span> <span class="mf">5.24929890e+00</span> <span class="mf">5.31665187e+00</span> <span class="mf">5.38400485e+00</span>
+  <span class="mf">7.67952187e+00</span> <span class="mf">7.74687484e+00</span> <span class="mf">7.81422782e+00</span> <span class="mf">7.88158079e+00</span>
+  <span class="mf">2.78799885e-01</span> <span class="mf">3.46152860e-01</span> <span class="mf">4.13505836e-01</span> <span class="mf">4.80858811e-01</span>
+  <span class="mf">2.77637583e+00</span> <span class="mf">2.84372880e+00</span> <span class="mf">2.91108178e+00</span> <span class="mf">2.97843475e+00</span>
+  <span class="mf">5.27395177e+00</span> <span class="mf">5.34130475e+00</span> <span class="mf">5.40865772e+00</span> <span class="mf">5.47601070e+00</span>
+  <span class="mf">7.77152772e+00</span> <span class="mf">7.83888069e+00</span> <span class="mf">7.90623367e+00</span> <span class="mf">7.97358664e+00</span><span class="p">]</span>
+ <span class="p">[</span><span class="mf">6.40930655e-03</span> <span class="mf">5.99408131e+00</span> <span class="mf">8.98791731e+00</span> <span class="mf">1.57776337e+00</span>
+  <span class="mf">4.57159937e+00</span> <span class="mf">7.56543538e+00</span> <span class="mf">1.05592714e+01</span> <span class="mf">3.14911744e+00</span>
+  <span class="mf">6.14295344e+00</span> <span class="mf">9.13678944e+00</span> <span class="mf">1.21306254e+01</span> <span class="mf">4.72047150e+00</span>
+  <span class="mf">7.71430750e+00</span> <span class="mf">1.07081435e+01</span> <span class="mf">1.37019795e+01</span> <span class="mf">1.56165616e+00</span>
+  <span class="mf">4.55549216e+00</span> <span class="mf">7.54932816e+00</span> <span class="mf">1.05431642e+01</span> <span class="mf">3.13301022e+00</span>
+  <span class="mf">9.12068223e+00</span> <span class="mf">1.21145182e+01</span> <span class="mf">4.70436429e+00</span> <span class="mf">1.06920363e+01</span>
+  <span class="mf">1.36858723e+01</span> <span class="mf">6.27571835e+00</span> <span class="mf">9.26955435e+00</span> <span class="mf">1.22633904e+01</span>
+  <span class="mf">1.52572264e+01</span> <span class="mf">3.11690301e+00</span> <span class="mf">6.11073901e+00</span> <span class="mf">9.10457501e+00</span>
+  <span class="mf">1.20984110e+01</span> <span class="mf">4.68825707e+00</span> <span class="mf">1.06759291e+01</span> <span class="mf">1.36697651e+01</span>
+  <span class="mf">6.25961114e+00</span> <span class="mf">9.25344714e+00</span> <span class="mf">1.22472831e+01</span> <span class="mf">1.52411191e+01</span>
+  <span class="mf">7.83096520e+00</span> <span class="mf">1.08248012e+01</span> <span class="mf">1.38186372e+01</span> <span class="mf">1.68124732e+01</span>
+  <span class="mf">4.67214986e+00</span> <span class="mf">7.66598586e+00</span> <span class="mf">1.06598219e+01</span> <span class="mf">1.36536579e+01</span>
+  <span class="mf">6.24350392e+00</span> <span class="mf">9.23733993e+00</span> <span class="mf">1.22311759e+01</span> <span class="mf">1.52250119e+01</span>
+  <span class="mf">7.81485799e+00</span> <span class="mf">1.08086940e+01</span> <span class="mf">1.38025300e+01</span> <span class="mf">1.67963660e+01</span>
+  <span class="mf">9.38621205e+00</span> <span class="mf">1.23800481e+01</span> <span class="mf">1.53738841e+01</span> <span class="mf">1.83677201e+01</span><span class="p">]]</span>
+<span class="n">energy</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">forces</span> <span class="o">=</span>
+<span class="kc">None</span>
+<span class="n">stress</span> <span class="o">=</span>
+<span class="kc">None</span>
+</pre></div>
+</div>
+<p>Notice how “fcc” now only has 60 atoms. This is because we ran the
+vacancy method on it twice. The first time, “fcc” went from 64 atoms to
+63 atoms because we set num_neighbors=1. The second time we ran the
+vacancy method, we set num_neighbors=3, so “fcc” went from 63 atoms to
+60 atoms.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="0_load_tutorial.html" class="btn btn-neutral float-left" title="Introduction to pyRANN" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Atomic_Descriptors.html" class="btn btn-neutral float-right" title="MLIP Atomic Descriptors with pyRANN" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Micah Nichols, Christopher Barrett.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

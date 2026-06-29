@@ -1,0 +1,547 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MLIP Atomic Descriptors with pyRANN &mdash; pyrann 1.0.0.a1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=f3915c0e"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Database Reduction using pyRANN" href="Database_Reduction.html" />
+    <link rel="prev" title="Creating data with pyRANN" href="2_3_4_create_data_tutorial.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            pyrann
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../pyrann.html">pyRANN API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="0_load_tutorial.html">Introduction to pyRANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2_3_4_create_data_tutorial.html">Creating data with pyRANN</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">MLIP Atomic Descriptors with pyRANN</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#getting-atomic-descriptors">6) Getting Atomic Descriptors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#visualizing-descriptor-space-with-umap">7) Visualizing Descriptor Space with UMAP</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#initializing-umap">Initializing UMAP</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#interactive-plotting-categorical-coloring-by-filename">Interactive Plotting - Categorical Coloring by Filename</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#interactive-plotting-linear-coloring-by-energy">Interactive Plotting - Linear Coloring by energy</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Database_Reduction.html">Database Reduction using pyRANN</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pyrann</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Tutorials</a></li>
+      <li class="breadcrumb-item active">MLIP Atomic Descriptors with pyRANN</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorial/Atomic_Descriptors.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="mlip-atomic-descriptors-with-pyrann">
+<h1>MLIP Atomic Descriptors with pyRANN<a class="headerlink" href="#mlip-atomic-descriptors-with-pyrann" title="Link to this heading"></a></h1>
+<p>We can access the atomic descriptors of the RANN, MTP, and GAP MLIP
+formalism with pyRANN. In order to access the MTP descriptors, please
+make sure to install the optional pyrann_mtp package using one of the
+following commands.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;pyrann[mtp]&quot;</span>
+pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;pyrann[all]&quot;</span>
+</pre></div>
+</div>
+<p>To access the descriptors, we first need to initialize a processing
+class instance with the filename of each of the 3 formalism potential
+files. For the RANN formalism, the file can be a completed potential
+file or an input file that has yet to be trained.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyrann</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">rann</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">rann_pot</span> <span class="o">=</span> <span class="n">rann</span><span class="o">.</span><span class="n">processing</span><span class="p">(</span><span class="s1">&#39;Mg.input&#39;</span><span class="p">)</span>
+<span class="n">mtp_pot</span> <span class="o">=</span> <span class="n">rann</span><span class="o">.</span><span class="n">processing</span><span class="p">(</span><span class="s1">&#39;pot4_6.0.mtp&#39;</span><span class="p">)</span>
+<span class="n">gap_pot</span> <span class="o">=</span> <span class="n">rann</span><span class="o">.</span><span class="n">processing</span><span class="p">(</span><span class="s1">&#39;GAP_Mg_7.0_4.0_3556_gs.xml&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Initializing</span> <span class="n">pyrann</span> <span class="n">version</span> <span class="mf">1.0.0</span><span class="o">.</span><span class="n">a1</span>
+</pre></div>
+</div>
+<section id="getting-atomic-descriptors">
+<h2>6) Getting Atomic Descriptors<a class="headerlink" href="#getting-atomic-descriptors" title="Link to this heading"></a></h2>
+<p>Now, we can get the atomic descriptors for each of the formalisms. Let’s
+start with RANN. 4 Mg LAMMPS dump files have been provided for this
+tutorial to act as a psuedo-database. Make sure that only the dump files
+you want to calculate the descriptors for are in the working directory.
+The RANN formalism scans the entire working directory for any file or
+directory with the lowercase word “dump”.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rann_pot</span><span class="o">.</span><span class="n">get_features</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">rann_pot</span><span class="o">.</span><span class="n">features</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Number Threads     : 16</span>
+<span class="p">[[</span> <span class="mf">3.38935976</span>  <span class="mf">3.02644257</span>  <span class="mf">2.25109709</span> <span class="o">...</span>  <span class="mf">1.61972099</span>  <span class="mf">1.95561874</span>
+   <span class="mf">1.68242089</span><span class="p">]</span>
+ <span class="p">[</span> <span class="mf">6.37313423</span>  <span class="mf">5.05768164</span>  <span class="mf">3.35657445</span> <span class="o">...</span>  <span class="mf">8.02213011</span>  <span class="mf">8.21899046</span>
+   <span class="mf">8.04288521</span><span class="p">]</span>
+ <span class="p">[</span> <span class="mf">1.16156767</span>  <span class="mf">1.51729725</span>  <span class="mf">1.84310613</span> <span class="o">...</span> <span class="o">-</span><span class="mf">0.03339917</span>  <span class="mf">0.02580062</span>
+  <span class="o">-</span><span class="mf">0.024193</span>  <span class="p">]</span>
+ <span class="o">...</span>
+ <span class="p">[</span><span class="o">-</span><span class="mf">1.07721352</span> <span class="o">-</span><span class="mf">1.49743447</span> <span class="o">-</span><span class="mf">1.95603472</span> <span class="o">...</span> <span class="o">-</span><span class="mf">0.04121257</span> <span class="o">-</span><span class="mf">0.11339892</span>
+  <span class="o">-</span><span class="mf">0.04301757</span><span class="p">]</span>
+ <span class="p">[</span><span class="o">-</span><span class="mf">0.32591448</span> <span class="o">-</span><span class="mf">0.50494778</span> <span class="o">-</span><span class="mf">0.74019567</span> <span class="o">...</span> <span class="o">-</span><span class="mf">0.03560158</span> <span class="o">-</span><span class="mf">0.06744371</span>
+  <span class="o">-</span><span class="mf">0.03037547</span><span class="p">]</span>
+ <span class="p">[</span><span class="o">-</span><span class="mf">0.6583386</span>  <span class="o">-</span><span class="mf">0.85380547</span> <span class="o">-</span><span class="mf">1.04831626</span> <span class="o">...</span> <span class="o">-</span><span class="mf">0.05904069</span> <span class="o">-</span><span class="mf">0.10222123</span>
+  <span class="o">-</span><span class="mf">0.05760668</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p>Running the get_features method also sets the filename, global_sim_num,
+local_sim_num, and local_id attributes of the processing class. These
+are all arrays that describe the filename, global simulation number,
+local (within-file) simulation number, and local (within-simulation) id
+for each atom.</p>
+<p>Now, let’s get the atomic descriptors for the same database using the
+MTP formalism. We need to set the file_fmt argument of the get_features
+method to ‘dump’ so that pyRANN knows to translate the LAMMPS dump files
+to MTP’s native cfg format.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mtp_pot</span><span class="o">.</span><span class="n">get_features</span><span class="p">(</span><span class="n">file_fmt</span><span class="o">=</span><span class="s1">&#39;dump&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">mtp_pot</span><span class="o">.</span><span class="n">features</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[[</span> <span class="mf">0.</span>         <span class="o">-</span><span class="mf">2.62030552</span> <span class="o">-</span><span class="mf">2.9269448</span>  <span class="o">...</span>  <span class="mf">3.58905704</span>  <span class="mf">3.54220025</span>
+   <span class="mf">3.41129791</span><span class="p">]</span>
+ <span class="p">[</span> <span class="mf">0.</span>         <span class="o">-</span><span class="mf">1.09789216</span> <span class="o">-</span><span class="mf">1.64585973</span> <span class="o">...</span> <span class="o">-</span><span class="mf">0.41706344</span> <span class="o">-</span><span class="mf">0.69452364</span>
+  <span class="o">-</span><span class="mf">0.57435477</span><span class="p">]</span>
+ <span class="p">[</span> <span class="mf">0.</span>         <span class="o">-</span><span class="mf">2.07964607</span> <span class="o">-</span><span class="mf">2.00114841</span> <span class="o">...</span> <span class="o">-</span><span class="mf">0.29337904</span> <span class="o">-</span><span class="mf">0.45432535</span>
+  <span class="o">-</span><span class="mf">0.38497632</span><span class="p">]</span>
+ <span class="o">...</span>
+ <span class="p">[</span> <span class="mf">0.</span>          <span class="mf">1.57324701</span>  <span class="mf">1.55826347</span> <span class="o">...</span>  <span class="mf">0.01165797</span> <span class="o">-</span><span class="mf">0.00835375</span>
+  <span class="o">-</span><span class="mf">0.04001837</span><span class="p">]</span>
+ <span class="p">[</span> <span class="mf">0.</span>          <span class="mf">2.17987415</span>  <span class="mf">2.19832042</span> <span class="o">...</span> <span class="o">-</span><span class="mf">0.52227954</span> <span class="o">-</span><span class="mf">0.54389097</span>
+  <span class="o">-</span><span class="mf">0.55966454</span><span class="p">]</span>
+ <span class="p">[</span> <span class="mf">0.</span>          <span class="mf">1.53174407</span>  <span class="mf">1.4282988</span>  <span class="o">...</span> <span class="o">-</span><span class="mf">0.28838971</span> <span class="o">-</span><span class="mf">0.29020163</span>
+  <span class="o">-</span><span class="mf">0.29370493</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p>Now we can do the same for the GAP (or SOAP) formalism. For this
+formalism, we also need to specify the element symbol.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gap_pot</span><span class="o">.</span><span class="n">get_features</span><span class="p">(</span><span class="n">file_fmt</span><span class="o">=</span><span class="s1">&#39;dump&#39;</span><span class="p">,</span> <span class="n">symbol</span><span class="o">=</span><span class="s1">&#39;Mg&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">gap_pot</span><span class="o">.</span><span class="n">features</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[[</span> <span class="mf">3.36212173e+00</span>  <span class="mf">4.02145133e+00</span>  <span class="mf">7.07412320e+00</span> <span class="o">...</span> <span class="o">-</span><span class="mf">6.60682039e-01</span>
+  <span class="o">-</span><span class="mf">6.03285115e-01</span>  <span class="mf">0.00000000e+00</span><span class="p">]</span>
+ <span class="p">[</span> <span class="mf">4.61939006e+00</span>  <span class="mf">6.29585082e+00</span>  <span class="mf">8.61582969e+00</span> <span class="o">...</span> <span class="o">-</span><span class="mf">8.81417063e-01</span>
+  <span class="o">-</span><span class="mf">4.70978834e-01</span>  <span class="mf">0.00000000e+00</span><span class="p">]</span>
+ <span class="p">[</span> <span class="mf">8.33206505e-01</span> <span class="o">-</span><span class="mf">2.05046993e-01</span> <span class="o">-</span><span class="mf">5.75611097e-03</span> <span class="o">...</span> <span class="o">-</span><span class="mf">4.99541177e-01</span>
+  <span class="o">-</span><span class="mf">7.24089657e-01</span>  <span class="mf">0.00000000e+00</span><span class="p">]</span>
+ <span class="o">...</span>
+ <span class="p">[</span><span class="o">-</span><span class="mf">5.55010506e-01</span>  <span class="mf">1.27548385e+00</span>  <span class="mf">9.35055344e-01</span> <span class="o">...</span>  <span class="mf">2.06545172e+00</span>
+  <span class="o">-</span><span class="mf">1.05686924e+00</span>  <span class="mf">0.00000000e+00</span><span class="p">]</span>
+ <span class="p">[</span> <span class="mf">3.53201390e-01</span>  <span class="mf">1.00131400e+00</span>  <span class="mf">1.06164819e+00</span> <span class="o">...</span>  <span class="mf">2.03311307e+00</span>
+  <span class="o">-</span><span class="mf">4.74448290e-01</span>  <span class="mf">0.00000000e+00</span><span class="p">]</span>
+ <span class="p">[</span><span class="o">-</span><span class="mf">3.18842598e-01</span>  <span class="mf">1.48647634e-01</span>  <span class="mf">1.69396143e+00</span> <span class="o">...</span>  <span class="mf">1.25940406e+00</span>
+   <span class="mf">2.10516594e-01</span>  <span class="mf">0.00000000e+00</span><span class="p">]]</span>
+</pre></div>
+</div>
+</section>
+<section id="visualizing-descriptor-space-with-umap">
+<h2>7) Visualizing Descriptor Space with UMAP<a class="headerlink" href="#visualizing-descriptor-space-with-umap" title="Link to this heading"></a></h2>
+<section id="initializing-umap">
+<h3>Initializing UMAP<a class="headerlink" href="#initializing-umap" title="Link to this heading"></a></h3>
+<p>Now that the features have been calculated for each formalism, we can
+visualize the descriptor space using UMAP. First, we need to initialize
+UMAP for each formalism.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rann_mapper</span> <span class="o">=</span> <span class="n">rann_pot</span><span class="o">.</span><span class="n">get_umap</span><span class="p">()</span>
+<span class="n">mtp_mapper</span> <span class="o">=</span> <span class="n">mtp_pot</span><span class="o">.</span><span class="n">get_umap</span><span class="p">()</span>
+<span class="n">gap_mapper</span> <span class="o">=</span> <span class="n">gap_pot</span><span class="o">.</span><span class="n">get_umap</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">UMAP</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="s1">&#39;pca&#39;</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">54</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">Sat</span> <span class="n">Jun</span> <span class="mi">27</span> <span class="mi">11</span><span class="p">:</span><span class="mi">08</span><span class="p">:</span><span class="mi">29</span> <span class="mi">2026</span> <span class="n">Construct</span> <span class="n">fuzzy</span> <span class="n">simplicial</span> <span class="nb">set</span>
+<span class="n">Sat</span> <span class="n">Jun</span> <span class="mi">27</span> <span class="mi">11</span><span class="p">:</span><span class="mi">08</span><span class="p">:</span><span class="mi">29</span> <span class="mi">2026</span> <span class="n">Finding</span> <span class="n">Nearest</span> <span class="n">Neighbors</span>
+<span class="n">Sat</span> <span class="n">Jun</span> <span class="mi">27</span> <span class="mi">11</span><span class="p">:</span><span class="mi">08</span><span class="p">:</span><span class="mi">29</span> <span class="mi">2026</span> <span class="n">Building</span> <span class="n">RP</span> <span class="n">forest</span> <span class="k">with</span> <span class="mi">20</span> <span class="n">trees</span>
+<span class="n">Sat</span> <span class="n">Jun</span> <span class="mi">27</span> <span class="mi">11</span><span class="p">:</span><span class="mi">08</span><span class="p">:</span><span class="mi">33</span> <span class="mi">2026</span> <span class="n">NN</span> <span class="n">descent</span> <span class="k">for</span> <span class="mi">16</span> <span class="n">iterations</span>
+     <span class="mi">1</span>  <span class="o">/</span>  <span class="mi">16</span>
+     <span class="mi">2</span>  <span class="o">/</span>  <span class="mi">16</span>
+    <span class="n">Stopping</span> <span class="n">threshold</span> <span class="n">met</span> <span class="o">--</span> <span class="n">exiting</span> <span class="n">after</span> <span class="mi">2</span> <span class="n">iterations</span>
+<span class="n">Sat</span> <span class="n">Jun</span> <span class="mi">27</span> <span class="mi">11</span><span class="p">:</span><span class="mi">08</span><span class="p">:</span><span class="mi">50</span> <span class="mi">2026</span> <span class="n">Finished</span> <span class="n">Nearest</span> <span class="n">Neighbor</span> <span class="n">Search</span>
+<span class="n">Sat</span> <span class="n">Jun</span> <span class="mi">27</span> <span class="mi">11</span><span class="p">:</span><span class="mi">08</span><span class="p">:</span><span class="mi">52</span> <span class="mi">2026</span> <span class="n">Construct</span> <span class="n">embedding</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Epochs</span> <span class="n">completed</span><span class="p">:</span>   <span class="mi">0</span><span class="o">%|</span>            <span class="mi">0</span><span class="o">/</span><span class="mi">200</span> <span class="p">[</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="n">completed</span>  <span class="mi">0</span>  <span class="o">/</span>  <span class="mi">200</span> <span class="n">epochs</span>
+    <span class="n">completed</span>  <span class="mi">20</span>  <span class="o">/</span>  <span class="mi">200</span> <span class="n">epochs</span>
+    <span class="n">completed</span>  <span class="mi">40</span>  <span class="o">/</span>  <span class="mi">200</span> <span class="n">epochs</span>
+    <span class="n">completed</span>  <span class="mi">60</span>  <span class="o">/</span>  <span class="mi">200</span> <span class="n">epochs</span>
+    <span class="n">completed</span>  <span class="mi">80</span>  <span class="o">/</span>  <span class="mi">200</span> <span class="n">epochs</span>
+    <span class="n">completed</span>  <span class="mi">100</span>  <span class="o">/</span>  <span class="mi">200</span> <span class="n">epochs</span>
+    <span class="n">completed</span>  <span class="mi">120</span>  <span class="o">/</span>  <span class="mi">200</span> <span class="n">epochs</span>
+    <span class="n">completed</span>  <span class="mi">140</span>  <span class="o">/</span>  <span class="mi">200</span> <span class="n">epochs</span>
+    <span class="n">completed</span>  <span class="mi">160</span>  <span class="o">/</span>  <span class="mi">200</span> <span class="n">epochs</span>
+    <span class="n">completed</span>  <span class="mi">180</span>  <span class="o">/</span>  <span class="mi">200</span> <span class="n">epochs</span>
+<span class="n">Sat</span> <span class="n">Jun</span> <span class="mi">27</span> <span class="mi">11</span><span class="p">:</span><span class="mi">09</span><span class="p">:</span><span class="mi">01</span> <span class="mi">2026</span> <span class="n">Finished</span> <span class="n">embedding</span>
+<span class="n">UMAP</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="s1">&#39;pca&#39;</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">54</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">Sat</span> <span class="n">Jun</span> <span class="mi">27</span> <span class="mi">11</span><span class="p">:</span><span class="mi">09</span><span class="p">:</span><span class="mi">01</span> <span class="mi">2026</span> <span class="n">Construct</span> <span class="n">fuzzy</span> <span class="n">simplicial</span> <span class="nb">set</span>
+<span class="n">Sat</span> <span class="n">Jun</span> <span class="mi">27</span> <span class="mi">11</span><span class="p">:</span><span class="mi">09</span><span class="p">:</span><span class="mi">01</span> <span class="mi">2026</span> <span class="n">Finding</span> <span class="n">Nearest</span> <span class="n">Neighbors</span>
+<span class="n">Sat</span> <span class="n">Jun</span> <span class="mi">27</span> <span class="mi">11</span><span class="p">:</span><span class="mi">09</span><span class="p">:</span><span class="mi">01</span> <span class="mi">2026</span> <span class="n">Building</span> <span class="n">RP</span> <span class="n">forest</span> <span class="k">with</span> <span class="mi">20</span> <span class="n">trees</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Sat</span> <span class="n">Jun</span> <span class="mi">27</span> <span class="mi">11</span><span class="p">:</span><span class="mi">09</span><span class="p">:</span><span class="mi">02</span> <span class="mi">2026</span> <span class="n">NN</span> <span class="n">descent</span> <span class="k">for</span> <span class="mi">16</span> <span class="n">iterations</span>
+     <span class="mi">1</span>  <span class="o">/</span>  <span class="mi">16</span>
+     <span class="mi">2</span>  <span class="o">/</span>  <span class="mi">16</span>
+    <span class="n">Stopping</span> <span class="n">threshold</span> <span class="n">met</span> <span class="o">--</span> <span class="n">exiting</span> <span class="n">after</span> <span class="mi">2</span> <span class="n">iterations</span>
+<span class="n">Sat</span> <span class="n">Jun</span> <span class="mi">27</span> <span class="mi">11</span><span class="p">:</span><span class="mi">09</span><span class="p">:</span><span class="mi">13</span> <span class="mi">2026</span> <span class="n">Finished</span> <span class="n">Nearest</span> <span class="n">Neighbor</span> <span class="n">Search</span>
+<span class="n">Sat</span> <span class="n">Jun</span> <span class="mi">27</span> <span class="mi">11</span><span class="p">:</span><span class="mi">09</span><span class="p">:</span><span class="mi">14</span> <span class="mi">2026</span> <span class="n">Construct</span> <span class="n">embedding</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Epochs</span> <span class="n">completed</span><span class="p">:</span>   <span class="mi">0</span><span class="o">%|</span>            <span class="mi">0</span><span class="o">/</span><span class="mi">200</span> <span class="p">[</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="n">completed</span>  <span class="mi">0</span>  <span class="o">/</span>  <span class="mi">200</span> <span class="n">epochs</span>
+    <span class="n">completed</span>  <span class="mi">20</span>  <span class="o">/</span>  <span class="mi">200</span> <span class="n">epochs</span>
+    <span class="n">completed</span>  <span class="mi">40</span>  <span class="o">/</span>  <span class="mi">200</span> <span class="n">epochs</span>
+    <span class="n">completed</span>  <span class="mi">60</span>  <span class="o">/</span>  <span class="mi">200</span> <span class="n">epochs</span>
+    <span class="n">completed</span>  <span class="mi">80</span>  <span class="o">/</span>  <span class="mi">200</span> <span class="n">epochs</span>
+    <span class="n">completed</span>  <span class="mi">100</span>  <span class="o">/</span>  <span class="mi">200</span> <span class="n">epochs</span>
+    <span class="n">completed</span>  <span class="mi">120</span>  <span class="o">/</span>  <span class="mi">200</span> <span class="n">epochs</span>
+    <span class="n">completed</span>  <span class="mi">140</span>  <span class="o">/</span>  <span class="mi">200</span> <span class="n">epochs</span>
+    <span class="n">completed</span>  <span class="mi">160</span>  <span class="o">/</span>  <span class="mi">200</span> <span class="n">epochs</span>
+    <span class="n">completed</span>  <span class="mi">180</span>  <span class="o">/</span>  <span class="mi">200</span> <span class="n">epochs</span>
+<span class="n">Sat</span> <span class="n">Jun</span> <span class="mi">27</span> <span class="mi">11</span><span class="p">:</span><span class="mi">09</span><span class="p">:</span><span class="mi">23</span> <span class="mi">2026</span> <span class="n">Finished</span> <span class="n">embedding</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">UMAP</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="s1">&#39;pca&#39;</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">54</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">Sat</span> <span class="n">Jun</span> <span class="mi">27</span> <span class="mi">11</span><span class="p">:</span><span class="mi">09</span><span class="p">:</span><span class="mi">24</span> <span class="mi">2026</span> <span class="n">Construct</span> <span class="n">fuzzy</span> <span class="n">simplicial</span> <span class="nb">set</span>
+<span class="n">Sat</span> <span class="n">Jun</span> <span class="mi">27</span> <span class="mi">11</span><span class="p">:</span><span class="mi">09</span><span class="p">:</span><span class="mi">24</span> <span class="mi">2026</span> <span class="n">Finding</span> <span class="n">Nearest</span> <span class="n">Neighbors</span>
+<span class="n">Sat</span> <span class="n">Jun</span> <span class="mi">27</span> <span class="mi">11</span><span class="p">:</span><span class="mi">09</span><span class="p">:</span><span class="mi">24</span> <span class="mi">2026</span> <span class="n">Building</span> <span class="n">RP</span> <span class="n">forest</span> <span class="k">with</span> <span class="mi">20</span> <span class="n">trees</span>
+<span class="n">Sat</span> <span class="n">Jun</span> <span class="mi">27</span> <span class="mi">11</span><span class="p">:</span><span class="mi">09</span><span class="p">:</span><span class="mi">27</span> <span class="mi">2026</span> <span class="n">NN</span> <span class="n">descent</span> <span class="k">for</span> <span class="mi">16</span> <span class="n">iterations</span>
+     <span class="mi">1</span>  <span class="o">/</span>  <span class="mi">16</span>
+     <span class="mi">2</span>  <span class="o">/</span>  <span class="mi">16</span>
+     <span class="mi">3</span>  <span class="o">/</span>  <span class="mi">16</span>
+     <span class="mi">4</span>  <span class="o">/</span>  <span class="mi">16</span>
+    <span class="n">Stopping</span> <span class="n">threshold</span> <span class="n">met</span> <span class="o">--</span> <span class="n">exiting</span> <span class="n">after</span> <span class="mi">4</span> <span class="n">iterations</span>
+<span class="n">Sat</span> <span class="n">Jun</span> <span class="mi">27</span> <span class="mi">11</span><span class="p">:</span><span class="mi">09</span><span class="p">:</span><span class="mi">55</span> <span class="mi">2026</span> <span class="n">Finished</span> <span class="n">Nearest</span> <span class="n">Neighbor</span> <span class="n">Search</span>
+<span class="n">Sat</span> <span class="n">Jun</span> <span class="mi">27</span> <span class="mi">11</span><span class="p">:</span><span class="mi">09</span><span class="p">:</span><span class="mi">57</span> <span class="mi">2026</span> <span class="n">Construct</span> <span class="n">embedding</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Epochs</span> <span class="n">completed</span><span class="p">:</span>   <span class="mi">0</span><span class="o">%|</span>            <span class="mi">0</span><span class="o">/</span><span class="mi">200</span> <span class="p">[</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="n">completed</span>  <span class="mi">0</span>  <span class="o">/</span>  <span class="mi">200</span> <span class="n">epochs</span>
+    <span class="n">completed</span>  <span class="mi">20</span>  <span class="o">/</span>  <span class="mi">200</span> <span class="n">epochs</span>
+    <span class="n">completed</span>  <span class="mi">40</span>  <span class="o">/</span>  <span class="mi">200</span> <span class="n">epochs</span>
+    <span class="n">completed</span>  <span class="mi">60</span>  <span class="o">/</span>  <span class="mi">200</span> <span class="n">epochs</span>
+    <span class="n">completed</span>  <span class="mi">80</span>  <span class="o">/</span>  <span class="mi">200</span> <span class="n">epochs</span>
+    <span class="n">completed</span>  <span class="mi">100</span>  <span class="o">/</span>  <span class="mi">200</span> <span class="n">epochs</span>
+    <span class="n">completed</span>  <span class="mi">120</span>  <span class="o">/</span>  <span class="mi">200</span> <span class="n">epochs</span>
+    <span class="n">completed</span>  <span class="mi">140</span>  <span class="o">/</span>  <span class="mi">200</span> <span class="n">epochs</span>
+    <span class="n">completed</span>  <span class="mi">160</span>  <span class="o">/</span>  <span class="mi">200</span> <span class="n">epochs</span>
+    <span class="n">completed</span>  <span class="mi">180</span>  <span class="o">/</span>  <span class="mi">200</span> <span class="n">epochs</span>
+<span class="n">Sat</span> <span class="n">Jun</span> <span class="mi">27</span> <span class="mi">11</span><span class="p">:</span><span class="mi">10</span><span class="p">:</span><span class="mi">16</span> <span class="mi">2026</span> <span class="n">Finished</span> <span class="n">embedding</span>
+</pre></div>
+</div>
+</section>
+<section id="interactive-plotting-categorical-coloring-by-filename">
+<h3>Interactive Plotting - Categorical Coloring by Filename<a class="headerlink" href="#interactive-plotting-categorical-coloring-by-filename" title="Link to this heading"></a></h3>
+<p>Now, we can produce interactive plots of the descriptor space for each
+formalism colored by filename.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rann_pot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">rann_mapper</span><span class="p">,</span> <span class="n">color_data</span><span class="o">=</span><span class="n">rann_pot</span><span class="o">.</span><span class="n">filenames</span><span class="p">,</span>
+              <span class="n">hover_info</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Global Simulation Number&#39;</span><span class="p">:</span> <span class="n">rann_pot</span><span class="o">.</span><span class="n">global_sim_num</span><span class="p">,</span>
+                          <span class="s1">&#39;Local Simulation Number&#39;</span><span class="p">:</span> <span class="n">rann_pot</span><span class="o">.</span><span class="n">local_sim_num</span><span class="p">,</span>
+                          <span class="s1">&#39;Local ID&#39;</span><span class="p">:</span> <span class="n">rann_pot</span><span class="o">.</span><span class="n">local_id</span><span class="p">},</span>
+              <span class="n">key_str</span><span class="o">=</span><span class="s1">&#39;rann&#39;</span><span class="p">)</span>
+<span class="n">mtp_pot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mtp_mapper</span><span class="p">,</span> <span class="n">color_data</span><span class="o">=</span><span class="n">mtp_pot</span><span class="o">.</span><span class="n">filenames</span><span class="p">,</span>
+             <span class="n">hover_info</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Global Simulation Number&#39;</span><span class="p">:</span> <span class="n">mtp_pot</span><span class="o">.</span><span class="n">global_sim_num</span><span class="p">,</span>
+                         <span class="s1">&#39;Local Simulation Number&#39;</span><span class="p">:</span> <span class="n">mtp_pot</span><span class="o">.</span><span class="n">local_sim_num</span><span class="p">,</span>
+                         <span class="s1">&#39;Local ID&#39;</span><span class="p">:</span> <span class="n">mtp_pot</span><span class="o">.</span><span class="n">local_id</span><span class="p">},</span>
+             <span class="n">key_str</span><span class="o">=</span><span class="s1">&#39;mtp&#39;</span><span class="p">)</span>
+<span class="n">gap_pot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">gap_mapper</span><span class="p">,</span> <span class="n">color_data</span><span class="o">=</span><span class="n">gap_pot</span><span class="o">.</span><span class="n">filenames</span><span class="p">,</span>
+             <span class="n">hover_info</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Global Simulation Number&#39;</span><span class="p">:</span> <span class="n">gap_pot</span><span class="o">.</span><span class="n">global_sim_num</span><span class="p">,</span>
+                         <span class="s1">&#39;Local Simulation Number&#39;</span><span class="p">:</span> <span class="n">gap_pot</span><span class="o">.</span><span class="n">local_sim_num</span><span class="p">,</span>
+                         <span class="s1">&#39;Local ID&#39;</span><span class="p">:</span> <span class="n">gap_pot</span><span class="o">.</span><span class="n">local_id</span><span class="p">},</span>
+             <span class="n">key_str</span><span class="o">=</span><span class="s1">&#39;gap&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<section id="rann">
+<h4>RANN<a class="headerlink" href="#rann" title="Link to this heading"></a></h4>
+<p>Click the colored circles on the legend to hide atoms from that specific
+filename. Hover over data points to see information on that particular
+atom.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">IFrame</span>
+
+<span class="n">IFrame</span><span class="p">(</span><span class="n">src</span><span class="o">=</span><span class="s1">&#39;rann.html&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="s1">&#39;100%&#39;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+</pre></div>
+</div>
+<iframe
+    width="100%"
+    height="1000"
+    src="_static/rann.html"
+    frameborder="0"
+    allowfullscreen
+
+></iframe></section>
+<section id="mtp">
+<h4>MTP<a class="headerlink" href="#mtp" title="Link to this heading"></a></h4>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">IFrame</span><span class="p">(</span><span class="n">src</span><span class="o">=</span><span class="s1">&#39;mtp.html&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="s1">&#39;100%&#39;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+</pre></div>
+</div>
+<iframe
+    width="100%"
+    height="1000"
+    src="_static/mtp.html"
+    frameborder="0"
+    allowfullscreen
+
+></iframe></section>
+<section id="gap">
+<h4>GAP<a class="headerlink" href="#gap" title="Link to this heading"></a></h4>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">IFrame</span><span class="p">(</span><span class="n">src</span><span class="o">=</span><span class="s1">&#39;gap.html&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="s1">&#39;100%&#39;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+</pre></div>
+</div>
+<iframe
+    width="100%"
+    height="1000"
+    src="_static/gap.html"
+    frameborder="0"
+    allowfullscreen
+
+></iframe></section>
+</section>
+<section id="interactive-plotting-linear-coloring-by-energy">
+<h3>Interactive Plotting - Linear Coloring by energy<a class="headerlink" href="#interactive-plotting-linear-coloring-by-energy" title="Link to this heading"></a></h3>
+<p>Now, we can produce interactive plots of the descriptor space for each
+formalism colored by the energy per atom <span class="math notranslate nohighlight">\((\frac{eV}{atom})\)</span>. The
+energy per atom is calculated by dividing the energy of each simulation
+by the number of atoms in that simulation.</p>
+<p>To ensure that the array of energies is in the correct order for each
+formalism, we must first load in the database using pyrann.load in the
+same order that each formalism reads the files for feature calculation.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get unique filenames and the index the first unique instance appears</span>
+<span class="n">rann_filenames</span><span class="p">,</span> <span class="n">rann_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">rann_pot</span><span class="o">.</span><span class="n">filenames</span><span class="p">,</span> <span class="n">return_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">mtp_filenames</span><span class="p">,</span> <span class="n">mtp_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">mtp_pot</span><span class="o">.</span><span class="n">filenames</span><span class="p">,</span> <span class="n">return_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">gap_filenames</span><span class="p">,</span> <span class="n">gap_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">gap_pot</span><span class="o">.</span><span class="n">filenames</span><span class="p">,</span> <span class="n">return_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Sort the index in ascending order. This is to get the unique filenames in the order the formalism reads them.</span>
+<span class="n">rann_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">rann_index</span><span class="p">)</span>
+<span class="n">mtp_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">mtp_index</span><span class="p">)</span>
+<span class="n">gap_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">gap_index</span><span class="p">)</span>
+
+<span class="c1"># Get unique filenames in the order that the formalism reads them.</span>
+<span class="n">rann_unique_filenames</span> <span class="o">=</span> <span class="n">rann_filenames</span><span class="p">[</span><span class="n">rann_index</span><span class="p">]</span>
+<span class="n">mtp_unique_filenames</span> <span class="o">=</span> <span class="n">mtp_filenames</span><span class="p">[</span><span class="n">mtp_index</span><span class="p">]</span>
+<span class="n">gap_unique_filenames</span> <span class="o">=</span> <span class="n">gap_filenames</span><span class="p">[</span><span class="n">gap_index</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">rann_unique_filenames</span><span class="w"> </span><span class="si">= }</span><span class="se">\n</span><span class="si">{</span><span class="n">mtp_unique_filenames</span><span class="w"> </span><span class="si">= }</span><span class="se">\n</span><span class="si">{</span><span class="n">gap_unique_filenames</span><span class="w"> </span><span class="si">= }</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rann_unique_filenames</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span><span class="s1">&#39;18_hcp_tetra.dump&#39;</span><span class="p">,</span> <span class="s1">&#39;07_fcc_thermal.dump&#39;</span><span class="p">,</span> <span class="s1">&#39;06_bcc_thermal.dump&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;05_hcp_thermal.dump&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;&lt;U19&#39;</span><span class="p">)</span>
+<span class="n">mtp_unique_filenames</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span><span class="s1">&#39;18_hcp_tetra.cfg&#39;</span><span class="p">,</span> <span class="s1">&#39;07_fcc_thermal.cfg&#39;</span><span class="p">,</span> <span class="s1">&#39;05_hcp_thermal.cfg&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;06_bcc_thermal.cfg&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;&lt;U18&#39;</span><span class="p">)</span>
+<span class="n">gap_unique_filenames</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span><span class="s1">&#39;18_hcp_tetra.dump&#39;</span><span class="p">,</span> <span class="s1">&#39;07_fcc_thermal.dump&#39;</span><span class="p">,</span> <span class="s1">&#39;06_bcc_thermal.dump&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;05_hcp_thermal.dump&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;&lt;U19&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>As you can see, MTP differs in the order that it reads the input
+files. This step is very important to ensure all analysis is done
+correctly</strong></p>
+<p>Now we can load in the database in the correct order and calculate the
+energy per atom for each atom for each formalism.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Loading in the database in formalism specific orders</span>
+<span class="n">rann_series</span> <span class="o">=</span> <span class="p">[</span><span class="n">rann</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">series</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">rann_unique_filenames</span><span class="p">]</span>
+<span class="n">mtp_series</span> <span class="o">=</span> <span class="p">[</span><span class="n">rann</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">series</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">mtp_unique_filenames</span><span class="p">]</span>
+<span class="n">gap_series</span> <span class="o">=</span> <span class="p">[</span><span class="n">rann</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">series</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">gap_unique_filenames</span><span class="p">]</span>
+
+<span class="c1"># Calculating the energy per atom for each formalism specific order using list comprehension</span>
+<span class="n">rann_epa</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">j</span><span class="o">.</span><span class="n">energy</span> <span class="o">/</span> <span class="n">j</span><span class="o">.</span><span class="n">natoms</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">rann_series</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">i</span><span class="o">.</span><span class="n">systems</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">j</span><span class="o">.</span><span class="n">natoms</span><span class="p">)])</span>
+<span class="n">mtp_epa</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">j</span><span class="o">.</span><span class="n">energy</span> <span class="o">/</span> <span class="n">j</span><span class="o">.</span><span class="n">natoms</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">mtp_series</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">i</span><span class="o">.</span><span class="n">systems</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">j</span><span class="o">.</span><span class="n">natoms</span><span class="p">)])</span>
+<span class="n">gap_epa</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">j</span><span class="o">.</span><span class="n">energy</span> <span class="o">/</span> <span class="n">j</span><span class="o">.</span><span class="n">natoms</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">gap_series</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">i</span><span class="o">.</span><span class="n">systems</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">j</span><span class="o">.</span><span class="n">natoms</span><span class="p">)])</span>
+</pre></div>
+</div>
+<p>We can now plot the interactive plots colored by energy per atom by
+setting the color_type argument to “linear” and setting the color_data
+argument to the epa array for each formalism.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rann_pot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">rann_mapper</span><span class="p">,</span> <span class="n">color_data</span><span class="o">=</span><span class="n">rann_epa</span><span class="p">,</span>
+              <span class="n">color_type</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span>
+              <span class="n">hover_info</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Filename&#39;</span><span class="p">:</span> <span class="n">rann_pot</span><span class="o">.</span><span class="n">filenames</span><span class="p">,</span>
+                          <span class="s1">&#39;Global Simulation Number&#39;</span><span class="p">:</span> <span class="n">rann_pot</span><span class="o">.</span><span class="n">global_sim_num</span><span class="p">,</span>
+                          <span class="s1">&#39;Local Simulation Number&#39;</span><span class="p">:</span> <span class="n">rann_pot</span><span class="o">.</span><span class="n">local_sim_num</span><span class="p">,</span>
+                          <span class="s1">&#39;Local ID&#39;</span><span class="p">:</span> <span class="n">rann_pot</span><span class="o">.</span><span class="n">local_id</span><span class="p">},</span>
+              <span class="n">key_str</span><span class="o">=</span><span class="s1">&#39;rann_epa&#39;</span><span class="p">)</span>
+<span class="n">mtp_pot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mtp_mapper</span><span class="p">,</span> <span class="n">color_data</span><span class="o">=</span><span class="n">mtp_epa</span><span class="p">,</span>
+              <span class="n">color_type</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span>
+              <span class="n">hover_info</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Filename&#39;</span><span class="p">:</span> <span class="n">mtp_pot</span><span class="o">.</span><span class="n">filenames</span><span class="p">,</span>
+                          <span class="s1">&#39;Global Simulation Number&#39;</span><span class="p">:</span> <span class="n">mtp_pot</span><span class="o">.</span><span class="n">global_sim_num</span><span class="p">,</span>
+                          <span class="s1">&#39;Local Simulation Number&#39;</span><span class="p">:</span> <span class="n">mtp_pot</span><span class="o">.</span><span class="n">local_sim_num</span><span class="p">,</span>
+                          <span class="s1">&#39;Local ID&#39;</span><span class="p">:</span> <span class="n">mtp_pot</span><span class="o">.</span><span class="n">local_id</span><span class="p">},</span>
+              <span class="n">key_str</span><span class="o">=</span><span class="s1">&#39;mtp_epa&#39;</span><span class="p">)</span>
+<span class="n">gap_pot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">gap_mapper</span><span class="p">,</span> <span class="n">color_data</span><span class="o">=</span><span class="n">gap_epa</span><span class="p">,</span>
+              <span class="n">color_type</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span>
+              <span class="n">hover_info</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Filename&#39;</span><span class="p">:</span> <span class="n">gap_pot</span><span class="o">.</span><span class="n">filenames</span><span class="p">,</span>
+                          <span class="s1">&#39;Global Simulation Number&#39;</span><span class="p">:</span> <span class="n">gap_pot</span><span class="o">.</span><span class="n">global_sim_num</span><span class="p">,</span>
+                          <span class="s1">&#39;Local Simulation Number&#39;</span><span class="p">:</span> <span class="n">gap_pot</span><span class="o">.</span><span class="n">local_sim_num</span><span class="p">,</span>
+                          <span class="s1">&#39;Local ID&#39;</span><span class="p">:</span> <span class="n">gap_pot</span><span class="o">.</span><span class="n">local_id</span><span class="p">},</span>
+              <span class="n">key_str</span><span class="o">=</span><span class="s1">&#39;gap_epa&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<section id="id1">
+<h4>RANN<a class="headerlink" href="#id1" title="Link to this heading"></a></h4>
+<p>The interactive plots with linear coloring do not have an interactive
+legend like the previous plots. Instead, they feature a colorbar on the
+left and a dual slider at the bottom left of the figure. You can adjust
+the dual slider to show only the energies within the slider range on the
+plot. When you move the dual slider, the default option is for the
+colorbar to not be rescaled. In order to more accurately see the
+differences in the visible data, this can be turned on by setting the
+rescale_colorbar argument to True. There are also seven colormaps to
+choose from. The default is Viridis256. The other options include
+Greys256, Inferno256, Magma256, Plasma256, Cividis256, and Turbo256.
+Change the colormap by setting the cmap argument to one of the listed
+colormaps.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">IFrame</span><span class="p">(</span><span class="n">src</span><span class="o">=</span><span class="s1">&#39;rann_epa.html&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="s1">&#39;100%&#39;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+</pre></div>
+</div>
+<iframe
+    width="100%"
+    height="1000"
+    src="_static/rann_epa.html"
+    frameborder="0"
+    allowfullscreen
+
+></iframe></section>
+<section id="id2">
+<h4>MTP<a class="headerlink" href="#id2" title="Link to this heading"></a></h4>
+<p>The interactive plots with linear coloring do not have an interactive
+legend like the previous plots. Instead, they feature a colorbar on the
+left and a dual slider at the bottom left of the figure. You can adjust
+the dual slider to show only the energies within the slider range on the
+plot. When you move the dual slider, the default option is for the
+colorbar to not be rescaled. In order to more accurately see the
+differences in the visible data, this can be turned on by setting the
+rescale_colorbar argument to True. There are also seven colormaps to
+choose from. The default is Viridis256. The other options include
+Greys256, Inferno256, Magma256, Plasma256, Cividis256, and Turbo256.
+Change the colormap by setting the cmap argument to one of the listed
+colormaps.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">IFrame</span><span class="p">(</span><span class="n">src</span><span class="o">=</span><span class="s1">&#39;mtp_epa.html&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="s1">&#39;100%&#39;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+</pre></div>
+</div>
+<iframe
+    width="100%"
+    height="1000"
+    src="_static/mtp_epa.html"
+    frameborder="0"
+    allowfullscreen
+
+></iframe></section>
+<section id="id3">
+<h4>GAP<a class="headerlink" href="#id3" title="Link to this heading"></a></h4>
+<p>The interactive plots with linear coloring do not have an interactive
+legend like the previous plots. Instead, they feature a colorbar on the
+left and a dual slider at the bottom left of the figure. You can adjust
+the dual slider to show only the energies within the slider range on the
+plot. When you move the dual slider, the default option is for the
+colorbar to not be rescaled. In order to more accurately see the
+differences in the visible data, this can be turned on by setting the
+rescale_colorbar argument to True. There are also seven colormaps to
+choose from. The default is Viridis256. The other options include
+Greys256, Inferno256, Magma256, Plasma256, Cividis256, and Turbo256.
+Change the colormap by setting the cmap argument to one of the listed
+colormaps.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">IFrame</span><span class="p">(</span><span class="n">src</span><span class="o">=</span><span class="s1">&#39;gap_epa.html&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="s1">&#39;100%&#39;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+</pre></div>
+</div>
+<iframe
+    width="100%"
+    height="1000"
+    src="_static/gap_epa.html"
+    frameborder="0"
+    allowfullscreen
+
+></iframe></section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="2_3_4_create_data_tutorial.html" class="btn btn-neutral float-left" title="Creating data with pyRANN" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Database_Reduction.html" class="btn btn-neutral float-right" title="Database Reduction using pyRANN" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Micah Nichols, Christopher Barrett.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

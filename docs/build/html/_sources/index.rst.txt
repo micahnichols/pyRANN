@@ -3,11 +3,11 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-RANNDIP DOCUMENTATION
+pyRANN DOCUMENTATION
 =====================
 .. toctree::
    :caption: Contents:
-   :maxdepth: -1
+   :maxdepth: 2
 
    pyrann
-   tutorial
+   tutorial/index

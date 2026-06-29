@@ -6,7 +6,7 @@ import pybind11
 # Source configuration
 # ----------------------------------------------------------------
 
-SRC_DIR = Path('mlip-3-main')
+SRC_DIR = Path('mlip-3-main') / 'src'
 CPP_SOURCES = [str(i)
                for i in SRC_DIR.rglob('*.cpp')
                if i.name not in ('main.cpp', 'mtp_bindings.cpp')

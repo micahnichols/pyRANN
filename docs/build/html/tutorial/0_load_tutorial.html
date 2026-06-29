@@ -1,0 +1,236 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Introduction to pyRANN &mdash; pyrann 1.0.0.a1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=f3915c0e"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Creating data with pyRANN" href="2_3_4_create_data_tutorial.html" />
+    <link rel="prev" title="Tutorials" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            pyrann
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../pyrann.html">pyRANN API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorials</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Introduction to pyRANN</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pyrann-basics">0) pyRANN Basics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#loading-a-file">1) Loading a File</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="2_3_4_create_data_tutorial.html">Creating data with pyRANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Atomic_Descriptors.html">MLIP Atomic Descriptors with pyRANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Database_Reduction.html">Database Reduction using pyRANN</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pyrann</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Tutorials</a></li>
+      <li class="breadcrumb-item active">Introduction to pyRANN</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorial/0_load_tutorial.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="introduction-to-pyrann">
+<h1>Introduction to pyRANN<a class="headerlink" href="#introduction-to-pyrann" title="Link to this heading"></a></h1>
+<p>Micah Nichols, <a class="reference external" href="mailto:mwn45&#37;&#52;&#48;msstate&#46;edu">mwn45<span>&#64;</span>msstate<span>&#46;</span>edu</a></p>
+<section id="pyrann-basics">
+<h2>0) pyRANN Basics<a class="headerlink" href="#pyrann-basics" title="Link to this heading"></a></h2>
+<p>pyRANN version 1.0.0a1 is the alpha verion and is still actively under
+development. Please report any bugs or suggestions to Micah Nichols at
+<a class="reference external" href="mailto:mwn45&#37;&#52;&#48;msstate&#46;edu">mwn45<span>&#64;</span>msstate<span>&#46;</span>edu</a> or <a class="reference external" href="mailto:micahwnichols45&#37;&#52;&#48;gmail&#46;com">micahwnichols45<span>&#64;</span>gmail<span>&#46;</span>com</a>.</p>
+<p>pyRANN is divided into 3 main classes and a helper function.</p>
+<p>The helper function, pyrann.load(), serves to load in atomic structures
+from files. The current accepted filetypes are POSCAR, LAMMPS data,
+LAMMPS dump, and cfg. More filetypes may be added later.</p>
+<p>The first class is pyrann.system(). This class initializes singular
+atomic structures. pyrann.load(filename, series=False) initializes
+an instance of the system class. The methods of this class perform
+operations to alter the system. Some directly change the system, and
+some create new system instances. The export method will export the
+system to any of the filetypes mentioned above. Please see the full
+documentation for more information.</p>
+<p>The second class is pyrann.series(). This class is made of a list of
+pyrann.system() instances. pyrann.load(filename, series=True)
+initializes an instance of the series class. The only method of this
+class is export. If the filetype is POSCAR or LAMMPS data, export will
+produce a separate file for each system instance in the series. If the
+filetype is LAMMPS dump or cfg, export will produce one file with multiple
+timesteps. Please see the full documentation and tutorials for more information.</p>
+<p>The third class is pyrann.processing(). This class is used to calculate
+atomic descriptors, visualize descriptor space, and reduce redundant
+databases using atomic descriptors. The current machine learning
+interatomic potential (MLIP) formalisms supported for atomic descriptor
+calculation are RANN, MTP, and GAP. More formalisms may be added later.
+If the user wishes to use another formalism and can access the atomic
+descriptors, this class supports manually defining the descriptors
+using class_instance.features = user_features. Visualization makes use
+of Uniform Manifold Approximation &amp; Projection (UMAP) and bokeh
+interactive plots. Please see the full documentation and tutorials
+for more information.</p>
+</section>
+<section id="loading-a-file">
+<h2>1) Loading a File<a class="headerlink" href="#loading-a-file" title="Link to this heading"></a></h2>
+<p>Let’s start by getting a POSCAR file for an FCC Al system from Materials
+Project. You can either download the poscar directly or use the Python
+API:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mp_api.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">MPRester</span>
+<span class="o">%</span><span class="k">load_ext</span> dotenv
+<span class="o">%</span><span class="k">dotenv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="n">api_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;MY_API_KEY&#39;</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">MPRester</span><span class="p">(</span><span class="n">api_key</span><span class="p">)</span> <span class="k">as</span> <span class="n">mpr</span><span class="p">:</span>
+    <span class="n">search</span> <span class="o">=</span> <span class="n">mpr</span><span class="o">.</span><span class="n">materials</span><span class="o">.</span><span class="n">summary</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
+        <span class="n">formula</span> <span class="o">=</span> <span class="s1">&#39;Al&#39;</span><span class="p">,</span>
+        <span class="n">theoretical</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">is_stable</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">search</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Material Id: </span><span class="si">{</span><span class="n">i</span><span class="o">.</span><span class="n">material_id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Theoretical: </span><span class="si">{</span><span class="n">i</span><span class="o">.</span><span class="n">theoretical</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Is Stable: </span><span class="si">{</span><span class="n">i</span><span class="o">.</span><span class="n">is_stable</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Symmetry: </span><span class="si">{</span><span class="n">i</span><span class="o">.</span><span class="n">symmetry</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Retrieving SummaryDoc documents:   0%|          | 0/1 [00:00&lt;?, ?it/s]
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Material</span> <span class="n">Id</span><span class="p">:</span> <span class="n">mp</span><span class="o">-</span><span class="mi">134</span>
+<span class="n">Theoretical</span><span class="p">:</span> <span class="kc">False</span>
+<span class="n">Is</span> <span class="n">Stable</span><span class="p">:</span> <span class="kc">True</span>
+<span class="n">Symmetry</span><span class="p">:</span> <span class="n">crystal_system</span><span class="o">=&lt;</span><span class="n">CrystalSystem</span><span class="o">.</span><span class="n">cubic</span><span class="p">:</span> <span class="s1">&#39;Cubic&#39;</span><span class="o">&gt;</span> <span class="n">symbol</span><span class="o">=</span><span class="s1">&#39;Fm-3m&#39;</span> <span class="n">hall</span><span class="o">=</span><span class="s1">&#39;-F 4 2 3&#39;</span> <span class="n">number</span><span class="o">=</span><span class="mi">225</span> <span class="n">point_group</span><span class="o">=</span><span class="s1">&#39;m-3m&#39;</span> <span class="n">symprec</span><span class="o">=</span><span class="mf">0.1</span> <span class="n">angle_tolerance</span><span class="o">=</span><span class="mf">5.0</span> <span class="n">version</span><span class="o">=</span><span class="s1">&#39;2.7.0&#39;</span>
+</pre></div>
+</div>
+<p>This returned one structure that is stable (on the convex hull). We can
+now save it to a POSCAR file.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sys</span> <span class="o">=</span> <span class="n">mpr</span><span class="o">.</span><span class="n">get_structure_by_material_id</span><span class="p">(</span><span class="s1">&#39;mp-134&#39;</span><span class="p">)</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;Al.POSCAR&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Retrieving MaterialsDoc documents:   0%|          | 0/1 [00:00&lt;?, ?it/s]
+</pre></div>
+</div>
+<pre class="literal-block">'Al1n1.0n   2.4733290000000001    0.0000000000000000    1.4279770000000001n   0.8244430000000000    2.3318770000000000    1.4279770000000001n   0.0000000000000000    0.0000000000000000    2.8559549999999998nAln1ndirectn   0.0000000000000000    0.0000000000000000    0.0000000000000000 Aln'</pre>
+<p>Now, let’s import pyRANN and load the system from the file.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyrann</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">rann</span>
+
+<span class="n">fcc</span> <span class="o">=</span> <span class="n">rann</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;Al.POSCAR&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">fcc</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Initializing</span> <span class="n">pyrann</span> <span class="n">version</span> <span class="mf">1.0.0</span><span class="o">.</span><span class="n">a1</span>
+<span class="n">box</span> <span class="ow">and</span> <span class="n">atoms</span> <span class="n">are</span> <span class="n">column</span> <span class="n">vectors</span>
+<span class="n">System</span> <span class="n">created</span> <span class="kn">from</span><span class="w"> </span><span class="nn">Al.POSCAR</span>
+<span class="n">box</span> <span class="o">=</span>
+<span class="p">[[</span><span class="mf">2.473329</span> <span class="mf">0.824443</span> <span class="mf">0.</span>      <span class="p">]</span>
+ <span class="p">[</span><span class="mf">0.</span>       <span class="mf">2.331877</span> <span class="mf">0.</span>      <span class="p">]</span>
+ <span class="p">[</span><span class="mf">1.427977</span> <span class="mf">1.427977</span> <span class="mf">2.855955</span><span class="p">]]</span>
+<span class="n">natoms</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">elements</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Al&#39;</span><span class="p">]</span>
+<span class="n">timestep</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">types</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">atoms</span> <span class="o">=</span>
+<span class="p">[[</span><span class="mf">0.</span><span class="p">]</span>
+ <span class="p">[</span><span class="mf">0.</span><span class="p">]</span>
+ <span class="p">[</span><span class="mf">0.</span><span class="p">]]</span>
+<span class="n">energy</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">forces</span> <span class="o">=</span>
+<span class="kc">None</span>
+<span class="n">stress</span> <span class="o">=</span>
+<span class="kc">None</span>
+</pre></div>
+</div>
+<p>We now have an instance of the system class stored in the variable
+“fcc”.</p>
+<p>pyRANN supports loading in POSCAR, LAMMPS data, LAMMPS dump, and cfg
+files. The load function attempts to determine the filetype by looking
+at the extension. If it does not correctly assume the filetype, the load
+function takes in an argument “filetype”.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Tutorials" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="2_3_4_create_data_tutorial.html" class="btn btn-neutral float-right" title="Creating data with pyRANN" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Micah Nichols, Christopher Barrett.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

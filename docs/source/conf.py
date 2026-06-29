@@ -17,7 +17,7 @@ release = '1.0.0.a1'
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.apidoc', 'sphinx.ext.napoleon', 'sphinx_autodoc_typehints', 'sphinx.ext.autosummary']
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.napoleon', 'sphinx.ext.apidoc', 'sphinx_autodoc_typehints', 'sphinx.ext.autosummary']
 
 autosummary_generate = True
 

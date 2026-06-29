@@ -1,4 +1,4 @@
-pyRANN PACKAGE
+pyRANN API
 ===============
 .. automodule:: pyrann
 
@@ -115,7 +115,6 @@ calibration
    .. rubric:: Class
 
    .. autosummary::
-      :toctree: generated/
       :signatures: short
 
       ~PairRANN
@@ -130,7 +129,6 @@ calibration
    .. rubric:: Attributes
 
    .. autosummary::
-      :toctree: generated/
       :signatures: short
 
       ~PairRANN.natoms
@@ -140,7 +138,6 @@ calibration
    .. rubric:: Methods
 
    .. autosummary::
-      :toctree: generated/
       :signatures: short
 
       ~PairRANN.feature
@@ -161,7 +158,6 @@ calibration
    .. rubric:: Attributes
 
    .. autosummary::
-      :toctree: generated/
       :signatures: short
 
       ~Simulation.energy
@@ -172,7 +168,6 @@ calibration
    .. rubric:: Methods
 
    .. autosummary::
-      :toctree: generated/
       :signatures: short
 
       ~Simulation.feature

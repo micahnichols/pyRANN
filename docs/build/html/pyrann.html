@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pyRANN PACKAGE &mdash; pyrann 1.0.0.a1 documentation</title>
+  <title>pyRANN API &mdash; pyrann 1.0.0.a1 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
@@ -20,8 +20,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="pyrann.calibration.PairRANN" href="generated/pyrann.calibration.PairRANN.html" />
-    <link rel="prev" title="RANNDIP DOCUMENTATION" href="index.html" /> 
+    <link rel="next" title="Tutorials" href="tutorial/index.html" />
+    <link rel="prev" title="pyRANN DOCUMENTATION" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -45,7 +45,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">pyRANN PACKAGE</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">pyRANN API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#pyrann.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#pyrann.system.system"><code class="docutils literal notranslate"><span class="pre">system</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#pyrann.system.system.change_type"><code class="docutils literal notranslate"><span class="pre">system.change_type()</span></code></a></li>
@@ -91,8 +91,6 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-pyrann.calibration">calibration</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="generated/pyrann.calibration.PairRANN.html">pyrann.calibration.PairRANN</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/pyrann.calibration.Simulation.html">pyrann.calibration.Simulation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pyrann.calibration.PairRANN"><code class="docutils literal notranslate"><span class="pre">PairRANN</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#pyrann.calibration.PairRANN.feature"><code class="docutils literal notranslate"><span class="pre">PairRANN.feature()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pyrann.calibration.PairRANN.finish"><code class="docutils literal notranslate"><span class="pre">PairRANN.finish()</span></code></a></li>
@@ -107,17 +105,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#pyrann.calibration.PairRANN.sims_per_file"><code class="docutils literal notranslate"><span class="pre">PairRANN.sims_per_file</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="generated/pyrann.calibration.PairRANN.natoms.html">pyrann.calibration.PairRANN.natoms</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/pyrann.calibration.PairRANN.nsims.html">pyrann.calibration.PairRANN.nsims</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/pyrann.calibration.PairRANN.sims_per_file.html">pyrann.calibration.PairRANN.sims_per_file</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/pyrann.calibration.PairRANN.feature.html">pyrann.calibration.PairRANN.feature</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/pyrann.calibration.PairRANN.finish.html">pyrann.calibration.PairRANN.finish</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/pyrann.calibration.PairRANN.firstneigh.html">pyrann.calibration.PairRANN.firstneigh</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/pyrann.calibration.PairRANN.force.html">pyrann.calibration.PairRANN.force</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/pyrann.calibration.PairRANN.id.html">pyrann.calibration.PairRANN.id</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/pyrann.calibration.PairRANN.run.html">pyrann.calibration.PairRANN.run</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/pyrann.calibration.PairRANN.setup.html">pyrann.calibration.PairRANN.setup</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/pyrann.calibration.PairRANN.types.html">pyrann.calibration.PairRANN.types</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pyrann.calibration.Simulation"><code class="docutils literal notranslate"><span class="pre">Simulation</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#pyrann.calibration.Simulation.feature"><code class="docutils literal notranslate"><span class="pre">Simulation.feature()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pyrann.calibration.Simulation.energy"><code class="docutils literal notranslate"><span class="pre">Simulation.energy</span></code></a></li>
@@ -126,16 +113,11 @@
 <li class="toctree-l4"><a class="reference internal" href="#pyrann.calibration.Simulation.types"><code class="docutils literal notranslate"><span class="pre">Simulation.types</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="generated/pyrann.calibration.Simulation.energy.html">pyrann.calibration.Simulation.energy</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/pyrann.calibration.Simulation.filename.html">pyrann.calibration.Simulation.filename</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/pyrann.calibration.Simulation.inum.html">pyrann.calibration.Simulation.inum</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/pyrann.calibration.Simulation.types.html">pyrann.calibration.Simulation.types</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/pyrann.calibration.Simulation.feature.html">pyrann.calibration.Simulation.feature</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">pyRANN TUTORIAL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/index.html">Tutorials</a></li>
 </ul>
 
         </div>
@@ -152,7 +134,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">pyRANN PACKAGE</li>
+      <li class="breadcrumb-item active">pyRANN API</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/pyrann.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -163,7 +145,7 @@
            <div itemprop="articleBody">
              
   <section id="module-pyrann">
-<span id="pyrann-package"></span><h1>pyRANN PACKAGE<a class="headerlink" href="#module-pyrann" title="Link to this heading"></a></h1>
+<span id="pyrann-api"></span><h1>pyRANN API<a class="headerlink" href="#module-pyrann" title="Link to this heading"></a></h1>
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#pyrann.load" title="pyrann.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(…)</p></td>
@@ -371,6 +353,16 @@ Note: Some of these filetypes may not be implemented yet.</p></li>
 <dd class="field-odd"><p><strong>ValueError</strong> – If an invalid <cite>filetype</cite> or <cite>style</cite> is provided.</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<dl class="simple">
+<dt>Todo</dt><dd><dl class="simple">
+<dt>qe</dt><dd><p>Implement Quantum Expresso</p>
+</dd>
+<dt>vasp</dt><dd><p>Implement VASP</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -502,9 +494,7 @@ a series for further analysis or export.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>temp</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Maximum random perturbation of atoms.
-Currently, this should be a percentage of the given simulation cell’s lattice parameter (in decimal
-format).</p></li>
+<li><p><strong>temp</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Maximum random perturbation of atoms in Angstroms.</p></li>
 <li><p><strong>strain</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">0</span></code>)) – Maximum strain given as a percentage (in decimal format) of the given simulation
 cell’s lattice parameter.</p></li>
 <li><p><strong>nsims</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">100</span></code>)) – The number of unique structures to produce.</p></li>
@@ -1286,8 +1276,8 @@ needs.</p></li>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="index.html" class="btn btn-neutral float-left" title="RANNDIP DOCUMENTATION" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="generated/pyrann.calibration.PairRANN.html" class="btn btn-neutral float-right" title="pyrann.calibration.PairRANN" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="pyRANN DOCUMENTATION" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tutorial/index.html" class="btn btn-neutral float-right" title="Tutorials" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

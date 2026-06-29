@@ -554,12 +554,14 @@ class system:
         ------
         ValueError
             If an invalid `filetype` or `style` is provided.
-        Todo
+
+        Notes
         ----
-        qe
-            Implement Quantum Expresso
-        vasp
-            Implement VASP
+        Todo
+            qe
+                Implement Quantum Expresso
+            vasp
+                Implement VASP
         """
 
         if filename is None:

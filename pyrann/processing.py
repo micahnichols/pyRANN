@@ -615,6 +615,7 @@ class processing:
                         1000*dd[rows, fallback_idx]
                         )
                 dens = 1.0 / avg_dist
+                dens = np.array([np.mean(dens[self.global_sim_num==i]) for i in global_unique])
 
                 metric = np.where(deleted[global_unique] == 0,
                                   dens[global_unique],
@@ -740,7 +741,7 @@ class processing:
             data['label'] = color_data
             data['color'] = pd.Series(color_data).map(new_color)
 
-            if subset_points:
+            if subset_points is not None:
                 data['subset'] = subset_points
                 data = data[data['subset']==True]
                 data = data.drop('subset', axis=1)
@@ -783,7 +784,7 @@ class processing:
                 radius = 2
 
             data['color'] = color_data
-            if subset_points:
+            if subset_points is not None:
                 data['subset'] = subset_points
                 data = data[data['subset']==True]
                 data = data.drop('subset', axis=1)
