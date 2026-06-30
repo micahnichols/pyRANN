@@ -17,9 +17,11 @@ pip3 install ".[all]"
 
 ## Documentation
 
-Please visit the html documentation in /docs/build/html/pyrann.html as well as the tutorial in /docs/build/html/tutorial.html
+Please visit https://pyrann.readthedocs.io/en/latest/pyrann.html
 
 ## Tutorial
+
+For all tutorials and documentation, please see https://pyrann.readthedocs.io/en/latest/pyrann.html
 
 This is a tutorial for plotting the descriptor space of a sample MLIP database (Mg) with RANN and MTP atomic descriptors. Please open /pyrann/docs/build/html/tutorial.html in a browser to see the full interactive plots. Alternatively, open the plots themselves in /pyrann/docs/source/_static/*.html
 
