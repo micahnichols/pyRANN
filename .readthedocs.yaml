@@ -4,10 +4,10 @@ build:
   os: ubuntu-24.04
   tools:
     python: "3.10"
+  commands:
+    - mkdir -p _readthedocs/html/
+    - cp -r docs/build/html/* _readthedocs/html/
 
 sphinx:
   configuration: docs/source/conf.py
 
-commands:
-  - mkdir -p _readthedocs/html/
-  - cp -r docs/build/html/* _readthedocs/html/
