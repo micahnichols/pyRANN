@@ -297,7 +297,7 @@ atom.
     <iframe
         width="100%"
         height="1000"
-        src="_static/rann.html"
+        src="../_static/rann.html"
         frameborder="0"
         allowfullscreen
     
@@ -322,7 +322,7 @@ MTP
     <iframe
         width="100%"
         height="1000"
-        src="_static/mtp.html"
+        src="../_static/mtp.html"
         frameborder="0"
         allowfullscreen
     
@@ -347,7 +347,7 @@ GAP
     <iframe
         width="100%"
         height="1000"
-        src="_static/gap.html"
+        src="../_static/gap.html"
         frameborder="0"
         allowfullscreen
     
@@ -474,7 +474,7 @@ colormaps.
     <iframe
         width="100%"
         height="1000"
-        src="_static/rann_epa.html"
+        src="../_static/rann_epa.html"
         frameborder="0"
         allowfullscreen
     
@@ -512,7 +512,7 @@ colormaps.
     <iframe
         width="100%"
         height="1000"
-        src="_static/mtp_epa.html"
+        src="../_static/mtp_epa.html"
         frameborder="0"
         allowfullscreen
     
@@ -550,7 +550,7 @@ colormaps.
     <iframe
         width="100%"
         height="1000"
-        src="_static/gap_epa.html"
+        src="../_static/gap_epa.html"
         frameborder="0"
         allowfullscreen
     

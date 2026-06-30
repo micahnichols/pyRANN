@@ -131,7 +131,7 @@ Let’s plot the original database first for comparison after we reduce.
     <iframe
         width="100%"
         height="1000"
-        src="_static/rann_original.html"
+        src="../_static/rann_original.html"
         frameborder="0"
         allowfullscreen
     
@@ -183,7 +183,7 @@ otherwise.
     <iframe
         width="100%"
         height="1000"
-        src="_static/rann_reduced.html"
+        src="../_static/rann_reduced.html"
         frameborder="0"
         allowfullscreen
     
