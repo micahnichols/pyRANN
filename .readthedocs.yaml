@@ -8,6 +8,6 @@ build:
 sphinx:
   configuration: docs/source/conf.py
 
-python:
-  install:
-    - requirements: requirements.txt
+commands:
+  - mkdir -p _readthedocs/html/
+  - cp -r docs/build/html/* _readthedocs/html/
