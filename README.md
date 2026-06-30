@@ -4,7 +4,7 @@ A python package for generating atomic structures for machine learned interatomi
 
 To enable calculation of MTP atomic descriptors, make sure to install the optional pyrann[mtp] package along with pyrann.
 
-For documentation, please see pyrann.readthedocs.io/en/latest/pyrann.html
+For documentation, please see https://pyrann.readthedocs.io/en/latest/pyrann.html
 
 ## Installation
 
