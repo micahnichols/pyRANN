@@ -349,7 +349,9 @@ class processing:
                                   for j in range(a[i].inum)])
             global_sim_num = np.array([i for i in range(a.nsims) for j in range(a[i].inum)])
             local_temp = np.array([j for i in a.sims_per_file for j in range(i)], dtype=np.int64)
-            local_sim_num = np.array([local_temp[i] for i in range(a.nsims) for j in range(a[i].inum)], dtype=np.int64)
+            # local_sim_num = np.array([local_temp[i] for i in range(a.nsims) for j in range(a[i].inum)], dtype=np.int64)
+            local_sim_num = np.array([a[i].timestep for i in range(a.nsims)
+                                      for j in range(a[i].inum)])
             local_id = np.array([a.id(i)[j] for i in range(a.nsims) for j in range(a[i].inum)], dtype=np.int64)
             features = np.array([a.feature(i,j) for i in range(a.nsims) for j in range(a[i].inum)], dtype=np.float64)
 
@@ -558,6 +560,94 @@ class processing:
         dens = 1.0 / avg_dist
         return dens
 
+    def get_cv(self,
+               percent: float = 50.0,
+               metric: Optional[Callable] = None,
+               **kwargs
+               ) -> np.ndarray:
+
+        if metric == None:
+
+            # deleted = np.zeros(len(self.global_sim_num))
+            model = NearestNeighbors(n_neighbors=100)
+            model.fit(self.features)
+            dd, ii = model.kneighbors(self.features)
+
+            global_unique, global_index = np.unique(self.global_sim_num, return_index=True)
+            global_unique = self.global_sim_num[global_index]
+            loop_size = int(len(global_unique)*(percent/100))
+
+            deleted = np.zeros(len(global_unique))
+
+            n_points = len(ii)
+            k = ii.shape[1]
+
+            q25 = np.percentile(dd, 25, axis=1, keepdims=True)
+            q75 = np.percentile(dd, 75, axis=1, keepdims=True)
+            iqr = q75 - q25
+            threshold = q75 + 1.5*iqr
+            masked_array = np.ma.masked_greater_equal(dd, threshold)
+
+            # for i in range(loop_size):
+            neighbor_sims = self.global_sim_num[ii]
+
+            same_sim = (neighbor_sims == self.global_sim_num[:, None])
+            nbr_deleted = deleted[neighbor_sims]
+
+
+            valid = (~same_sim) & (nbr_deleted == 0)
+            has_valid = (valid.any(axis=1)) & (masked_array.any(axis=1))
+            rows = np.arange(n_points)
+            fallback_idx = k-1
+            # masked_array = np.ma.masked_array(masked_array[rows, :], mask=~valid)
+            # masked_array |= (~valid)
+            masked_array = np.ma.masked_where(~valid, masked_array)
+            # avg_dist = np.where(
+            #         has_valid,
+            #         np.mean(np.ma.masked_array(dd[rows, :], mask=~valid), axis=1),
+            #         1000*dd[rows, fallback_idx]
+            #         )
+            # avg_dist = np.where(
+            #         has_valid,
+            #         np.mean(masked_array, axis=1),
+            #         1000*dd[rows, fallback_idx]
+            #         )
+            # dens = 1.0 / avg_dist
+            avg_dist = np.where(
+                    has_valid,
+                    np.mean(masked_array, axis=1),
+                    -1
+                    )
+            avg_dist = np.ma.masked_where(avg_dist == -1, avg_dist)
+            # dens = 1.0 / avg_dist
+            avg_dens = 1.0 / avg_dist
+            count = np.bincount(self.global_sim_num)
+            sum_x = np.bincount(self.global_sim_num, weights=avg_dens)
+            sum_x2 = np.bincount(self.global_sim_num, weights=avg_dens**2)
+            mean = sum_x / count
+            std = np.sqrt(sum_x2 / count - mean**2)
+            # dens = np.array([np.mean(dens[self.global_sim_num==i]) for i in global_unique])
+            # std = np.array([np.std(avg_dens[self.global_sim_num==i]) for i in global_unique])
+            cv = std / mean
+            # print(f'\n\n{cv = }\n\n')
+            metric = np.where(deleted[global_unique] == 0,
+                              cv[global_unique],
+                              1.0e8)
+            # del_pos = int(np.argmax(metric))
+            del_pos = int(np.argmin(metric))
+            del_sim_num = int(global_unique[del_pos])
+
+            deleted = np.where(
+                    (global_unique != del_sim_num) & (deleted[global_unique] != 1),
+                    0, 1
+                    ).astype(np.float64)
+
+            keep = np.array([global_unique[i] for i in range(len(deleted)) if deleted[i] == 0])
+        else:
+            keep = metric(**kwargs)
+        # return keep
+        return cv
+
     def reduce(self,
                percent: float = 50.0,
                metric: Optional[Union[Callable, None]] = None,
@@ -587,8 +677,12 @@ class processing:
         # print(f'{loop_size = }')
 
         if metric == None:
+            min_cv = []
+            median_cv = []
+            mean_cv = []
+            min_threshold = 1.0
 
-            deleted = np.zeros(len(self.global_sim_num))
+            # deleted = np.zeros(len(self.global_sim_num))
             model = NearestNeighbors(n_neighbors=100)
             model.fit(self.features)
             dd, ii = model.kneighbors(self.features)
@@ -597,39 +691,81 @@ class processing:
             global_unique = self.global_sim_num[global_index]
             loop_size = int(len(global_unique)*(percent/100))
 
+            deleted = np.zeros(len(global_unique))
+
             n_points = len(ii)
             k = ii.shape[1]
-            for i in range(loop_size):
+
+            q25 = np.percentile(dd, 25, axis=1, keepdims=True)
+            q75 = np.percentile(dd, 75, axis=1, keepdims=True)
+            iqr = q75 - q25
+            threshold = q75 + 1.5*iqr
+            masked_array = np.ma.masked_greater_equal(dd, threshold)
+            # for i in range(loop_size):
+            while min_threshold > 1e-3:
                 neighbor_sims = self.global_sim_num[ii]
 
                 same_sim = (neighbor_sims == self.global_sim_num[:, None])
                 nbr_deleted = deleted[neighbor_sims]
 
+
                 valid = (~same_sim) & (nbr_deleted == 0)
-                has_valid = valid.any(axis=1)
+                has_valid = (valid.any(axis=1)) & (masked_array.any(axis=1))
                 rows = np.arange(n_points)
                 fallback_idx = k-1
+                # masked_array = np.ma.masked_array(masked_array[rows, :], mask=~valid)
+                # masked_array |= (~valid)
+                masked_array = np.ma.masked_where(~valid, masked_array)
+                # avg_dist = np.where(
+                #         has_valid,
+                #         np.mean(np.ma.masked_array(dd[rows, :], mask=~valid), axis=1),
+                #         1000*dd[rows, fallback_idx]
+                #         )
+                # avg_dist = np.where(
+                #         has_valid,
+                #         np.mean(masked_array, axis=1),
+                #         1000*dd[rows, fallback_idx]
+                #         )
+                # dens = 1.0 / avg_dist
                 avg_dist = np.where(
                         has_valid,
-                        np.mean(np.ma.masked_array(dd[rows, :], mask=~valid), axis=1),
-                        1000*dd[rows, fallback_idx]
+                        np.mean(masked_array, axis=1),
+                        -1
                         )
-                dens = 1.0 / avg_dist
-                dens = np.array([np.mean(dens[self.global_sim_num==i]) for i in global_unique])
-
+                avg_dist = np.ma.masked_where(avg_dist == -1, avg_dist)
+                # dens = 1.0 / avg_dist
+                avg_dens = 1.0 / avg_dist
+                count = np.bincount(self.global_sim_num)
+                sum_x = np.bincount(self.global_sim_num, weights=avg_dens)
+                sum_x2 = np.bincount(self.global_sim_num, weights=avg_dens**2)
+                mean = sum_x / count
+                std = np.sqrt(sum_x2 / count - mean**2)
+                # dens = np.array([np.mean(dens[self.global_sim_num==i]) for i in global_unique])
+                # std = np.array([np.std(avg_dens[self.global_sim_num==i]) for i in global_unique])
+                cv = std / mean
+                min_cv.append(min(cv))
+                median_cv.append(np.median(cv))
+                mean_cv.append(np.mean(cv))
+                # print(f'\n\n{cv = }\n\n')
                 metric = np.where(deleted[global_unique] == 0,
-                                  dens[global_unique],
-                                  1.0e-8)
-                del_pos = int(np.argmax(metric))
+                                  cv[global_unique],
+                                  1.0e8)
+                # del_pos = int(np.argmax(metric))
+                del_pos = int(np.argmin(metric))
                 del_sim_num = int(global_unique[del_pos])
 
                 deleted = np.where(
                         (global_unique != del_sim_num) & (deleted[global_unique] != 1),
                         0, 1
                         ).astype(np.float64)
+                min_threshold = min(cv)
             keep = np.array([global_unique[i] for i in range(len(deleted)) if deleted[i] == 0])
         else:
             keep = metric(**kwargs)
+        min_cv = np.asarray(min_cv)
+        median_cv = np.asarray(median_cv)
+        mean_cv = np.asarray(mean_cv)
+        # return keep, min_cv, median_cv, mean_cv
         return keep
 
     def get_umap(self, **kwargs):

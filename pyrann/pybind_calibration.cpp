@@ -26,6 +26,12 @@ PYBIND11_MODULE(calibration, m) {
         },
 	"Filename for a simulation number. a[sim_num].filename is the dump file filename for global simulation number sim_num.")
 
+	/* .def_property_readonly("timestep", &PairRANN::Simulation::timestep, "Timestep of a simulation. a[sim_sum].timestep is the local? timestep of the global simulation number sim_num.") */
+	.def_property_readonly("timestep", [](PairRANN::Simulation &s) {
+	    return s.timestep ? py::cast(s.timestep) : py::none();
+	},
+	"Timestep of a simulation. a[sim_num].timestep is the local? timestep of the global simulation number sim_num.")
+
         /* Safe per-atom feature copy */
         .def("feature",
              [](PairRANN::Simulation &s, PairRANN &p, int atom) {
