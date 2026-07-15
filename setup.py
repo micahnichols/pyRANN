@@ -24,6 +24,7 @@ extra_compile_args = [
     "-fPIC",
     "-shared-libgcc",
     "-fopenmp",
+    "-Wno-error=format-security",
 ]
 
 extra_link_args = [

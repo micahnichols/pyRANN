@@ -21,6 +21,7 @@ extra_compile_args = [
     "-O3",
     "-shared",
     "-fPIC",
+    "-Wno-error=format-security",
 ]
 
 extra_link_args = [
