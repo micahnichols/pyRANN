@@ -150,6 +150,19 @@ PairRANN::~PairRANN(){
 
 void PairRANN::setup(){
 
+        struct rlimit rl;
+        // Get current limits
+        if (getrlimit(RLIMIT_STACK, &rl) == 0) {
+        	// Set soft limit to unlimited
+        	rl.rlim_cur = RLIM_INFINITY;
+        	// Apply changes
+        	if (setrlimit(RLIMIT_STACK, &rl) != 0) {
+         		std::cerr << "Failed to set unlimited stack" << std::endl;
+         	}
+        }
+        else {
+        	std::cout << "Set unlimited stack\n" << std:: endl;
+        }
 	int nthreads=1;
 	#pragma omp parallel
 	nthreads=omp_get_num_threads();

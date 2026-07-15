@@ -323,14 +323,14 @@ class processing:
                     for file in os.listdir(path):
                         if file.lower().endswith(file_fmt.lower()):
                             temp = load(file, series=series_bool)
-                            temp.export(f'{file.split('.')[0]}.dump')
+                            temp.export(f'{file.split(".")[0]}.dump')
                 elif self.formalism == 'mtp':
                     temp_list = []
                     for file in os.listdir(path):
                         if file.lower().endswith(file_fmt.lower()):
                             temp = load(file, series=series_bool)
                             temp_list.append(temp)
-                            temp.export(f'{file.split('.')[0]}.cfg')
+                            temp.export(f'{file.split(".")[0]}.cfg')
                 elif self.formalism == 'soap':
                     # TODO - ADD IN .xyz SUPPORT?
                     pass

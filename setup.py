@@ -72,6 +72,7 @@ setup(
         'quippy-ase',
         'ase',
         'umap-learn',
+        'holoviews',
         ],
     extras_require = {
         'mtp': ['pyrann-mtp @ file:./pyrann-mtp'],
