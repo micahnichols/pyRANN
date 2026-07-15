@@ -356,9 +356,9 @@ class series:
                #     do_stress = False 
                # else:
                #     do_stress = True
-                   stress = self.systems[nn].stress
                if self.systems[nn]._do_stress:
                    file.write("ITEM: BOX BOUNDS xy xz yz pp pp pp stress\n")
+                   stress = self.systems[nn].stress
                else:
                    file.write("ITEM: BOX BOUNDS xy xz yz pp pp pp\n")
                # stress = sims[nn]['stress']
@@ -369,8 +369,8 @@ class series:
                    if self.systems[nn]._do_stress:
                        file.write("%f %f %f %f %f %f\n" % (lammpsbox[i,0],
                                                            lammpsbox[i,1],
-                                                           tilt[i],stress[0],
-                                                           stress[1],stress[2]))
+                                                           tilt[i],stress[i,0],
+                                                           stress[i,1],stress[i,2]))
                    else:
                        file.write("%f %f %f\n" % (lammpsbox[i,0],lammpsbox[i,1],tilt[i]))
                file.write("ITEM: ATOMS id type x y z fx fy fz\n")
@@ -384,6 +384,7 @@ class series:
                for i in range(natoms):
                    # if self.systems[nn].force != None:
                    if self.systems[nn]._do_force:
+                       f = self.systems[nn].force
                        file.write("%d %d %f %f %f %f %f %f\n" % (i+1, self.systems[nn].types[i],
                                                                  x[0][i], x[1][i], x[2][i],
                                                                  f[0][i], f[1][i], f[2][i]))
