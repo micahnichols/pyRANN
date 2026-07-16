@@ -299,9 +299,9 @@ def load(filename: str,
             line = file.readline()
             if not line:
                 break
-            if line=="BEGIN_CFG\n":
+            if line.strip() == "BEGIN_CFG":
                 nsims=nsims+1
-            if line==" Size\n":
+            if line.strip().lower() == "size":
                 line = file.readline()
                 size=int(line)
                 if size>maxsize:
@@ -310,7 +310,7 @@ def load(filename: str,
         nsims = 0
         with open (filename, 'r') as file:
             for line in file:
-                if line=='BEGIN_CFG\n':
+                if line.strip() == 'BEGIN_CFG':
                     nsims += 1
             file.close()
         # print(nsims)
@@ -330,7 +330,7 @@ def load(filename: str,
             # print(nn)
             sims[nn]['index']=nn
             line = file.readline()
-            while line!="BEGIN_CFG\n":
+            while line.strip()!="BEGIN_CFG":
                 line = file.readline()
             isopen = 1
             while isopen:
@@ -338,18 +338,18 @@ def load(filename: str,
                 sims[nn]['energy_weight']=1
                 sims[nn]['force_weight']=1
                 line = file.readline()
-                if line==' Size\n':
+                if line.strip().lower() == 'size':
                     # print('size')
                     line=file.readline()
                     sims[nn]['natoms']=int(line)
-                elif line==' Supercell\n':
+                elif line.strip().lower() == 'supercell':
                     # print(' Supercell\n')
                     for i in range(3):
                         line=file.readline()
                         ls = line.split()
                         for j in range(3):
                             sims[nn]['box'][j,i]=float(ls[j])
-                elif line[:10]==' AtomData:':
+                elif line[:10].strip().lower() == 'atomdata:':
                     if line.strip().split()[-1] in ['fx', 'fy', 'fz']:
                         do_force = True
                     else:
@@ -363,7 +363,7 @@ def load(filename: str,
                         sims[nn]['x'][i,:]=(float(ls[2]),float(ls[3]),float(ls[4]))
                         if do_force:
                             sims[nn]['f'][i,:]=(float(ls[5]),float(ls[6]),float(ls[7]))
-                elif line[:12]==" PlusStress:":
+                elif line[:12].strip().lower() == "plusstress:":
                     do_stress = True
                     # print(' PlusStress\n')
                     line = file.readline()
@@ -378,20 +378,26 @@ def load(filename: str,
                     sims[nn]['stress'][2,0]=stressvoight[4]
                     sims[nn]['stress'][1,2]=stressvoight[5]
                     sims[nn]['stress'][2,1]=stressvoight[5]
-                elif line==" Energy\n":
-                    # print(' Energy\n')
-                    line = file.readline()
-                    sims[nn]['energy']=float(line)
-                elif line=='END_CFG\n':
+                elif line.split()[0].strip().lower() == "energy":
+                    if len(line.split()) != 1:
+                        sims[nn]['energy']=float(line.split()[-1].strip())
+                    else:
+                        # print(f'{line.split() = }')
+                        # print(f'\n\nEnergy\n')
+                        # print(' Energy\n')
+                        line = file.readline()
+                        # print(f'{line = }\n\n')
+                        sims[nn]['energy']=float(line)
+                elif line.strip() == 'END_CFG':
                     # file.readline()
                     # file.readline()
                     # print('END_CFG\n')
                     isopen=0
-                elif line[:8]==" Feature":
+                elif line[:8].strip().lower() == "feature":
                     # print(' Feature')
                     # file.readline()
                     pass
-                elif line=='BEGIN_CFG\n':
+                elif line.strip() == 'BEGIN_CFG':
                     # print('BEGIN_CFG\n')
                     file.readline()
                     # file.readline()
