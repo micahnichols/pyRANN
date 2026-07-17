@@ -677,9 +677,9 @@ class processing:
         # print(f'{loop_size = }')
 
         if metric == None:
-            min_cv = []
-            median_cv = []
-            mean_cv = []
+            # min_cv = []
+            # median_cv = []
+            # mean_cv = []
             min_threshold = 1.0
 
             # deleted = np.zeros(len(self.global_sim_num))
@@ -701,7 +701,6 @@ class processing:
             iqr = q75 - q25
             threshold = q75 + 1.5*iqr
             masked_array = np.ma.masked_greater_equal(dd, threshold)
-            # for i in range(loop_size):
             while min_threshold > 1e-3:
                 neighbor_sims = self.global_sim_num[ii]
 
@@ -711,46 +710,34 @@ class processing:
 
                 valid = (~same_sim) & (nbr_deleted == 0)
                 has_valid = (valid.any(axis=1)) & (masked_array.any(axis=1))
-                rows = np.arange(n_points)
-                fallback_idx = k-1
-                # masked_array = np.ma.masked_array(masked_array[rows, :], mask=~valid)
-                # masked_array |= (~valid)
                 masked_array = np.ma.masked_where(~valid, masked_array)
-                # avg_dist = np.where(
-                #         has_valid,
-                #         np.mean(np.ma.masked_array(dd[rows, :], mask=~valid), axis=1),
-                #         1000*dd[rows, fallback_idx]
-                #         )
-                # avg_dist = np.where(
-                #         has_valid,
-                #         np.mean(masked_array, axis=1),
-                #         1000*dd[rows, fallback_idx]
-                #         )
-                # dens = 1.0 / avg_dist
                 avg_dist = np.where(
                         has_valid,
                         np.mean(masked_array, axis=1),
                         -1
                         )
+                std_dist = np.where(
+                        has_valid,
+                        np.std(1/masked_array, axis=1),
+                        1.0e12
+                        )
                 avg_dist = np.ma.masked_where(avg_dist == -1, avg_dist)
-                # dens = 1.0 / avg_dist
                 avg_dens = 1.0 / avg_dist
+                std_dens = np.ma.masked_where(std_dist == 1.0e12, std_dist)
                 count = np.bincount(self.global_sim_num)
                 sum_x = np.bincount(self.global_sim_num, weights=avg_dens)
-                sum_x2 = np.bincount(self.global_sim_num, weights=avg_dens**2)
                 mean = sum_x / count
-                std = np.sqrt(sum_x2 / count - mean**2)
-                # dens = np.array([np.mean(dens[self.global_sim_num==i]) for i in global_unique])
-                # std = np.array([np.std(avg_dens[self.global_sim_num==i]) for i in global_unique])
+                sum_std = np.bincount(self.global_sim_num, weights=std_dens)
+                std = sum_std / count
                 cv = std / mean
-                min_cv.append(min(cv))
-                median_cv.append(np.median(cv))
-                mean_cv.append(np.mean(cv))
-                # print(f'\n\n{cv = }\n\n')
+                if min_threshold <= 1.0e-3:
+                    break
+                # min_cv.append(min(cv))
+                # median_cv.append(np.median(cv))
+                # mean_cv.append(np.mean(cv))
                 metric = np.where(deleted[global_unique] == 0,
                                   cv[global_unique],
                                   1.0e8)
-                # del_pos = int(np.argmax(metric))
                 del_pos = int(np.argmin(metric))
                 del_sim_num = int(global_unique[del_pos])
 
@@ -759,12 +746,13 @@ class processing:
                         0, 1
                         ).astype(np.float64)
                 min_threshold = min(cv)
-            keep = np.array([global_unique[i] for i in range(len(deleted)) if deleted[i] == 0])
+            # keep = np.array([global_unique[i] for i in range(len(deleted)) if deleted[i] == 0])
+            keep = global_unique[deleted==0]
         else:
             keep = metric(**kwargs)
-        min_cv = np.asarray(min_cv)
-        median_cv = np.asarray(median_cv)
-        mean_cv = np.asarray(mean_cv)
+        # min_cv = np.asarray(min_cv)
+        # median_cv = np.asarray(median_cv)
+        # mean_cv = np.asarray(mean_cv)
         # return keep, min_cv, median_cv, mean_cv
         return keep
 
