@@ -701,14 +701,21 @@ class processing:
             iqr = q75 - q25
             threshold = q75 + 1.5*iqr
             masked_array = np.ma.masked_greater_equal(dd, threshold)
+
+            neighbor_sims = self.global_sim_num[ii]
+            same_sim = (neighbor_sims == self.global_sim_num[:,None])
+            valid = ~same_sim
+            del_sim_num = int(len(global_unique))+1000
             while min_threshold > 1e-3:
-                neighbor_sims = self.global_sim_num[ii]
+                # neighbor_sims = self.global_sim_num[ii]
 
-                same_sim = (neighbor_sims == self.global_sim_num[:, None])
-                nbr_deleted = deleted[neighbor_sims]
+                # same_sim = (neighbor_sims == self.global_sim_num[:, None])
+                # nbr_deleted = deleted[neighbor_sims]
 
 
-                valid = (~same_sim) & (nbr_deleted == 0)
+                # valid = (~same_sim) & (nbr_deleted == 0)
+                newly_deleted = (neighbor_sims == del_sim_num)
+                valid[newly_deleted] = False
                 has_valid = (valid.any(axis=1)) & (masked_array.any(axis=1))
                 masked_array = np.ma.masked_where(~valid, masked_array)
                 avg_dist = np.where(
@@ -795,7 +802,7 @@ class processing:
         if not kwargs:
             mapper = umap.UMAP(verbose=True, init='pca', n_neighbors=54).fit(self.features)
         else:
-            mapper = umap.UMAP(**kwargs)
+            mapper = umap.UMAP(**kwargs).fit(self.features)
         return mapper
 
     def plot(self,

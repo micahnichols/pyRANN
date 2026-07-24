@@ -112,7 +112,8 @@ def load(filename: str,
 
     elif filetype == 'data' or filetype == 'dat':
         file = open(filename,'r')
-        box = np.empty((3,3))
+        # box = np.empty((3,3))
+        box = np.zeros((3,3))
         origin = np.empty(3)
         atom_count = 0
         for line_num, content in enumerate(file):
@@ -183,6 +184,15 @@ def load(filename: str,
         #     (Id[i],types[i],atoms[0,i],atoms[1,i],atoms[2,i])=np.float64(line)
         file.close()
         descriptor = filename
+        if origin[0] != 0.0:
+            box[0,0] += -1*origin[0]
+            atoms[0,:] += -1*origin[0]
+        if origin[1] != 0.0:
+            box[1,1] += -1*origin[1]
+            atoms[1,:] += -1*origin[1]
+        if origin[2] != 0.0:
+            box[2,2] += -1*origin[2]
+            atoms[2,:] += -1*origin[2]
         return system(atoms=atoms, box=box, types=types, descriptor=descriptor)
         # return (atoms,box,types,Id)
 
