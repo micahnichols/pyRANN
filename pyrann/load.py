@@ -479,16 +479,23 @@ def load(filename: str,
             box = np.zeros([3,2])
             new_box = np.zeros([3,3])
             tilt = np.zeros([3])
+            stress = np.zeros([3,3])
             for i in range(3):
                 line678 = file.readline()
-                # print(f'{line678 = }')
+                # print(f'\n\n{line678 = }\n\n')
                 # bs = line678.split(' ')
                 bs = line678.split()
-                # print(f'{bs = }')
+                # print(f'\n\n{bs = }\n\n')
                 box[i,0]=float(bs[0])
                 box[i,1]=float(bs[1])
                 if (len(bs)>=3):
                     tilt[i]=float(bs[2])
+                    if len(bs)>3:
+                        stress[0,i] = float(bs[3])
+                        stress[1,i] = float(bs[4])
+                        stress[2,i] = float(bs[5])
+                    else:
+                        stress = None
             new_box[0,0] = ((box[0,1]-max([0, tilt[0], tilt[1], tilt[0]+tilt[1]]))
                             - (box[0,0]-min([0, tilt[0], tilt[1], tilt[0]+tilt[1]])))
             new_box[1,0] = tilt[0]
@@ -545,7 +552,8 @@ def load(filename: str,
             else:
                 types = np.ones(atoms.shape[1])
             series_list.append(system(atoms=atoms, box=new_box.T, types=types, natoms=natoms,
-                                      timestep=timestep, energy=energy, force=force, descriptor=filename))
+                                      timestep=timestep, energy=energy, force=force, stress=stress,
+                                      descriptor=filename))
         # file.close()
         # Data_arr = np.array([Data_arr])[0]
         # colstr_arr = np.array([colstr_arr])[0]
