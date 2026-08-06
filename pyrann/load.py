@@ -374,20 +374,33 @@ def load(filename: str,
                         if do_force:
                             sims[nn]['f'][i,:]=(float(ls[5]),float(ls[6]),float(ls[7]))
                 elif line[:12].strip().lower() == "plusstress:":
+                    given_keys = line.strip().lower().split()[1:]
                     do_stress = True
                     # print(' PlusStress\n')
                     line = file.readline()
                     ls = line.strip().split()
                     stressvoight = (float(ls[0]),float(ls[1]),float(ls[2]),float(ls[3]),float(ls[4]),float(ls[5]))
-                    sims[nn]['stress'][0,0]=stressvoight[0]
-                    sims[nn]['stress'][1,1]=stressvoight[1]
-                    sims[nn]['stress'][2,2]=stressvoight[2]
-                    sims[nn]['stress'][0,1]=stressvoight[3]
-                    sims[nn]['stress'][1,0]=stressvoight[3]
-                    sims[nn]['stress'][0,2]=stressvoight[4]
-                    sims[nn]['stress'][2,0]=stressvoight[4]
-                    sims[nn]['stress'][1,2]=stressvoight[5]
-                    sims[nn]['stress'][2,1]=stressvoight[5]
+                    # stress_keys = np.array(['xx', 'yy', 'zz', 'yz', 'xz', 'xy'])
+                    stress_dict = {given_keys[i]: stressvoight[i] for i in range(len(stressvoight))}
+                    sims[nn]['stress'][0,0]=stress_dict['xx']
+                    sims[nn]['stress'][1,1]=stress_dict['yy']
+                    sims[nn]['stress'][2,2]=stress_dict['zz']
+                    sims[nn]['stress'][0,1]=stress_dict['xy']
+                    sims[nn]['stress'][1,0]=stress_dict['xy']
+                    sims[nn]['stress'][0,2]=stress_dict['xz']
+                    sims[nn]['stress'][2,0]=stress_dict['xz']
+                    sims[nn]['stress'][1,2]=stress_dict['yz']
+                    sims[nn]['stress'][2,1]=stress_dict['yz']
+
+                    # sims[nn]['stress'][0,0]=stressvoight[0]
+                    # sims[nn]['stress'][1,1]=stressvoight[1]
+                    # sims[nn]['stress'][2,2]=stressvoight[2]
+                    # sims[nn]['stress'][0,1]=stressvoight[3]
+                    # sims[nn]['stress'][1,0]=stressvoight[3]
+                    # sims[nn]['stress'][0,2]=stressvoight[4]
+                    # sims[nn]['stress'][2,0]=stressvoight[4]
+                    # sims[nn]['stress'][1,2]=stressvoight[5]
+                    # sims[nn]['stress'][2,1]=stressvoight[5]
                 elif line.split()[0].strip().lower() == "energy":
                     if len(line.split()) != 1:
                         sims[nn]['energy']=float(line.split()[-1].strip())
