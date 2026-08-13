@@ -367,12 +367,12 @@ class series:
                    # file.write("%f %f %f %f %f %f\n" % (box[i,0],box[i,1],tilt[i],stress[i,0],stress[i,1],stress[i,2]))
                    # file.write("%f %f %f %f %f %f\n" % (box[i,0],box[i,1],tilt[i],stress[0],stress[1],stress[2]))
                    if self.systems[nn]._do_stress:
-                       file.write("%f %f %f %f %f %f\n" % (lammpsbox[i,0],
+                       file.write("%.9f %.9f %.9f %.9f %.9f %.9f\n" % (lammpsbox[i,0],
                                                            lammpsbox[i,1],
                                                            tilt[i],stress[i,0],
                                                            stress[i,1],stress[i,2]))
                    else:
-                       file.write("%f %f %f\n" % (lammpsbox[i,0],lammpsbox[i,1],tilt[i]))
+                       file.write("%.9f %.9f %.9f\n" % (lammpsbox[i,0],lammpsbox[i,1],tilt[i]))
                file.write("ITEM: ATOMS id type x y z fx fy fz\n")
                # f = sims[nn]['f']
                # do_force = True
@@ -385,14 +385,13 @@ class series:
                    # if self.systems[nn].force != None:
                    if self.systems[nn]._do_force:
                        f = self.systems[nn].force
-                       file.write("%d %d %f %f %f %f %f %f\n" % (i+1, self.systems[nn].types[i],
+                       file.write("%d %d %.9f %.9f %.9f %.9f %.9f %.9f\n" % (i+1, self.systems[nn].types[i],
                                                                  x[0][i], x[1][i], x[2][i],
                                                                  f[0][i], f[1][i], f[2][i]))
                    else:
                        # TODO - FIX TO WHERE FORCES ARE NOT WRITTEN IF _do_force == False
-                       file.write("%d %d %f %f %f %f %f %f\n" % (i+1, self.systems[nn].types[i],
-                                                                 x[0][i], x[1][i], x[2][i],
-                                                                 0.0, 0.0, 0.0))
+                       file.write("%d %d %.9f %.9f %.9f\n" % (i+1, self.systems[nn].types[i],
+                                                                 x[0][i], x[1][i], x[2][i]))
             file.close()
         elif filetype == 'cfg':
             original_filename = filename
