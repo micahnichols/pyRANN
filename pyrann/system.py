@@ -29,6 +29,8 @@ class system:
         The 3x3 matrix representing the simulation box. Default is the identity matrix.
     atoms
         A 3xN array representing the atom positions. This is required.
+    ids
+        Array of atom ids
     types
         Atom types, either as a string, integer, or list. Default is an array of ones.
     elements
@@ -55,6 +57,7 @@ class system:
     def __init__(self,
                  box: Optional[npt.ArrayLike] = None,
                  atoms: Optional[npt.ArrayLike] = None,
+                 ids: Optional[Union[str, int, npt.ArrayLike]] = None,
                  types: Optional[Union[str, int, npt.ArrayLike]] = None,
                  elements: Optional[Union[str, list]] = None,
                  natoms: Optional[Union[str, int]] = None,
@@ -68,6 +71,8 @@ class system:
         self._original_box = box
         self.atoms = atoms
         self._original_atoms = atoms
+        self.ids = ids
+        self._original_ids = ids
         self.types = types
         self._original_types = types
         self.elements = elements
@@ -175,6 +180,35 @@ class system:
         atoms = np.asarray(value, dtype=np.float64)
         assert atoms.shape[0] == 3, 'Atoms must be column vectors'
         self.__atoms = atoms
+
+    @property
+    def ids(self) -> np.ndarray:
+        """
+        Returns the atom ids.
+
+        Returns
+        -------
+        np.ndarray
+            A 1d array representing the atom ids.
+        """
+        return self.__ids
+
+    @ids.setter
+    def ids(self, value: Optional[Union[str, int, npt.ArrayLike]] = None):
+        """
+        Sets the atom ids.
+
+        Parameters
+        ----------
+        value
+            Atom ids, either as a string, integer, or array.
+        """
+        ids = value
+        if ids is None:
+            ids = np.linspace(1, self.atoms.shape[1], num=self.atoms.shape[1])
+        else:
+            ids = np.asarray(ids, dtype=int)
+        self.__ids = ids
 
     @property
     def types(self) -> np.ndarray:

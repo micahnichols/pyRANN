@@ -551,6 +551,10 @@ def load(filename: str,
             atoms = np.array([v for k, v in per_atom_dict.items()
                               if k.startswith('x') or k.startswith('y') or k.startswith('z')])
             # print(f'{atoms = }')
+            if 'id' in per_atom_dict.keys():
+                ids = np.asarray(per_atom_dict['id'], dtype=int)
+            else:
+                ids = None
             if 'fx' in per_atom_dict.keys():
                 force = np.array([per_atom_dict['fx'], per_atom_dict['fy'], per_atom_dict['fz']])
                 # print(f'{force = }')
@@ -566,7 +570,7 @@ def load(filename: str,
                 types = np.ones(atoms.shape[1])
             series_list.append(system(atoms=atoms, box=new_box.T, types=types, natoms=natoms,
                                       timestep=timestep, energy=energy, force=force, stress=stress,
-                                      descriptor=filename))
+                                      descriptor=filename, ids=ids))
         # file.close()
         # Data_arr = np.array([Data_arr])[0]
         # colstr_arr = np.array([colstr_arr])[0]
