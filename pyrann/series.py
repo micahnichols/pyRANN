@@ -467,80 +467,88 @@ class series:
 
     # TODO - IMPLEMENT VASP FUNCTIONALITY
 
-    #def write_vasp(self,
-    #               INCAR: Union[str, None] = None,
-    #               KPOINTS: Union[str, None] = None):
-    #    """
-    #    Writes VASP DFT inputs
-    #    """
-    #    if INCAR != None:
-    #        with open(INCAR, 'r') as f:
-    #            INCAR = f.read()
-    #    else:
-    #        INCAR = textwrap.dedent('''\
-    #        System = Fe bcc fero
-    #        # Parameters
-    #            PREC = Accurate
-    #            LASPH = True
-    #            LORBIT = 10
+    def write_vasp(self,
+                   INCAR: Union[str, None] = None,
+                   KPOINTS: Union[str, None] = None,
+                   **kwargs):
+        """
+        Writes VASP DFT inputs
+        """
+        allowed_kwargs = {'system', 'prec', 'lasph', 'lorbit', 'algo',
+                          'encut', 'nelm', 'nelmin', 'ediff', 'lreal',
+                          'ismear', 'sigma', 'lwave', 'lcharg', 'lefl',
+                          'nsw', 'isif', 'ibrion', 'potim', 'isym'}
+        unexpected_keys = set(kwargs.keys().lower()) - allowed_kwargs
+        if unexpected_keys:
+            raise TypeError(f'Unexpected keyword argumen(s): {", ".join(unexpected_keys)}')
+        if INCAR != None:
+            with open(INCAR, 'r') as f:
+                INCAR = f.read()
+        else:
+            INCAR = textwrap.dedent('''\
+            System = Fe bcc fero
+            # Parameters
+                PREC = Accurate
+                LASPH = True
+                LORBIT = 10
 
-    #        #Electronic relaxation
-    #            ALGO = Normal
+            #Electronic relaxation
+                ALGO = Normal
 
-    #        #Electronic Relaxation
-    #           ENCUT  =    520.00
-    #           NELM   =    300    #max SCF steps
-    #           NELMIN =      4    #min SCF steps
-    #           EDIFF  =   1E-7    #stopping-criterion for ELM
-    #           LREAL = F    # RM and RH
+            #Electronic Relaxation
+               ENCUT  =    520.00
+               NELM   =    300    #max SCF steps
+               NELMIN =      4    #min SCF steps
+               EDIFF  =   1E-7    #stopping-criterion for ELM
+               LREAL = F    # RM and RH
 
 
-    #        #DOS related values:
-    #            ISMEAR = 0
-    #            SIGMA = 0.2
+            #DOS related values:
+                ISMEAR = 0
+                SIGMA = 0.2
 
-    #        #Write flags
-    #            LWAVE  =      F    #write WAVECAR
-    #            LCHARG =      F    #write CHGCAR
-    #            LELF   =      F    #write electronic localiz. function (ELF)
+            #Write flags
+                LWAVE  =      F    #write WAVECAR
+                LCHARG =      F    #write CHGCAR
+                LELF   =      F    #write electronic localiz. function (ELF)
 
-    #        #Ionic relaxation
-    #        #   NSW    =     100    #number of steps for IOM
-    #            ISIF   =      2
-    #            IBRION =      -1   # no update
-    #        #   POTIM  =    0.1    #time-step for ionic-motion
-    #        #   ISYM   =      0    #0-off
-    #        ''')
-    #        with open('INCAR', 'w') as f:
-    #            f.write(INCAR)
-    #    if KPOINTS != None:
-    #        with open(KPOINTS, 'r') as f:
-    #            KPOINTS = f.read()
-    #    else:
-    #        KPOINTS = textwrap.dedent('''\
-    #        K-Spacing Value to Generate K-Mesh: 0.020
-    #        0
-    #        Monkhorst-Pack
-    #          5 5 5
-    #        0.0  0.0  0.0
-    #        ''')
-    #        with open('KPOINTS', 'w') as f:
-    #            f.write(KPOINTS)
-    #    nsims = len(self.systems)
-    #    # print(nsims)
-    #    sys.path.append(os.getcwd())
-    #    self.export(filename='POSCAR',
-    #                filetype='poscar',
-    #                directory='all_poscars')
-    #    for i in range(nsims):
-    #        directory = f'input_{i+1}'
-    #        if not os.path.isdir(directory):
-    #            os.mkdir(directory)
-    #        os.system(f'cp INCAR KPOINTS {directory}/.')
-    #        os.chdir(directory)
-    #        self.systems[i].export(filename='POSCAR',
-    #                               filetype='poscar')
-    #        os.system('mv POSCAR.poscar POSCAR')
-    #        os.chdir('../')
+            #Ionic relaxation
+            #   NSW    =     100    #number of steps for IOM
+                ISIF   =      2
+                IBRION =      -1   # no update
+            #   POTIM  =    0.1    #time-step for ionic-motion
+            #   ISYM   =      0    #0-off
+            ''')
+            with open('INCAR', 'w') as f:
+                f.write(INCAR)
+        if KPOINTS != None:
+            with open(KPOINTS, 'r') as f:
+                KPOINTS = f.read()
+        else:
+            KPOINTS = textwrap.dedent('''\
+            K-Spacing Value to Generate K-Mesh: 0.020
+            0
+            Monkhorst-Pack
+              5 5 5
+            0.0  0.0  0.0
+            ''')
+            with open('KPOINTS', 'w') as f:
+                f.write(KPOINTS)
+        nsims = len(self.systems)
+        # print(nsims)
+        sys.path.append(os.getcwd())
+        self.export(filename='POSCAR',
+                    filetype='poscar',
+                    directory='all_poscars')
+        for i in range(nsims):
+            directory = f'input_{i+1}'
+            if not os.path.isdir(directory):
+                os.mkdir(directory)
+            os.system(f'cp INCAR KPOINTS POTCAR {directory}/.')
+            os.chdir(directory)
+            self.systems[i].export(filename='POSCAR',
+                                   filetype='poscar')
+            os.system('mv POSCAR.poscar POSCAR')
+            os.chdir('../')
 
 

@@ -71,6 +71,7 @@ class processing:
         self.formalism = formalism
         self.features = np.zeros((100,100))
         self.global_sim_num = np.zeros(100)
+        # self.ntypes = 1
 
     @property
     def input_file(self) -> str:
@@ -262,6 +263,49 @@ class processing:
         assert local_id.ndim == 1, "local_id array must be 1-dimensional"
         self.__local_id = local_id
 
+    @property
+    def ntypes(self) -> int:
+        """
+        Returns the number of element types defined by the MLP
+
+        Returns
+        -------
+        int
+            Integer value of the number of element types defined in 
+            the MLP
+        """
+        if hasattr(self, 'formalism') and hasattr(self, 'input_file'):
+            with open(self.input_file, 'r') as f:
+                for line_num, line in enumerate(f):
+                    if self.formalism == 'rann' and line.startswith('atomtypes:'):
+                        types = f.readline().strip().split()
+                        ntypes = len(types)
+                        break
+                    elif self.formalism == 'mtp' and line.startswith('species_count'):
+                        ntypes = int(line.strip().split()[-1])
+                        break
+            self.__ntypes = ntypes
+            return self.__ntypes
+        else:
+            raise ValueError('Please define an MLP formalism and/or input script')
+
+    # @ntypes.setter
+    # def ntypes(self):
+    #     """
+    #     Sets the number of element types defined by the MLP
+    #     """
+    #     with open(self.input_file, 'r') as f:
+    #         for line_num, line in enumerate(f):
+    #             if self.formalism == 'rann' and line.startswith('atomtypes:'):
+    #                 types = f.readline().strip().split()
+    #                 ntypes = len(types)
+    #                 break
+    #             elif self.formalism == 'mtp' and line.startswith('species_count'):
+    #                 ntypes = int(line.strip().split()[-1])
+    #                 break
+    #     print(f'\n\npyrann {ntypes = }\n\n')
+    #     self.__ntypes = ntypes
+
     def get_features(self,
                      standardize: Optional[bool] = True,
                      file_fmt: Optional[Union[str, None]] = None,
@@ -343,19 +387,39 @@ class processing:
                     # export.export('combined.cfg')
 
         if self.formalism == 'rann':
-            a = calibration.PairRANN(self.input_file)
-            a.setup()
-            filenames = np.array([a[i].filename for i in range(a.nsims)
-                                  for j in range(a[i].inum)])
-            global_sim_num = np.array([i for i in range(a.nsims) for j in range(a[i].inum)])
-            local_temp = np.array([j for i in a.sims_per_file for j in range(i)], dtype=np.int64)
-            # local_sim_num = np.array([local_temp[i] for i in range(a.nsims) for j in range(a[i].inum)], dtype=np.int64)
-            local_sim_num = np.array([a[i].timestep for i in range(a.nsims)
+            if self.ntypes == 1:
+                a = calibration.PairRANN(self.input_file)
+                a.setup()
+                filenames = np.array([a[i].filename for i in range(a.nsims)
                                       for j in range(a[i].inum)])
-            local_id = np.array([a.id(i)[j] for i in range(a.nsims) for j in range(a[i].inum)], dtype=np.int64)
-            features = np.array([a.feature(i,j) for i in range(a.nsims) for j in range(a[i].inum)], dtype=np.float64)
+                global_sim_num = np.array([i for i in range(a.nsims) for j in range(a[i].inum)])
+                local_temp = np.array([j for i in a.sims_per_file for j in range(i)], dtype=np.int64)
+                # local_sim_num = np.array([local_temp[i] for i in range(a.nsims) for j in range(a[i].inum)], dtype=np.int64)
+                local_sim_num = np.array([a[i].timestep for i in range(a.nsims)
+                                          for j in range(a[i].inum)])
+                local_id = np.array([a.id(i)[j] for i in range(a.nsims) for j in range(a[i].inum)], dtype=np.int64)
+                features = np.array([a.feature(i,j) for i in range(a.nsims) for j in range(a[i].inum)], dtype=np.float64)
+                types = np.array([a[i].types(j) for i in range(a.nsims) for j in range(a[i].inum)], dtype=int)
 
-            self.pair_rann = a
+                self.pair_rann = a
+            else:
+                a = calibration.PairRANN(self.input_file)
+                a.setup()
+                filenames = np.array([a[i].filename for i in range(a.nsims)
+                                      for j in range(a[i].inum)])
+                global_sim_num = np.array([i for i in range(a.nsims) for j in range(a[i].inum)])
+                local_temp = np.array([j for i in a.sims_per_file for j in range(i)], dtype=np.int64)
+                # local_sim_num = np.array([local_temp[i] for i in range(a.nsims) for j in range(a[i].inum)], dtype=np.int64)
+                local_sim_num = np.array([a[i].timestep for i in range(a.nsims)
+                                          for j in range(a[i].inum)])
+                local_id = np.array([a.id(i)[j] for i in range(a.nsims) for j in range(a[i].inum)], dtype=np.int64)
+                features_dict = {f'{i}': [] for i in range(1, self.ntypes+1)}
+                for k in range(1, self.ntypes+1):
+                    features_dict[f'{k}'] = np.array([a.feature(i,j) for i in range(a.nsims) for j in range(a[i].inum) if a[i].types[j] == k-1])
+                types = np.array([a[i].types[j] for i in range(a.nsims) for j in range(a[i].inum)], dtype=int)
+                self.pair_rann = a
+                # print(f'\n\n{features_dict = }\n\n')
+                # return None
 
         elif self.formalism == 'mtp':
             try:
@@ -404,6 +468,10 @@ class processing:
                                      for i in range(len(filename_list)) 
                                      for j in range(len(loaded_cfgs[i].systems)) 
                                      for k in range(loaded_cfgs[i].systems[j].natoms)])
+                types = np.array([k for i in cfgs
+                                       for j in i.types
+                                       for k in j])
+                # print(f'\n\n{types = }\n\n')
             else:
                 features = np.array([pot.calc_basis_funcs(k) 
                                      for i in cfgs 
@@ -417,6 +485,10 @@ class processing:
                                           for i in range(len(filename_list)) 
                                           for j in range(len(loaded_cfgs[i].systems)) 
                                           for k in range(loaded_cfgs[i].systems[j].natoms)])
+                types = np.array([k for i in cfgs
+                                  for j in i.types
+                                  for k in j])
+                # print(f'\n\n{types = }\n\n')
                 # global_temp = 0
                 # TODO - MAKE SURE THIS MATH IS CORRECT
                 # global_sim_num = np.array([global_temp:=global_temp*i+(j+i) for i in range(len(filename_list)) for j in range(len(loaded_cfgs[i].systems)) for k in range(loaded_cfgs[i].systems[j].natoms)])
@@ -433,6 +505,8 @@ class processing:
                                      for i in range(len(filename_list)) 
                                      for j in range(len(loaded_cfgs[i].systems)) 
                                      for k in range(loaded_cfgs[i].systems[j].natoms)])
+            features_dict = {f'{i}': features[types==i-1] for i in range(1,self.ntypes+1)}
+            print(f'\n\n{features_dict = }\n\n')
         elif self.formalism == 'soap':
             from quippy.descriptors import Descriptor
             import ase
@@ -506,12 +580,25 @@ class processing:
         self.global_sim_num = global_sim_num
         self.local_sim_num = local_sim_num
         self.local_id = local_id
+        self.types = types
 
-        if standardize:
+        if standardize and self.ntypes == 1:
             scaler = StandardScaler()
             scaler.fit(features)
             features = scaler.transform(features)
+        elif standardize and self.ntypes > 1:
+            scaler = StandardScaler()
+            for i in range(1, self.ntypes+1):
+                scaler.fit(features_dict[f'{i}'])
+                features_dict[f'{i}'] = scaler.transform(features_dict[f'{i}'])
+            features = features_dict
         self.features = features
+        unique_filenames, filenames_index = np.unique(self.filenames, return_index=True)
+        filenames_index = np.argsort(filenames_index)
+        unique_filenames = unique_filenames[filenames_index]
+        structures = [load(i, series=True) for i in unique_filenames]
+        structures = series([j for i in structures for j in i.systems])
+        self.structures = structures
 
     def density(self) -> np.ndarray:
         """
@@ -683,9 +770,38 @@ class processing:
             min_threshold = 1.0
 
             # deleted = np.zeros(len(self.global_sim_num))
-            model = NearestNeighbors(n_neighbors=100)
-            model.fit(self.features)
-            dd, ii = model.kneighbors(self.features)
+            if self.ntypes == 1:
+                model = NearestNeighbors(n_neighbors=100)
+                model.fit(self.features)
+                dd, ii = model.kneighbors(self.features)
+            else:
+                dd_list = []
+                ii_list = []
+                local_list = []
+                global_list = []
+                model = NearestNeighbors(n_neighbors=100)
+                for i in range(1, self.ntypes+1):
+                    # model = NearestNeighbors(n_neighbors=100)
+                    model.fit(self.features[f'{i}'])
+                    dd, ii = model.kneighbors(self.features[f'{i}'])
+                    dd_list.append(dd)
+                    # global_temp = np.array([self.global_sim_num[self.types==i-1]])
+                    global_temp = self.global_sim_num[self.types==i-1]
+                    global_list.append(global_temp)
+                    local_id_temp = self.local_id[self.types==i-1]
+                    local_list.append(local_id_temp)
+                    # id_temp = self.local
+                    new_ii = global_temp[ii]
+                    ii_list.append(ii)
+
+                dd = np.array([j for i in dd_list for j in i])
+                ii = np.array([j for i in ii_list for j in i])
+                local_array = np.array([j for i in local_list for j in i])
+                global_array = np.array([j for i in global_list for j in i])
+                sort_array = np.array([[global_array[i], local_array[i]] for i in range(len(global_array))])
+                sort_index = np.lexsort((sort_array[:,1], sort_array[:,0]))
+                dd = dd[sort_index]
+                ii = ii[sort_index]
 
             global_unique, global_index = np.unique(self.global_sim_num, return_index=True)
             global_unique = self.global_sim_num[global_index]
@@ -763,7 +879,7 @@ class processing:
         # return keep, min_cv, median_cv, mean_cv
         return keep
 
-    def get_umap(self, **kwargs):
+    def get_umap(self, all=False, **kwargs):
         """
         Initializes UMAP for the set features.
 
@@ -799,11 +915,47 @@ class processing:
         if not np.any(self.features):
             raise ValueError('Please set the features before calling this function.')
 
-        if not kwargs:
-            mapper = umap.UMAP(verbose=True, init='pca', n_neighbors=54).fit(self.features)
+        if self.ntypes == 1:
+            if not kwargs:
+                mapper = umap.UMAP(verbose=True, init='pca', n_neighbors=54).fit(self.features)
+            else:
+                mapper = umap.UMAP(**kwargs).fit(self.features)
+            return mapper
         else:
-            mapper = umap.UMAP(**kwargs).fit(self.features)
-        return mapper
+            if not all:
+                mapper_list = []
+                for i in range(1,self.ntypes+1):
+                    if not kwargs:
+                        # mapper = umap.UMAP(verbose=True, init='pca', n_neighbors=54).fit(self.features[self.types==i])
+                        mapper = umap.UMAP(verbose=True, init='pca', n_neighbors=54).fit(self.features[f'{i}'])
+                    else:
+                        # mapper = umap.UMAP(**kwargs).fit(self.features[self.types==i])
+                        mapper = umap.UMAP(**kwargs).fit(self.features[f'{i}'])
+                    mapper_list.append(mapper)
+                return mapper_list
+            else:
+                global_list = []
+                local_list = []
+                all_features = np.array([j for i in self.features for j in self.features[f'{i}']])
+                for i in range(1, self.ntypes+1):
+                    global_temp = self.global_sim_num[self.types==i-1]
+                    global_list.append(global_temp)
+                    local_id_temp = self.local_id[self.types==i-1]
+                    local_list.append(local_id_temp)
+                    # id_temp = self.local
+
+                local_array = np.array([j for i in local_list for j in i])
+                global_array = np.array([j for i in global_list for j in i])
+                sort_array = np.array([[global_array[i], local_array[i]] for i in range(len(global_array))])
+                sort_index = np.lexsort((sort_array[:,1], sort_array[:,0]))
+                all_features = all_features[sort_index]
+
+                if not kwargs:
+                    mapper = umap.UMAP(verbose=True, init='pca', n_neighbors=54).fit(all_features)
+                else:
+                    mapper = umap.UMAP(**kwargs).fit(all_features)
+                return mapper
+
 
     def plot(self,
              mapper,
