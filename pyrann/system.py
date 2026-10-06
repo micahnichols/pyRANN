@@ -65,7 +65,10 @@ class system:
                  energy: Optional[Union[str, float]] = None,
                  stress: Optional[Union[str, npt.ArrayLike]] = None,
                  force: Optional[Union[str, npt.ArrayLike]] = None,
-                 descriptor: Optional[str] = None):
+                 descriptor: Optional[str] = None,
+                 e_weight: Optional[float] = None,
+                 f_weight: Optional[float] = None,
+                 s_weight: Optional[float] = None):
 
         self.box = box
         self._original_box = box
@@ -89,6 +92,9 @@ class system:
         self._original_force = force
         self.descriptor = descriptor
         self._original_descriptor = descriptor
+        self.e_weight = e_weight
+        self.f_weight = f_weight
+        self.s_weight = s_weight
 
     def __str__(self) -> str:
         """
@@ -420,6 +426,90 @@ class system:
             force = None
             self._do_force = False
         self.__force = force
+
+    @property
+    def e_weight(self) -> Optional[float]:
+        """
+        Returns the energy weight of the system used in training.
+
+        Returns
+        -------
+        float
+            Energy weight used for training
+        """
+        return self.__e_weight
+
+    @e_weight.setter
+    def e_weight(self, value: Optional[float] = None):
+        """
+        Sets the energy weight for the system for training
+
+        Parameters
+        ----------
+        value
+            Energy weight
+        """
+        if value is not None:
+            e_weight = np.float64(value)
+        else:
+            e_weight = 1.0
+        self.__e_weight = e_weight
+
+    @property
+    def f_weight(self) -> Optional[float]:
+        """
+        Returns the force weight of the system used in training.
+
+        Returns
+        -------
+        float
+            Energy weight used for training
+        """
+        return self.__f_weight
+
+    @f_weight.setter
+    def f_weight(self, value: Optional[float] = None):
+        """
+        Sets the force weight for the system for training
+
+        Parameters
+        ----------
+        value
+            Energy weight
+        """
+        if value is not None:
+            f_weight = np.float64(value)
+        else:
+            f_weight = 0.01
+        self.__f_weight = f_weight
+
+    @property
+    def s_weight(self) -> Optional[float]:
+        """
+        Returns the stress weight of the system used in training.
+
+        Returns
+        -------
+        float
+            Energy weight used for training
+        """
+        return self.__s_weight
+
+    @s_weight.setter
+    def s_weight(self, value: Optional[float] = None):
+        """
+        Sets the stress weight for the system for training
+
+        Parameters
+        ----------
+        value
+            Energy weight
+        """
+        if value is not None:
+            s_weight = np.float64(value)
+        else:
+            s_weight = 0.001 
+        self.__s_weight = s_weight
 
     @property
     def descriptor(self) -> Optional[str]:

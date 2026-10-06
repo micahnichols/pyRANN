@@ -475,9 +475,15 @@ def load(filename: str,
         energy_arr = []
         series_list = []
         for mwn in range(0, nsims):
-            file.readline()
+            # file.readline()
+            item_temp = file.readline().strip().split()
+            item_temp = [i.strip(',') for i in item_temp if i != 'ITEM:']
+            # item_dict = {i for i in item_temp if i != 'ITEM:'}
+            # item_dict = {i for i in file.readline().strip().split() if i != 'ITEM:'}
             # line2 = file.readline()
             line2 = file.readline().strip().split()
+            item_dict = {item_temp[i]: line2[i] for i in range(len(line2))}
+            # print(f'\n\n{item_dict = }\n\n')
             # nsims = line2.strip().split()[-1]
             # print(f'{nsims = }')
             file.readline()
@@ -568,9 +574,22 @@ def load(filename: str,
                 types = per_atom_dict['type']
             else:
                 types = np.ones(atoms.shape[1])
+            if 'energy_weight' in item_dict.keys():
+                e_weight = item_dict['energy_weight']
+            else:
+                e_weight = None
+            if 'force_weight' in item_dict.keys():
+                f_weight = item_dict['force_weight']
+            else:
+                f_weight = None
+            if 'stress_weight' in item_dict.keys():
+                s_weight = item_dict['stress_weight']
+            else:
+                s_weight = None
             series_list.append(system(atoms=atoms, box=new_box.T, types=types, natoms=natoms,
                                       timestep=timestep, energy=energy, force=force, stress=stress,
-                                      descriptor=filename, ids=ids))
+                                      descriptor=filename, ids=ids, e_weight=e_weight, f_weight=f_weight,
+                                      s_weight=s_weight))
         # file.close()
         # Data_arr = np.array([Data_arr])[0]
         # colstr_arr = np.array([colstr_arr])[0]

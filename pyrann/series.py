@@ -304,15 +304,17 @@ class series:
             nsims = len(self.systems)
             sims = len(self.systems)
             energy = np.zeros(nsims)
-            energy_weight = np.ones(nsims)
+            # energy_weight = np.ones(nsims)
             # force = np.zeros((nsims,3))
-            force_weight = np.ones(nsims)
+            # force_weight = np.ones(nsims)
             # stress1 = np.zeros((nsims,3))
             for nn in range(nsims):
                file.write("ITEM: TIMESTEP energy, energy_weight, force_weight, nsims\n")
                file.write("%d %f %f %f %d\n" % (self.systems[nn].timestep,
                                                 self.systems[nn].energy,
-                                                energy_weight[nn],force_weight[nn],nsims))
+                                                self.systems[nn].e_weight,
+                                                self.systems[nn].f_weight,
+                                                nsims))
                file.write("ITEM: NUMBER OF ATOMS\n")
                natoms = self.systems[nn].natoms
                file.write("%d\n" % natoms)
